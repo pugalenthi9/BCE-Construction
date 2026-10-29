@@ -1,0 +1,187 @@
+{
+  "P font color 1": {
+    "$type": "color",
+    "$value": {
+      "colorSpace": "srgb",
+      "components": [
+        0.10980392247438431,
+        0.10980392247438431,
+        0.11764705926179886
+      ],
+      "alpha": 1,
+      "hex": "#1C1C1E"
+    },
+    "$extensions": {
+      "com.figma.variableId": "VariableID:18:114",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "S font color": {
+    "$type": "color",
+    "$value": {
+      "colorSpace": "srgb",
+      "components": [
+        0.3019607961177826,
+        0.3019607961177826,
+        0.3019607961177826
+      ],
+      "alpha": 1,
+      "hex": "#4D4D4D"
+    },
+    "$extensions": {
+      "com.figma.variableId": "VariableID:18:115",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "T Font Color": {
+    "$type": "color",
+    "$value": {
+      "colorSpace": "srgb",
+      "components": [
+        0.45098039507865906,
+        0.4431372582912445,
+        0.4431372582912445
+      ],
+      "alpha": 1,
+      "hex": "#737171"
+    },
+    "$extensions": {
+      "com.figma.variableId": "VariableID:18:116",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "CTA Button Fill Color": {
+    "$type": "color",
+    "$value": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1882352977991104,
+        0.21568627655506134,
+        0.250980406999588
+      ],
+      "alpha": 1,
+      "hex": "#303740"
+    },
+    "$extensions": {
+      "com.figma.variableId": "VariableID:18:117",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "Primary Brand Color 1": {
+    "$type": "color",
+    "$value": {
+      "colorSpace": "srgb",
+      "components": [
+        0,
+        0.27450981736183167,
+        0.6627451181411743
+      ],
+      "alpha": 1,
+      "hex": "#0046A9"
+    },
+    "$extensions": {
+      "com.figma.variableId": "VariableID:18:118",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "Primary Brand Color 2": {
+    "$type": "color",
+    "$value": {
+      "colorSpace": "srgb",
+      "components": [
+        0,
+        0.30980393290519714,
+        0.7490196228027344
+      ],
+      "alpha": 1,
+      "hex": "#004FBF"
+    },
+    "$extensions": {
+      "com.figma.variableId": "VariableID:18:119",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "Bg color 1": {
+    "$type": "color",
+    "$value": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9900000095367432,
+        0.9940000176429749,
+        1
+      ],
+      "alpha": 1,
+      "hex": "#FCFDFF"
+    },
+    "$extensions": {
+      "com.figma.variableId": "VariableID:18:120",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "Bg Color 2": {
+    "$type": "color",
+    "$value": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9215686321258545,
+        0.9529411792755127,
+        1
+      ],
+      "alpha": 1,
+      "hex": "#EBF3FF"
+    },
+    "$extensions": {
+      "com.figma.variableId": "VariableID:18:121",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "Stroke Color 1": {
+    "$type": "color",
+    "$value": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9215686321258545,
+        0.9372549057006836,
+        0.9607843160629272
+      ],
+      "alpha": 1,
+      "hex": "#EBEFF5"
+    },
+    "$extensions": {
+      "com.figma.variableId": "VariableID:18:122",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "Boolean": {
+    "$type": "number",
+    "$value": 1,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:196:186",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ],
+      "com.figma.type": "boolean"
+    }
+  },
+  "$extensions": {
+    "com.figma.modeName": "Mode 1"
+  }
+}

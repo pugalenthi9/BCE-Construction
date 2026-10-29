@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About Us — Bala Construction &amp; Engineering Pte Ltd</title>
+<meta name="description" content="4+ years of construction and renovation experience in Singapore. Meet the team behind Bala Construction &amp; Engineering, our values and recent work.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="images/brand/favicon-32.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="images/brand/favicon-180.png?v=3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/sections.css">
+<link rel="stylesheet" href="css/responsive.css">
+<script>try{var f='bce-intro',s=sessionStorage.getItem(f)==='1',x=/[?&]intro=1/.test(location.href);if(s&&!x){document.documentElement.classList.add('intro-seen')}else{sessionStorage.setItem(f,'1')}}catch(e){}</script>
+</head>
+<body data-active-nav="About Us">
+
+<!-- Intro loader (Figma 438:1536) - a 2.5s curtain, removed by main.js -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro__sky intro__sky--a"><img src="images/intro/skyline-a.webp" alt=""></div>
+  <div class="intro__sky intro__sky--b"><img src="images/intro/skyline-b.webp" alt=""></div>
+  <div class="intro__sky intro__sky--c"><img src="images/intro/skyline-c.webp" alt=""></div>
+  <div class="intro__brand">
+    <img class="intro__logo" src="images/brand/bce-logo.webp" alt="Bala Construction &amp; Engineering">
+    <span class="intro__bar"></span>
+    <p class="intro__tagline"><span>Quality - Innovation - Team Work - Passion</span></p>
+  </div>
+</div>
+
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-component="site-header"></header>
+
+<main id="main">
+
+  <!-- ===== About ======================================================== -->
+  <section class="section">
+    <div class="container about">
+      <div class="collage" data-reveal="left">
+        <figure class="collage__item collage__item--a"><img src="images/about/collage-1-crew.webp" alt="Safety equipment ready for the crew" loading="lazy"></figure>
+        <figure class="collage__item collage__item--b"><img src="images/about/collage-2-site.webp" alt="Site works in progress" loading="lazy"></figure>
+        <figure class="collage__item collage__item--c"><img src="images/about/collage-3-worker.webp" alt="Worker on a reinforced structure" loading="lazy"></figure>
+        <figure class="collage__item collage__item--d"><img src="images/about/collage-4-gloves.webp" alt="Protective gloves" loading="lazy"></figure>
+      </div>
+
+      <div data-reveal="right">
+        <span class="eyebrow">About Us</span>
+        <h1 class="section-title section-title--md" style="margin-top:16px">
+          The Team Behind Bala Construction &amp; Engineering
+        </h1>
+        <p class="section-lead">
+          4+ years of hands-on experience across residential, commercial and industrial projects
+          in Singapore — delivering construction and renovation work that is safe, on schedule and
+          built to last.
+        </p>
+        <p class="section-lead">
+          From a single room to a full fit-out, the same team handles the programme end to end:
+          one supervisor, an agreed scope, and a written quote you are held to — not a moving target.
+        </p>
+
+        <div class="about__stats">
+          <div class="stat"><p class="stat__value" data-count="100">100+</p><p class="stat__label">Satisfied Customers</p></div>
+          <div class="stat"><p class="stat__value" data-count="20">20+</p><p class="stat__label">Successful Projects</p></div>
+          <div class="stat"><p class="stat__value" data-count="10">10+</p><p class="stat__label">Expert Team Members</p></div>
+        </div>
+
+        <div class="about__actions">
+          <a class="btn btn--primary" href="contact.html">
+            <span class="btn__icon" data-icon="star-fall"></span>
+            <span>Book Your Service Now</span>
+          </a>
+          <a class="btn btn--outline" href="tel:+6598945223">
+            <span class="btn__icon" data-icon="phone-call"></span>
+            <span>Call Us</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Your reliable partner (Figma 437:1221) ======================= -->
+  <section class="values-band">
+    <div class="container">
+      <h2 class="values-band__title" data-reveal>Your reliable partner for construction related services</h2>
+      <div class="value-grid" data-render="values"></div>
+    </div>
+  </section>
+
+  <!-- ===== Meet our MD (Figma 437:1464) ================================= -->
+  <section class="md-band" data-render="founder-band"></section>
+
+  <!-- ===== Building types (dark) =======================================
+       Same section as the home page, rendered from the same data and markup
+       so the two cannot drift apart. -->
+  <!-- No id here: the home page owns #building-types, and the single-file
+       build keeps both pages in one DOM, where a duplicate id is invalid. -->
+  <section class="section section--dark has-grid">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Services &amp; Solutions</span>
+        <h2 class="section-title">We Provide For All Building Types</h2>
+      </div>
+
+      <div class="grid-3" data-render="building-types"></div>
+
+      <div class="other-buildings" data-reveal>
+        <img class="other-buildings__skyline" src="images/misc/ob-skyline.webp" alt="" aria-hidden="true">
+        <span class="other-buildings__icon">
+          <img class="other-buildings__glow" src="images/misc/ob-glow.svg" alt="" aria-hidden="true">
+          <img src="images/icons/buildings-alt.svg" alt="" width="72" height="72">
+        </span>
+        <div>
+          <h3 class="other-buildings__title">Other Buildings &amp; Space</h3>
+          <p class="other-buildings__desc">
+            Can&rsquo;t find your building type? Click &ldquo;Other Building&rdquo; and get expert
+            assistance from a team you can trust.
+          </p>
+          <div class="other-buildings__cta">
+            <a class="btn btn--brand" href="contact.html?type=Other">Other Buildings</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ========================================================== -->
+  <div data-component="cta-banner"></div>
+
+</main>
+
+<div data-component="site-footer"></div>
+<div data-component="success-modal"></div>
+
+<script src="js/data/site.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/components.js"></script>
+<script src="js/renderers.js"></script>
+<script src="js/dropdown.js"></script>
+<script src="js/mailer.js"></script>
+<script src="js/forms.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Services — Bala Construction &amp; Engineering Pte Ltd</title>
+<meta name="description" content="Construction and renovation services in Singapore from Bala Construction &amp; Engineering.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="images/brand/favicon-32.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="images/brand/favicon-180.png?v=3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/sections.css">
+<link rel="stylesheet" href="css/responsive.css">
+<script>try{var f='bce-intro',s=sessionStorage.getItem(f)==='1',x=/[?&]intro=1/.test(location.href);if(s&&!x){document.documentElement.classList.add('intro-seen')}else{sessionStorage.setItem(f,'1')}}catch(e){}</script>
+</head>
+<body data-active-nav="Services">
+
+<!-- Intro loader (Figma 438:1536) - a 2.5s curtain, removed by main.js -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro__sky intro__sky--a"><img src="images/intro/skyline-a.webp" alt=""></div>
+  <div class="intro__sky intro__sky--b"><img src="images/intro/skyline-b.webp" alt=""></div>
+  <div class="intro__sky intro__sky--c"><img src="images/intro/skyline-c.webp" alt=""></div>
+  <div class="intro__brand">
+    <img class="intro__logo" src="images/brand/bce-logo.webp" alt="Bala Construction &amp; Engineering">
+    <span class="intro__bar"></span>
+    <p class="intro__tagline"><span>Quality - Innovation - Team Work - Passion</span></p>
+  </div>
+</div>
+
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-component="site-header"></header>
+
+<main id="main" data-service-page>
+
+  <!-- ===== Hero (Figma 49:2930 / Image 8 49:2931) ======================= -->
+  <section class="service-hero">
+    <img class="service-hero__photo" data-field="heroImage" src="images/misc/service-hero.webp" alt="">
+    <span class="service-hero__veil" aria-hidden="true"></span>
+    <img class="service-hero__grid" src="images/misc/grid-lines-hero.svg" alt="" aria-hidden="true">
+    <div class="container service-hero__inner">
+      <div class="service-hero__main">
+        <h1 class="service-hero__title" data-field="heroTitle" data-reveal>Services &amp; Solutions</h1>
+        <div class="service-hero__actions" data-reveal style="--reveal-delay:180ms">
+          <a class="btn btn--brand" data-field="bookLink" href="contact.html">
+            <span class="btn__icon btn__icon--sm" data-icon="star-fall"></span>
+            <span>Book Now</span>
+          </a>
+        </div>
+      </div>
+      <p class="service-hero__lead" data-field="heroLead" data-reveal style="--reveal-delay:90ms"></p>
+    </div>
+  </section>
+
+  <!-- ===== Words from the founder (Figma 49:2951) ======================= -->
+  <section class="section founder-band has-grid">
+    <div class="container founder">
+      <div class="founder__aside" data-reveal="left">
+        <span class="eyebrow">Words From</span>
+        <div class="founder__person">
+          <span class="founder__avatar">B</span>
+          <span>
+            <span class="founder__name">Bala</span><br>
+            <span class="founder__role">Founder &amp; Director</span>
+          </span>
+        </div>
+      </div>
+      <div data-reveal="right">
+        <p class="founder__quote" data-field="intro"></p>
+        <p class="founder__body" data-field="body"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Service process (Figma 1:2079 "We provide") ================== -->
+  <section class="section provide">
+    <div class="container">
+      <img class="provide__art" src="images/misc/service-process.svg" alt="" aria-hidden="true">
+      <div class="section-head" data-reveal>
+        <h2 class="section-title" data-field="processTitle">Complete Service Process</h2>
+        <p class="section-lead" data-field="processLead"></p>
+      </div>
+      <div class="provide__grid" data-field="steps"></div>
+    </div>
+  </section>
+
+  <!-- ===== How it works ================================================= -->
+  <section class="section process">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">How it works</span>
+        <h2 class="section-title">We Will Reach You In a Few Clicks</h2>
+      </div>
+    </div>
+    <div class="process__band">
+      <div class="container">
+        <div class="process__stage">
+          <figure class="process__photo" data-reveal="right">
+            <img src="images/misc/process-team.webp" alt="BCE engineers reviewing plans on site" loading="lazy">
+          </figure>
+          <div class="process__card" data-reveal="left">
+            <h3 class="process__card-title">The Process</h3>
+            <div data-render="process-steps"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Other services (Figma 1:2017) =============================== -->
+  <section class="section has-grid">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <h2 class="section-title">Services</h2>
+      </div>
+      <div class="grid-3" data-field="related"></div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ========================================================== -->
+  <div data-component="cta-banner"></div>
+
+</main>
+
+<div data-component="site-footer"></div>
+<div data-component="success-modal"></div>
+
+<script src="js/data/site.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/components.js"></script>
+<script src="js/renderers.js"></script>
+<script src="js/dropdown.js"></script>
+<script src="js/mailer.js"></script>
+<script src="js/service-page.js"></script>
+<script src="js/forms.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

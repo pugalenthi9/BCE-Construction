@@ -1,0 +1,24 @@
+<svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_153_3020)">
+<mask id="mask0_153_3020" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="72" height="72">
+<path d="M72 0H0V72H72V0Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_153_3020)">
+<path opacity="0.15" d="M30.33 12C30.09 12.9 30 13.89 30 15V24H15V18C15 14.7 17.7 12 21 12H30.33Z" fill="white"/>
+<path opacity="0.25" d="M30 57V24H15C9 24 6 27 6 33V57C6 63 9 66 15 66H39C33 66 30 63 30 57ZM20.25 51C20.25 52.23 19.23 53.25 18 53.25C16.77 53.25 15.75 52.23 15.75 51V39C15.75 37.77 16.77 36.75 18 36.75C19.23 36.75 20.25 37.77 20.25 39V51Z" fill="white"/>
+<g opacity="0.25">
+<path d="M42 66H39C33 66 30 63 30 57V15C30 9 33 6 39 6H57C63 6 66 9 66 15V57C66 63 63 66 57 66H54" fill="white"/>
+<mask id="stroke0_153_3020" fill="white">
+<path d="M42 66H39C33 66 30 63 30 57V15C30 9 33 6 39 6H57C63 6 66 9 66 15V57C66 63 63 66 57 66H54"/>
+</mask>
+<path d="M42 66H39C33 66 30 63 30 57V15C30 9 33 6 39 6H57C63 6 66 9 66 15V57C66 63 63 66 57 66H54" stroke-width="2" stroke="#4C5664" mask="url(#stroke0_153_3020)"/>
+</g>
+<path d="M54 54V66H42V54C42 52.35 43.35 51 45 51H51C52.65 51 54 52.35 54 54Z" fill="#92A3C3"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_153_3020">
+<rect width="72" height="72" fill="white"/>
+</clipPath>
+</defs>
+</svg>

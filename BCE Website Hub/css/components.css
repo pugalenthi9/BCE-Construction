@@ -1,0 +1,1303 @@
+/* ==========================================================================
+   BCE — Reusable components
+   Buttons, utility bar, navigation, mega-menu, cards, forms, modal, footer.
+   Variants follow the "Buttons Component" sheet (43:1714) in Figma, where the
+   hover convention across the whole site is charcoal -> brand blue.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  height: 48px;
+  padding: var(--sp-2) var(--sp-4);
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+.btn:hover  { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.btn:active { transform: translateY(0); box-shadow: none; }
+
+/* Button icons are masked, not <img>, so they always take the button's own
+   text colour. Several exports carry a baked-in fill (star-fall and invoice
+   are white) which made them vanish on light buttons. */
+.btn__icon,
+.pill-btn__icon {
+  display: block;
+  width: 24px; height: 24px;
+  flex: none;
+  color: inherit;          /* the inlined SVG paints with currentColor */
+}
+.btn__icon svg,
+.pill-btn__icon svg { width: 100%; height: 100%; display: block; }
+.pill-btn__icon { width: 20px; height: 20px; }
+
+/* Filled charcoal -> brand blue on hover (primary CTA) */
+.btn--primary { background: var(--cta-fill); color: var(--white); }
+.btn--primary:hover { background: var(--cta-fill-hover); }
+
+/* White with charcoal text -> charcoal on hover (used on tinted grounds) */
+.btn--inverse { background: var(--white); color: var(--cta-fill); border-color: var(--cta-outline); }
+.btn--inverse:hover { background: var(--cta-fill); color: var(--white); }
+
+/* Outlined secondary — "Get in Touch" / "Call Us" */
+.btn--outline {
+  background: var(--white);
+  color: var(--cta-fill);
+  border-color: var(--cta-outline);
+}
+.btn--outline:hover { background: var(--brand-1); color: var(--white); border-color: var(--brand-1); }
+
+/* Solid brand blue — the service hero's "Book Now" (Figma 49:2943) */
+.btn--brand { background: var(--brand-1); color: var(--white); }
+.btn--brand:hover { background: var(--brand-2); }
+.btn__icon--sm { width: 20px; height: 20px; }
+
+/* Compact nav button — "Get Quote" (36px) */
+.btn--sm {
+  height: 36px;
+  padding: var(--sp-2) var(--sp-3);
+  font-size: var(--fs-sm);
+}
+.btn--sm .btn__icon { width: 20px; height: 20px; }
+
+/* The nav CTA reads charcoal while the top of the page is on screen and brand
+   blue once it is scrolled past. initNavCta() puts .is-hero-view on <body>,
+   keyed to each page's first section, so all four pages behave the same way.
+   The colour eases on its own - .btn already transitions background-color. */
+.navbar .btn--primary                { background: var(--brand-1); }
+.navbar .btn--primary:hover          { background: var(--brand-2); }
+.is-hero-view .navbar .btn--primary       { background: var(--cta-fill); }
+.is-hero-view .navbar .btn--primary:hover { background: var(--cta-fill-hover); }
+
+/* Full-width blue submit */
+.btn--submit {
+  width: 100%;
+  background: var(--brand-2);
+  color: var(--white);
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+.btn--submit:hover { background: var(--brand-1); }
+.btn--submit:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* Neutral — modal "Close" */
+.btn--ghost { background: var(--white); color: var(--text-1); border-color: var(--stroke-field); }
+.btn--ghost:hover { background: var(--bg-2); border-color: var(--stroke-1); }
+
+.btn--block { width: 100%; }
+
+/* Text link with a real arrow glyph (the old pseudo-element drew only the
+   shaft, which read as a stray dash). */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--fs-body);
+  font-weight: 500;
+  color: var(--brand-2);
+  transition: gap var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.link-arrow svg {
+  width: 22px; height: 12px;
+  flex: none;
+  overflow: visible;
+  transition: transform var(--dur) var(--ease);
+}
+.link-arrow:hover { gap: var(--sp-4); }
+.link-arrow:hover svg { transform: translateX(4px); }
+.section--dark .link-arrow { color: var(--brand-selected); }
+
+/* --------------------------------------------------------------------------
+   Utility contact bar (44px)
+   -------------------------------------------------------------------------- */
+.utility-bar {
+  height: var(--utility-h);
+  background: var(--bg-utility);
+  font-size: var(--fs-sm);
+}
+.utility-bar__inner { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+.utility-bar__region { color: var(--text-2); font-weight: 500; }
+.utility-bar__contacts { display: flex; align-items: center; gap: var(--sp-6); }
+
+.contact-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--text-1);
+  transition: color var(--dur) var(--ease);
+}
+.contact-chip:hover { color: var(--brand-2); }
+.contact-chip__icon {
+  display: grid; place-items: center;
+  width: 24px; height: 24px;
+  background: var(--white);
+  border-radius: var(--r-sm);
+  flex: none;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.contact-chip__icon img { width: 16px; height: 16px; }
+.contact-chip:hover .contact-chip__icon { transform: translateY(-1px); box-shadow: var(--shadow-card); }
+
+/* --------------------------------------------------------------------------
+   Primary navigation (72px, sticky, blurred)
+   -------------------------------------------------------------------------- */
+/* Only the nav sticks. The utility strip scrolls away with the page so the
+   address/phone bar is not pinned over content. Both are body-level siblings
+   (see mountShell) so the navbar sticks against the viewport, not a wrapper. */
+.utility-bar { position: relative; z-index: 99; }
+
+/* Fully opaque: page content must never read through the bar while scrolling. */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--nav-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--stroke-nav);
+  transition: box-shadow var(--dur) var(--ease);
+}
+.navbar.is-stuck { box-shadow: 0 4px 16px rgba(28, 28, 30, .06); }
+.navbar__inner { display: flex; align-items: center; gap: var(--sp-6); height: 100%; }
+
+.brand { display: inline-flex; align-items: center; gap: var(--sp-2); flex: none; }
+.brand__mark { width: 58px; height: 56px; object-fit: contain; transition: transform var(--dur) var(--ease); }
+.brand:hover .brand__mark { transform: scale(1.05); }
+.brand__word { font-family: var(--font-logo); font-size: 24px; letter-spacing: .5px; }
+.brand__word i { font-style: normal; }
+.brand__word .b { color: var(--brand-cyan); }
+.brand__word .c { color: var(--brand-deep); }
+.brand__word .e { color: var(--brand-cyan-2); }
+
+/* Items stretch the full bar height so the active/hover rule can sit exactly on
+   the navbar's bottom edge (Figma "Line 1" at y=72) instead of a magic offset. */
+.nav-menu {
+  display: flex;
+  align-self: stretch;
+  align-items: stretch;
+  gap: 25px;
+  margin-left: var(--sp-10);
+}
+.nav-menu__item { position: relative; display: flex; align-items: center; }
+
+.nav-link {
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  height: 100%;
+  font-size: var(--fs-sm);
+  color: var(--text-1);
+  transition: color var(--dur) var(--ease);
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: var(--brand-1);
+  border-radius: 2px 2px 0 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur) var(--ease);
+}
+.nav-link:hover { color: var(--brand-1); }
+.nav-link:hover::after { transform: scaleX(1); }
+.nav-link.is-active { color: var(--brand-1); font-weight: var(--nav-active-weight); }
+.nav-link.is-active::after { transform: scaleX(1); }
+.nav-link__caret { width: 16px; height: 16px; transition: transform var(--dur) var(--ease); }
+.nav-menu__item.is-open .nav-link__caret { transform: rotate(180deg); }
+
+.nav-actions { display: flex; align-items: center; gap: var(--sp-5); margin-left: auto; }
+
+.nav-search {
+  display: flex; align-items: center; gap: var(--sp-2);
+  width: 302px; height: 36px;
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--white);
+  border: 1px solid var(--stroke-field);
+  border-radius: var(--r-md);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.nav-search:focus-within { border-color: var(--brand-2); box-shadow: 0 0 0 3px rgba(0, 79, 191, .12); }
+.nav-search img { width: 16px; height: 16px; flex: none; }
+.nav-search input {
+  border: 0; outline: 0; width: 100%;
+  font-size: var(--fs-xs); color: var(--text-2); background: transparent;
+}
+
+/* Search suggestions ------------------------------------------------------ */
+.search-results {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  width: 302px;
+  background: var(--white);
+  border: 1px solid var(--stroke-1);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-menu);
+  padding: var(--sp-2);
+  display: none;
+  z-index: 120;
+}
+.search-results.is-open { display: block; }
+.search-results__item {
+  display: flex; align-items: center; gap: var(--sp-3);
+  width: 100%; padding: var(--sp-2);
+  border-radius: var(--r-sm); text-align: left;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+.search-results__item:hover { background: var(--bg-2); }
+.search-results__item img { width: 36px; height: 36px; border-radius: var(--r-sm); object-fit: cover; }
+.search-results__empty { padding: var(--sp-4); color: var(--text-3); font-size: var(--fs-sm); }
+
+/* Burger (tablet / mobile) ------------------------------------------------ */
+.nav-toggle { display: none; width: 40px; height: 40px; place-items: center; border-radius: var(--r-sm); }
+.nav-toggle:hover { background: var(--bg-2); }
+.nav-toggle span {
+  display: block; width: 20px; height: 2px; margin: 3px 0;
+  background: var(--text-1); border-radius: 2px;
+  transition: transform var(--dur) var(--ease), opacity var(--dur-fast) var(--ease);
+}
+.nav-toggle.is-open span:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+.nav-toggle.is-open span:nth-child(2) { opacity: 0; }
+.nav-toggle.is-open span:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+
+/* --------------------------------------------------------------------------
+   Services mega-menu (653 x 376)
+   -------------------------------------------------------------------------- */
+.mega-menu {
+  position: absolute;
+  top: calc(100% + 12px);   /* item now spans the full bar, so 100% == navbar bottom */
+  left: -110px;
+  width: 653px;
+  padding: 19px;
+  background: var(--white);
+  border: 1px solid var(--stroke-1);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-menu);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease),
+    visibility var(--dur);
+  z-index: 110;
+}
+.nav-menu__item.is-open .mega-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+
+.mega-menu::before {
+  content: "";
+  position: absolute; top: -7px; left: 172px;
+  width: 14px; height: 14px;
+  background: var(--white);
+  border-left: 1px solid var(--stroke-1);
+  border-top: 1px solid var(--stroke-1);
+  transform: rotate(45deg);
+}
+.mega-menu__grid { display: grid; grid-template-columns: repeat(2, 287px); gap: var(--sp-10); }
+.mega-menu__col { display: flex; flex-direction: column; gap: var(--sp-4); }
+
+.menu-card {
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-2);
+  border-radius: var(--r-sm);
+  transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.menu-card:hover { background: var(--bg-2); }
+.menu-card__thumb {
+  width: 56px; height: 56px; flex: none;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  background: var(--white);
+}
+.menu-card__thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Figma 41:1585 — the text column is a fixed 203 x 56 box whose content is
+   top-aligned, not vertically centred against the thumbnail. */
+.menu-card__body {
+  position: relative;
+  display: flex; flex-direction: column;
+  justify-content: flex-start;
+  gap: var(--sp-1);
+  width: 203px; height: 56px;
+}
+.menu-card__title {
+  font-size: var(--fs-body); font-weight: 600; line-height: normal;
+  letter-spacing: .32px; color: var(--text-1);
+}
+.menu-card__desc {
+  font-size: var(--fs-xs); line-height: normal;
+  letter-spacing: .24px; color: var(--text-3);
+}
+
+/* Sits at the top-right of the text column; only shown on hover/focus. */
+.menu-card__arrow {
+  position: absolute; left: 183px; top: 3px;
+  width: 16px; height: 16px;
+  color: var(--brand-selected);
+  transform: rotate(90deg) scale(.4);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.menu-card__arrow svg { width: 100%; height: 100%; display: block; }
+.menu-card:hover .menu-card__arrow,
+.menu-card:focus-visible .menu-card__arrow { opacity: 1; transform: rotate(90deg) scale(1); }
+
+/* Mobile drawer ----------------------------------------------------------- */
+.mobile-drawer {
+  position: fixed; inset: 0 0 0 auto;
+  width: min(360px, 88vw);
+  background: var(--white);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, .16);
+  padding: var(--sp-6);
+  transform: translateX(100%);
+  transition: transform var(--dur-slow) var(--ease-out);
+  z-index: 150;
+  overflow-y: auto;
+  display: none;
+}
+.mobile-drawer.is-open { transform: translateX(0); }
+.mobile-drawer__section + .mobile-drawer__section { margin-top: var(--sp-6); }
+.mobile-drawer__link {
+  display: block; padding: var(--sp-3) 0;
+  font-size: var(--fs-lead); font-weight: 500;
+  border-bottom: 1px solid var(--stroke-1);
+  transition: color var(--dur) var(--ease), padding-left var(--dur) var(--ease);
+}
+.mobile-drawer__link:hover { color: var(--brand-1); padding-left: var(--sp-2); }
+.mobile-drawer__sub { padding-left: var(--sp-4); }
+
+.scrim {
+  position: fixed; inset: 0;
+  background: rgba(28, 28, 30, .48);
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--dur) var(--ease), visibility var(--dur);
+  z-index: 140;
+}
+.scrim.is-open { opacity: 1; visibility: visible; }
+
+/* --------------------------------------------------------------------------
+   Service card — image with scrim, label, arrow badge, hover reveal
+   -------------------------------------------------------------------------- */
+/* Bento: three independent columns so each card keeps its designed height. */
+.services-bento {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap);
+  align-items: start;
+}
+.services-bento__col { display: flex; flex-direction: column; gap: var(--grid-gap); }
+
+.service-card {
+  position: relative;
+  display: block;
+  height: var(--card-h, 436px);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--bg-2);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.service-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lift); }
+
+/* Hover wash from the design's hover variant (Figma 25:1158): transparent to
+   Primary Brand Color 1 at 60%. The design also puts a 12.5px backdrop blur
+   here, but that softened the photo itself, so the blur is deliberately left
+   off - the colour wash carries the state and the image stays sharp. */
+.service-card__glow {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0, 70, 169, 0) 50%, rgba(0, 70, 169, .6) 100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-slow) var(--ease);
+}
+.service-card:hover .service-card__glow,
+.service-card:focus-within .service-card__glow { opacity: 1; }
+
+.service-card__img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.service-card:hover .service-card__img { transform: scale(1.06); }
+
+.service-card__scrim { position: absolute; inset: 0; background: var(--scrim-card); }
+
+.service-card__badge {
+  position: absolute; top: 28px; right: 28px;
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, .22);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, .35);
+  transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.service-card:hover .service-card__badge { background: var(--white); color: var(--brand-1); }
+.service-card__badge { color: var(--white); }
+.service-card__badge svg { width: 18px; height: 18px; }
+
+.service-card__body {
+  position: absolute; inset: auto 0 0 0;
+  padding: 28px;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.service-card__title {
+  font-size: var(--fs-card);
+  line-height: var(--lh-card);
+  font-weight: 600;
+  color: var(--white);
+}
+.service-card__actions {
+  display: flex; gap: var(--sp-4);
+  margin-top: var(--sp-6);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.service-card:hover .service-card__actions,
+.service-card:focus-within .service-card__actions { opacity: 1; transform: translateY(0); }
+.service-card:hover .service-card__body { transform: translateY(-4px); }
+
+/* Invisible link filling the card, so a click or tap anywhere opens the
+   service page. It comes before the badge and the body in the DOM, and all
+   three are positioned, so those paint above it and keep their own links and
+   hover states exactly as before - this only covers the empty photo area. */
+.service-card__hit { position: absolute; inset: 0; }
+
+/* Touch devices have no hover, so the blue wash and the buttons that a mouse
+   user reveals are shown by default - otherwise they would be unreachable.
+   Keyed to the input device rather than screen width, so it covers tablets. */
+@media (hover: none) {
+  .service-card__glow { opacity: 1; }
+  .service-card__actions { opacity: 1; transform: none; }
+  .service-card__badge { background: var(--white); color: var(--brand-1); }
+}
+
+/* Card actions match the hover variant: 214px filled "Book Now" with the star
+   after the label, 16px gap, then an outlined "Know more". */
+.pill-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--sp-2);
+  height: 40px; padding: 0 var(--sp-3);
+  border-radius: var(--r-md);
+  font-size: var(--fs-sm); font-weight: 600;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.pill-btn--solid { background: var(--white); color: var(--brand-2); flex: 1 1 auto; max-width: 214px; }
+.pill-btn--solid:hover { background: var(--brand-2); color: var(--white); }
+.pill-btn--outline { border: 1px solid var(--white); color: var(--bg-1); font-weight: 500; flex: none; }
+.pill-btn--outline:hover { background: var(--white); color: var(--text-1); }
+
+/* --------------------------------------------------------------------------
+   Building-type card (dark section)
+   -------------------------------------------------------------------------- */
+/* Cards stretch to the tallest in the row and push their link to the bottom,
+   so every "Get Free Quote" lines up regardless of description length. */
+.type-card { display: flex; flex-direction: column; height: 100%; }
+
+.type-card__media {
+  height: 300px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--bg-dark-soft);
+}
+.type-card__media img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.type-card:hover .type-card__media img { transform: scale(1.06); }
+.type-card__title {
+  margin-top: var(--sp-4);
+  font-size: 24px; line-height: 32px; font-weight: 600;
+  color: var(--text-on-dark);
+  transition: color var(--dur) var(--ease);
+}
+.type-card:hover .type-card__title { color: var(--brand-selected); }
+.type-card__desc {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-sm); line-height: 22px;
+  color: var(--text-on-dark-muted);
+}
+.type-card__link { margin-top: auto; padding-top: var(--sp-5); }
+
+/* --------------------------------------------------------------------------
+   Testimonial card
+   -------------------------------------------------------------------------- */
+.testimonial {
+  padding: var(--sp-4);
+  background: var(--white);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.testimonial:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.testimonial__stars { display: flex; gap: 2px; color: var(--star); font-size: 18px; }
+.testimonial__category {
+  margin-top: var(--sp-4);
+  font-size: var(--fs-body); font-weight: 600; color: var(--brand-2);
+}
+.testimonial__quote {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-sm); line-height: 22px; color: var(--text-2);
+}
+.testimonial__client { display: flex; align-items: center; gap: var(--sp-3); margin-top: var(--sp-6); }
+.testimonial__avatar {
+  display: grid; place-items: center;
+  width: 40px; height: 40px; flex: none;
+  border-radius: var(--r-pill);
+  background: #7f9fd4; color: var(--white);
+  font-weight: 600;
+}
+.testimonial__name { font-size: var(--fs-sm); font-weight: 600; }
+.testimonial__role { font-size: var(--fs-xs); color: var(--text-3); }
+
+/* --------------------------------------------------------------------------
+   Form
+   -------------------------------------------------------------------------- */
+.form-card {
+  padding: var(--sp-4) var(--sp-8);
+  border-radius: 16px;
+  border: 1px solid var(--stroke-card);
+  background: var(--white);
+  box-shadow: var(--shadow-form);
+}
+.form-note { display: flex; gap: var(--sp-1); font-size: var(--fs-xs); font-style: italic; color: var(--text-2); }
+.form-note span { color: var(--danger); }
+
+.form-grid { display: grid; gap: var(--sp-4); margin-top: var(--sp-4); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+
+/* Label sits above its control, so nothing competes with the typed value and
+   the example hint can stay visible the whole time. */
+.field { position: relative; }
+
+.field__label {
+  display: block;
+  margin-bottom: var(--sp-2);
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  color: var(--text-2);
+  transition: color var(--dur) var(--ease);
+}
+.field:focus-within .field__label { color: var(--brand-2); }
+.field.has-error .field__label { color: var(--danger); }
+
+.field__wrap { position: relative; }
+
+.field__control {
+  width: 100%; height: 48px;
+  padding: 0 var(--sp-4);
+  background: var(--bg-field);
+  border: 1px solid var(--stroke-field);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-sm);
+  color: var(--text-1);
+  transition: background-color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resize: vertical; }
+
+/* A completed field stays white and is marked by a hairline blue stroke, so
+   answered and empty fields read apart without flooding the form with colour. */
+.field.is-filled .field__control,
+.field--combo.is-filled .combo__control {
+  background: var(--white);
+  border: .5px solid var(--stroke-filled);
+}
+
+.field__control::placeholder {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+}
+
+/* Chrome paints autofilled inputs with its own pale blue wash that no normal
+   background rule can override - only a thick inset shadow wins. */
+.field__control:-webkit-autofill,
+.field__control:-webkit-autofill:hover {
+  -webkit-text-fill-color: var(--text-1);
+  box-shadow: inset 0 0 0 1000px var(--white);
+  transition: background-color 9999s ease-in-out 0s;
+}
+.field__control:-webkit-autofill:focus {
+  box-shadow: inset 0 0 0 1000px var(--white), 0 0 0 3px rgba(0, 79, 191, .12);
+}
+
+.field__control:hover { border-color: var(--text-3); }
+.field__control:focus {
+  outline: 0;
+  background: var(--bg-field);
+  border-color: var(--brand-2);
+  box-shadow: 0 0 0 3px rgba(0, 79, 191, .12);
+}
+.field__control[aria-invalid="true"] { border-color: var(--danger); }
+.field__control[readonly] { cursor: default; color: var(--text-2); }
+
+/* Current-location trigger on the address field */
+.field__geo {
+  position: absolute; right: var(--sp-3); top: 50%;
+  display: grid; place-items: center;
+  width: 30px; height: 30px;
+  margin-top: -15px;
+  border-radius: var(--r-sm);
+  transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.field__geo img { width: 18px; height: 18px; }
+.field__geo:hover { background: rgba(0, 79, 191, .1); transform: scale(1.06); }
+.field__geo.is-busy { animation: geo-pulse 1s linear infinite; }
+.field__geo:disabled { opacity: .5; cursor: progress; }
+@keyframes geo-pulse { 50% { opacity: .35; } }
+.field__wrap:has(.field__geo) .field__control { padding-right: 46px; }
+
+.field__hintline {
+  margin-top: var(--sp-1);
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}
+.field__hintline.is-error { color: var(--danger); }
+
+.field__error {
+  display: none;
+  margin-top: var(--sp-1);
+  font-size: var(--fs-xs); color: var(--danger);
+}
+.field__error.is-shown { display: block; }
+
+/* --------------------------------------------------------------------------
+   Combobox (single select + multi select with chips)
+   -------------------------------------------------------------------------- */
+.combo { position: relative; }
+
+.combo__control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 48px;
+  padding: var(--sp-1) 44px var(--sp-1) var(--sp-3);
+  background: var(--bg-field);
+  border: 1px solid var(--stroke-field);
+  border-radius: var(--r-sm);
+  cursor: text;
+  transition: background-color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+.combo__control:hover { border-color: var(--text-3); }
+.combo.is-open .combo__control,
+.combo__control:focus-within {
+  background: var(--bg-field);
+  border-color: var(--brand-2);
+  box-shadow: 0 0 0 3px rgba(0, 79, 191, .12);
+}
+.field.has-error .combo__control { border-color: var(--danger); }
+
+.combo__chips { display: contents; }
+
+.combo__input {
+  flex: 1 1 90px;
+  min-width: 90px;
+  height: 38px;
+  border: 0; outline: 0; background: transparent;
+  font-size: var(--fs-sm);
+  color: var(--text-1);
+}
+.combo__input::placeholder { color: var(--text-3); font-size: var(--fs-xs); }
+
+/* Clickable: it toggles the panel, so it must receive the pointer. */
+.combo .field__chevron {
+  position: absolute; right: var(--sp-3); top: 24px;
+  width: 24px; height: 24px;
+  margin-top: -12px;
+  padding: 4px;
+  border-radius: var(--r-xs);
+  cursor: pointer;
+  transition: transform var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+.combo .field__chevron:hover { background: rgba(0, 79, 191, .1); }
+.combo.is-open .field__chevron { transform: rotate(180deg); }
+
+/* Chips: amber on arrival, settling to green once the pick is acknowledged. */
+.combo__chip {
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  height: 32px;
+  padding: 0 var(--sp-2) 0 var(--sp-3);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-sm); font-weight: 500;
+  color: var(--text-1);
+  background: rgba(245, 197, 24, .24);
+  border: 1px solid rgba(245, 197, 24, .55);
+  transition: background-color 600ms var(--ease),
+              border-color 600ms var(--ease),
+              color 600ms var(--ease);
+}
+.combo__chip.is-confirmed {
+  background: rgba(15, 157, 104, .14);
+  border-color: rgba(15, 157, 104, .4);
+  color: var(--success);
+}
+.combo__chip-remove {
+  display: grid; place-items: center;
+  width: 20px; height: 20px;
+  border-radius: var(--r-xs);
+  font-size: 16px; line-height: 1;
+  color: currentColor; opacity: .6;
+  transition: opacity var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+.combo__chip-remove:hover { opacity: 1; background: rgba(0, 0, 0, .07); }
+
+/* Panel sits detached from the control with a clear gap. */
+.combo__panel {
+  position: absolute; left: 0; right: 0; top: calc(100% + var(--sp-2));
+  max-height: 264px;
+  overflow-y: auto;
+  padding: var(--sp-2);
+  background: var(--white);
+  border: 1px solid var(--stroke-1);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-menu);
+  z-index: 40;
+}
+.combo__option {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  padding: var(--sp-3);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-sm);
+  color: var(--text-1);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.combo__option:hover,
+.combo__option.is-active { background: var(--bg-2); }
+.combo__option.is-selected { color: var(--brand-2); font-weight: 600; background: var(--bg-2); }
+
+/* 8px between the icon and its label. */
+.combo__option-main { display: flex; align-items: center; gap: var(--sp-2); }
+.combo__icon { width: 18px; height: 18px; flex: none; color: var(--text-3); transition: color var(--dur-fast) var(--ease); }
+.combo__option:hover .combo__icon,
+.combo__option.is-active .combo__icon { color: var(--text-2); }
+.combo__option.is-selected .combo__icon { color: var(--brand-2); }
+.combo__check { width: 16px; height: 16px; flex: none; }
+.combo__chip .combo__icon { width: 16px; height: 16px; color: inherit; opacity: .85; }
+.combo__empty { padding: var(--sp-3); font-size: var(--fs-sm); color: var(--text-3); }
+
+.voice-btn {
+  position: absolute; right: var(--sp-4); bottom: var(--sp-4);
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  height: 32px; padding: 0 var(--sp-3);
+  background: var(--bg-2);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-xs); font-weight: 500; color: var(--brand-2);
+  transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.voice-btn:hover { background: #dbe8ff; transform: translateY(-1px); }
+.voice-btn.is-recording { background: #ffe5e0; color: var(--danger); }
+.voice-btn img { width: 16px; height: 16px; }
+
+/* --------------------------------------------------------------------------
+   Success modal — mirrors "Submission Confirmation" (284:1900)
+   -------------------------------------------------------------------------- */
+.modal {
+  position: fixed; inset: 0;
+  display: grid; place-items: center;
+  padding: var(--sp-6);
+  background: rgba(28, 28, 30, .5);
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--dur) var(--ease), visibility var(--dur);
+  z-index: 200;
+}
+.modal.is-open { opacity: 1; visibility: visible; }
+
+.modal__panel {
+  position: relative;
+  background: var(--white);
+  overflow: hidden;
+  /* The design's 8px halo, carried on both dialogs. */
+  box-shadow: 0 0 0 8px rgba(221, 250, 255, .28), var(--shadow-modal);
+  transform: translateY(16px) scale(.96);
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.modal.is-open .modal__panel { transform: none; }
+
+/* --------------------------------------------------------------------------
+   Submission Confirmation (Figma 284:1900 — 337 x 320)
+   -------------------------------------------------------------------------- */
+/* Widened from the frame's 337px so the body copy settles on two lines
+   instead of three; the vertical rhythm is tightened to match. */
+.sc {
+  width: 400px; max-width: 100%;
+  height: 300px;
+  border-radius: var(--r-md);
+}
+.sc__head {
+  position: relative;
+  height: 80px;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(90deg, var(--stroke-1) 0 1px, transparent 1px 100px);
+}
+/* Blurred green bar bleeding down from the top edge. */
+.sc__glow {
+  position: absolute; left: -2px; top: 0; right: -2px;
+  height: 12px;
+  background: #06c082;
+  filter: blur(40px);
+}
+.sc__tick  { position: absolute; left: 16px; top: 16px; width: 48px; height: 48px; }
+.sc__title {
+  position: absolute; left: 72px; top: 18px; width: 249px;
+  font-size: 20px; font-weight: 600; line-height: normal;
+  letter-spacing: .4px; color: var(--text-1);
+}
+.sc__sub {
+  position: absolute; left: 72px; top: 46px; width: 175px;
+  font-size: var(--fs-xs); line-height: normal;
+  letter-spacing: .24px; color: var(--cta-fill);
+}
+.sc__body {
+  position: absolute; left: 16px; top: 96px; width: 368px;
+  font-size: var(--fs-sm); line-height: 22px;
+  letter-spacing: .28px; color: var(--cta-fill);
+}
+.sc__ref {
+  position: absolute; left: 16px; top: 142px; width: 368px;
+  font-size: var(--fs-xs); letter-spacing: .4px;
+  color: var(--brand-2); font-weight: 600;
+}
+.sc__fallback {
+  position: absolute; left: 16px; top: 212px; width: 368px;
+  font-size: var(--fs-xs); color: var(--text-3);
+  z-index: 2;
+}
+.sc__fallback a { color: var(--brand-2); text-decoration: underline; }
+
+.sc__close {
+  position: absolute; left: 16px; top: 164px;
+  display: flex; align-items: center; justify-content: center;
+  width: 368px; height: 40px;
+  background: var(--white);
+  border: 1px solid var(--cta-outline);
+  border-radius: var(--r-md);
+  font-size: var(--fs-sm); font-weight: 600; color: var(--cta-fill);
+  z-index: 2;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+.sc__close:hover { background: var(--brand-1); border-color: var(--brand-1); color: var(--white); }
+
+/* Height is explicit: the source is landscape, so width alone collapsed these
+   to ~86px and the negative offsets pushed them out of the clipped panel. */
+.sc__art {
+  position: absolute;
+  width: 150px; height: 186px;
+  opacity: .25;
+  object-fit: cover; object-position: bottom center;
+  pointer-events: none;
+}
+.sc__art--a { right: 16px; bottom: -67px; transform: scaleX(-1); }
+.sc__art--b { left: 10px;  bottom: -87px; }
+
+/* --------------------------------------------------------------------------
+   Get in Touch (Figma 197:2134 — 616 x 498)
+   -------------------------------------------------------------------------- */
+.gt {
+  width: 616px; max-width: 100%;
+  padding: var(--sp-6);
+  border-radius: 16px;
+}
+.gt__grid {
+  position: absolute; left: 0; top: 0;
+  width: 100%; height: 160px;
+  object-fit: cover; object-position: left top;
+  pointer-events: none;
+}
+.gt__skyline {
+  position: absolute; right: 0; bottom: -48px;
+  width: 218px; height: 271px;
+  opacity: .25;
+  object-fit: cover; object-position: bottom center;
+  transform: scaleX(-1);
+  pointer-events: none;
+}
+
+.gt__close {
+  position: absolute; right: var(--sp-6); top: var(--sp-6);
+  display: grid; place-items: center;
+  width: 24px; height: 24px;
+  border-radius: var(--r-xs);
+  z-index: 3;
+  transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.gt__close:hover { background: var(--bg-2); transform: rotate(90deg); }
+.gt__close img { width: 24px; height: 24px; }
+
+.gt__brand { position: relative; display: flex; align-items: center; height: 52px; z-index: 2; }
+.gt__mark  { width: 42px; height: 52px; object-fit: contain; }
+.gt__word  { font-family: var(--font-logo); font-size: 16px; letter-spacing: .5px; margin-left: -8px; }
+.gt__word i { font-style: normal; }
+.gt__word .b { color: var(--brand-cyan); }
+.gt__word .c { color: var(--brand-deep); }
+.gt__word .e { color: var(--brand-cyan-2); }
+
+.gt__head { position: relative; margin-top: var(--sp-4); z-index: 2; }
+.gt__title {
+  font-size: 24px; font-weight: 600; line-height: normal;
+  letter-spacing: .48px; color: var(--text-1);
+}
+.gt__sub {
+  margin-top: var(--sp-1);
+  font-size: var(--fs-sm); line-height: normal;
+  letter-spacing: .28px; color: var(--text-2);
+}
+
+.gt__grid-2 {
+  position: relative; z-index: 2;
+  display: grid; grid-template-columns: 164px 1fr; gap: var(--sp-6);
+  margin-top: 36px;
+}
+
+.gt__item { position: relative; z-index: 2; display: flex; flex-direction: column; gap: var(--sp-1); }
+.gt__item--wide { margin-top: var(--sp-6); max-width: 553px; }
+.gt__item-head { display: flex; align-items: center; gap: var(--sp-2); }
+.gt__icon {
+  display: grid; place-items: center;
+  width: 24px; height: 24px; flex: none;
+  background: #f4f9ff;
+  border-radius: var(--r-sm);
+}
+.gt__icon img { width: 16px; height: 16px; }
+.gt__label { font-size: var(--fs-sm); letter-spacing: .28px; color: var(--text-2); }
+.gt__value {
+  font-size: var(--fs-body); font-weight: 500; line-height: 28px;
+  color: var(--text-1);
+}
+.gt__value a { transition: color var(--dur) var(--ease); }
+.gt__value a:hover { color: var(--brand-2); }
+
+.gt__qr {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; gap: var(--sp-2);
+  margin-top: var(--sp-5);
+}
+.gt__qr img { width: 96px; height: 96px; }
+.gt__qr p { width: 96px; font-size: var(--fs-xs); line-height: 20px; color: var(--text-3); }
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+/* Figma 437:1152. The footer is a full-bleed 1440 block with only a 2px top
+   radius - it used to be an inset rounded card. Content sits on the normal
+   104px page margin instead of the card's own 40px padding. */
+.site-footer { background: var(--bg-footer); }
+.site-footer__inner {
+  position: relative;
+  padding-block: var(--sp-12) var(--sp-10);
+  border-radius: 2px 2px 0 0;
+  color: var(--text-on-dark);
+  overflow: hidden;
+}
+/* Figma 136:1782 — a 492 x 12 blue bar blurred 36.5px, bleeding a soft glow
+   out of the top-left corner. */
+.site-footer__accent {
+  position: absolute; top: 0; left: 0;
+  width: 492px; height: 12px; max-width: 70%;
+  background: var(--brand-2);
+  filter: blur(36.5px);
+  pointer-events: none;
+}
+/* Column pitch from the design: inside the 1232 container the tracks begin at
+   633 / 765 / 988 (x=737 / 869 / 1092 on the 1440 canvas), so these fr ratios
+   reproduce them at any width with no gap of their own. */
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 633fr) 132fr 223fr 244fr;
+  gap: 0;
+}
+/* Columns stretch so the seal and the QR can both sit on the bottom edge and
+   line up with each other across the footer. */
+.footer-grid > * { display: flex; flex-direction: column; }
+
+/* No logo mark: the name is the column heading and sits flush on the page
+   margin, so it lines up with the blurb and the seal beneath it. */
+.footer-brand { display: flex; flex-direction: column; gap: var(--sp-1); }
+.footer-brand__name {
+  font-size: var(--fs-lead); font-weight: 700;   /* 18px per Figma 437:1163 */
+  letter-spacing: .4px; text-transform: uppercase;
+  white-space: nowrap;                 /* company name stays on one line */
+}
+.footer-brand__uen {
+  font-size: var(--fs-sm); font-weight: 400;
+  letter-spacing: .3px;
+  color: rgba(255, 255, 255, .75);
+}
+/* Narrow enough to break over three lines, which keeps the brand column a
+   readable measure instead of one long ribbon across the footer. */
+.footer-blurb {
+  margin-top: var(--sp-6); max-width: 300px;
+  font-size: var(--fs-sm); font-weight: 400; line-height: 27px;
+  color: rgba(255, 255, 255, .75);
+}
+/* The design draws the seal at 150px, but that was against a brand column
+   carrying a logo mark and a wider blurb. With neither, 150 read as the
+   heaviest thing in the footer, so it sits at 110 to balance the column. */
+.footer-stamp { margin-top: var(--sp-10); width: 110px; opacity: .9; }
+/* 18px per Figma 437:1165 / 1172 / 1180 / 1193. */
+.footer-heading { font-size: var(--fs-lead); line-height: 27px; font-weight: 600; margin-bottom: var(--sp-5); }
+/* One rhythm for both link columns. The design sets Services to a 20px gap,
+   but that was tuned for its four placeholder rows - with six real services it
+   ran ~95px taller than Quick Links and pulled the footer out of balance. */
+.footer-list { display: flex; flex-direction: column; gap: var(--sp-3); }
+.footer-list a { font-size: var(--fs-sm); color: var(--text-on-dark-muted); transition: color var(--dur) var(--ease), padding-left var(--dur) var(--ease); }
+.footer-list a:hover { color: var(--white); padding-left: var(--sp-1); }
+
+.footer-contact { display: flex; flex-direction: column; gap: var(--sp-3); }
+.footer-contact .contact-chip { color: var(--text-on-dark-muted); font-size: var(--fs-sm); font-weight: 400; }
+.footer-contact .contact-chip:hover { color: var(--white); }
+/* Chips keep their light fills from the design: pale blue for phone/email,
+   white for the location pin. They were washed out to 10% white before. */
+.footer-contact .contact-chip__icon { background: var(--bg-2); }
+.footer-address__icon {
+  display: grid; place-items: center;
+  width: 24px; height: 24px; flex: none;
+  background: var(--white);
+  border-radius: var(--r-sm);
+}
+.footer-address__icon img { width: 16px; height: 16px; }
+.footer-address {
+  display: flex; gap: var(--sp-3);
+  font-size: var(--fs-sm); font-weight: 400; line-height: 28px;
+  color: var(--text-on-dark-muted); max-width: 244px;   /* Figma 437:1192 */
+}
+
+.footer-qr { display: flex; align-items: center; gap: var(--sp-4); margin-top: auto; padding-top: var(--sp-6); }
+.footer-qr img { width: 80px; height: 80px; border-radius: var(--r-sm); background: var(--white); padding: 4px; }
+.footer-qr span { font-size: var(--fs-sm); font-weight: 400; color: var(--text-on-dark-muted); max-width: 100px; }
+
+.footer-rule { height: 1px; background: var(--stroke-on-dark); margin-block: var(--sp-12) var(--sp-6); }
+.footer-base { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-6); }
+.footer-copy { font-size: var(--fs-sm); font-weight: 400; color: var(--text-on-dark-muted); }
+
+/* --------------------------------------------------------------------------
+   Loading overlay
+
+   Optional and deliberately slow to appear - BCE.loader.show() waits before
+   revealing anything, so work that finishes quickly never flashes a loader.
+   Driven entirely from JS; see BCE.loader in js/components.js.
+   -------------------------------------------------------------------------- */
+.loader {
+  position: fixed; inset: 0; z-index: 9000;
+  display: grid; place-items: center;
+  background: rgba(252, 253, 255, .55);
+  -webkit-backdrop-filter: blur(10px) saturate(1.1);
+          backdrop-filter: blur(10px) saturate(1.1);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+}
+.loader.is-open { opacity: 1; }
+
+/* A frosted card, so the panel still reads over a photo or a dark band. */
+.loader__panel {
+  display: grid; justify-items: center;
+  width: min(300px, calc(100vw - var(--sp-12)));
+  padding: var(--sp-8) var(--sp-6);
+  background: rgba(255, 255, 255, .72);
+  border: 1px solid rgba(255, 255, 255, .85);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lift);
+  -webkit-backdrop-filter: blur(6px);
+          backdrop-filter: blur(6px);
+}
+.loader__logo { display: block; width: auto; height: 52px; }
+
+.loader__track {
+  width: 100%; height: 6px;
+  margin-top: var(--sp-6);
+  background: rgba(28, 28, 30, .1);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+.loader__fill {
+  display: block; height: 100%; width: 0;
+  background: var(--progress-green);
+  border-radius: inherit;
+  transition: width .3s var(--ease-out);
+}
+.loader__label {
+  margin-top: var(--sp-4);
+  font-size: var(--fs-sm); font-weight: 500;
+  letter-spacing: .3px; color: var(--text-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader, .loader__fill { transition: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Intro loader (Figma 438:1536)
+
+   A 2.5s white curtain: the skyline rises, the mark fades in, the cyan rule
+   fills, then the whole thing lifts away. The sequence is pure CSS using
+   animation-fill-mode: forwards, so the site is revealed even if the script
+   never runs - main.js only removes the dead node afterwards.
+
+   An inline <head> script adds .intro-seen before first paint on repeat
+   navigations, so the curtain never flashes when it is meant to be skipped.
+   -------------------------------------------------------------------------- */
+/* Sequence, 4s end to end:
+     0.12s  skyline panels fade up, staggered 0.12s apart
+     0.45s  mark fades in from nothing, easing out of a slight scale
+     1.25s  cyan rule draws out from its centre
+     1.65s  tagline springs up from behind that rule
+     1.95s  a highlight sweeps the rule on a loop, so the hold is not dead
+     3.45s  curtain fades away over 0.55s                                  */
+.intro {
+  /* The skyline is laid out against a stage capped at the design canvas, not
+     the viewport. Without the cap a 1920 screen drew every building 1.33x
+     larger than drawn, which is what made the art look coarse and oversized. */
+  --stage: min(100vw, 1440px);
+
+  position: fixed; inset: 0; z-index: 9999;
+  display: grid; justify-items: center; align-content: start;
+  padding-top: clamp(48px, 9.5vh, 110px);
+  background: var(--white);
+  overflow: hidden;
+  animation: intro-out .55s cubic-bezier(.4, 0, .2, 1) 3.45s forwards;
+}
+.intro-seen .intro { display: none; }
+@keyframes intro-out {
+  to { opacity: 0; visibility: hidden; transform: scale(1.03); }
+}
+
+/* Three panels of the same line art, bottom-anchored. Every width, height and
+   offset is a fraction of --stage, so the composition holds the design's exact
+   proportions and stops growing past 1440. Each panel is placed from the
+   centre (its design centre offset minus half its width) rather than from an
+   edge, which keeps the group centred with symmetric margins on wide screens.
+
+   On exit the panels drift down while the mark lifts away - the two layers
+   part at different speeds, which is the parallax hand-off to the page. */
+.intro__sky {
+  position: absolute; bottom: 0; left: 50%;
+  opacity: 0;
+  animation: intro-rise 1.1s cubic-bezier(.22, .61, .36, 1) .12s forwards,
+             intro-sky-out .75s cubic-bezier(.4, 0, .2, 1) 3.3s forwards;
+}
+.intro__sky img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: bottom; }
+.intro__sky--a { width: calc(.5214 * var(--stage)); height: calc(.3747 * var(--stage)); margin-left: calc(-.5459 * var(--stage)); }
+.intro__sky--b { width: calc(.2104 * var(--stage)); height: calc(.3750 * var(--stage)); margin-left: calc(-.0243 * var(--stage)); animation-delay: .24s, 3.36s; }
+.intro__sky--c { width: calc(.3600 * var(--stage)); height: calc(.4474 * var(--stage)); margin-left: calc( .1858 * var(--stage)); animation-delay: .36s, 3.42s; }
+.intro__sky--c img { transform: scaleX(-1); }     /* mirrored, as in the design */
+@keyframes intro-rise {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: .5; transform: none; }
+}
+@keyframes intro-sky-out {
+  to { opacity: 0; transform: translateY(9%); }
+}
+
+/* Lifts away as the skyline sinks - opposing directions read as depth. */
+.intro__brand {
+  position: relative; z-index: 1; display: grid; justify-items: center;
+  animation: intro-brand-out .6s cubic-bezier(.4, 0, .2, 1) 3.4s forwards;
+}
+@keyframes intro-brand-out {
+  to { opacity: 0; transform: translateY(-36px); }
+}
+.intro__logo {
+  display: block; width: auto; height: 84px;
+  opacity: 0;
+  animation: intro-mark .8s cubic-bezier(.22, .61, .36, 1) .45s forwards;
+}
+@keyframes intro-mark {
+  from { opacity: 0; transform: scale(.94); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* 65 x 4 cyan rule. It draws out from the centre rather than filling left to
+   right, then a highlight sweeps along it for the rest of the hold so a 5s
+   curtain never looks frozen. */
+.intro__bar {
+  width: 65px; height: 4px; margin-top: 36px;
+  background: linear-gradient(90deg, #42d7f0 0 35%, #bff2fb 50%, #42d7f0 65% 100%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  transform: scaleX(0);
+  animation: intro-draw .55s cubic-bezier(.22, .61, .36, 1) 1.25s forwards,
+             intro-sweep 1.4s linear 1.95s infinite;
+}
+@keyframes intro-draw  { to { transform: scaleX(1); } }
+@keyframes intro-sweep { to { background-position: -200% 0; } }
+
+/* The tagline springs up from behind the rule: the mask clips it until it
+   clears, and the overshoot in the curve gives the bounce. */
+.intro__tagline {
+  overflow: hidden;
+  margin-top: var(--sp-4);
+}
+.intro__tagline span {
+  display: block;
+  font-size: 13px; font-weight: 500;
+  letter-spacing: 1.6px; white-space: nowrap;
+  color: var(--text-2);
+  transform: translateY(110%);
+  animation: intro-spring .75s cubic-bezier(.34, 1.56, .64, 1) 1.65s forwards;
+}
+@keyframes intro-spring { to { transform: none; } }
+
+/* The page half of the parallax. main.js sets .intro-exit while the curtain is
+   still fading, so the site rises into place behind it instead of appearing
+   after it. Keyed off a class, so with scripting off the page is simply there
+   and nothing animates. */
+.intro-exit .site-header,
+.intro-exit main {
+  animation: intro-page-in .8s cubic-bezier(.22, .61, .36, 1) both;
+}
+.intro-exit main { animation-delay: .06s; }
+@keyframes intro-page-in {
+  from { opacity: 0; transform: translateY(26px) scale(.994); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro__sky, .intro__logo, .intro__tagline span, .intro__brand {
+    animation-duration: .01ms; animation-delay: 0s;
+  }
+  .intro__bar { animation: intro-draw .01ms linear forwards; }   /* no sweep */
+  .intro { animation-delay: 1.2s; }    /* still clears, just without the build */
+  .intro-exit .site-header, .intro-exit main { animation: none; }
+}
+.footer-legal { display: flex; gap: var(--sp-6); }
+.footer-legal a { font-size: var(--fs-sm); font-weight: 400; color: var(--text-on-dark-muted); transition: color var(--dur) var(--ease); }
+.footer-legal a:hover { color: var(--white); }
+
+/* --------------------------------------------------------------------------
+   Back-to-top
+   -------------------------------------------------------------------------- */
+.to-top {
+  position: fixed; right: var(--sp-8); bottom: var(--sp-8);
+  display: grid; place-items: center;
+  width: 48px; height: 48px;
+  background: var(--cta-fill); color: var(--white);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-lift);
+  opacity: 0; visibility: hidden; transform: translateY(12px);
+  transition: opacity var(--dur) var(--ease), visibility var(--dur),
+              transform var(--dur) var(--ease), background-color var(--dur) var(--ease);
+  z-index: 90;
+}
+.to-top.is-shown { opacity: 1; visibility: visible; transform: none; }
+.to-top:hover { background: var(--brand-2); transform: translateY(-3px); }

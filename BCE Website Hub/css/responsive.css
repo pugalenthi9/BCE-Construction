@@ -1,0 +1,301 @@
+/* ==========================================================================
+   BCE — Responsive
+   Margin ladder:  104px (desktop / large laptop, as designed)
+                    64px (small laptop)
+                    40px (tablet)
+                    20px (mobile)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Small laptop / large tablet landscape  (1024 – 1279)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1279px) {
+  :root {
+    --page-margin: 64px;
+    --section-pad-y: 80px;
+    --fs-hero: 48px;  --lh-hero: 62px;
+    --fs-hero-sub: 26px; --lh-hero-sub: 30px;
+    --fs-h2: 40px;    --lh-h2: 50px;
+    --fs-h3: 32px;    --lh-h3: 44px;
+    --fs-card: 30px;  --lh-card: 40px;
+  }
+
+  .hero__banner { height: auto; min-height: 150px; padding: var(--sp-4) var(--sp-6); }
+  .hero__tick { display: none; }
+  /* Title stays on one line here - the cqi rule shrinks it to fit the banner. */
+
+  .nav-menu { margin-left: var(--sp-6); gap: var(--sp-5); }
+  .nav-search { width: 220px; }
+  .mega-menu { left: -180px; }
+
+  .about { grid-template-columns: 380px 1fr; gap: var(--sp-16); }
+  .collage { transform: scale(.86); transform-origin: left center; }
+
+  .contact { grid-template-columns: 380px 1fr; gap: var(--sp-16); }
+  .connect__grid { grid-template-columns: 320px minmax(0, 1fr); gap: var(--sp-12); }
+  .connect__photo { height: 480px; }
+  .process__stage { grid-template-columns: 380px 1fr; }
+  .process__photo { width: calc(100% - 150px); height: 480px; }
+
+  /* Banner keeps the design ratio but scales with the container. */
+  .cta-banner__inner { height: 380px; padding: 56px 44px; }
+  .cta-banner__title { font-size: 40px; }
+  .cta-banner__eyebrow { font-size: var(--fs-lead); }
+  .cta-banner__photo { width: 620px; height: 420px; margin-left: 0; }
+
+  .service-hero { min-height: 500px; }
+  .service-hero__inner { gap: var(--sp-12); padding-block: 72px 0; }
+  .service-hero__title { font-size: 56px; letter-spacing: 1px; }
+  .service-hero__lead { margin-top: var(--sp-12); }
+
+  .founder-band { padding-block: var(--sp-20); }
+  .founder { grid-template-columns: 180px 1fr; gap: var(--sp-16); }
+  .founder__quote { font-size: 36px; }
+  .provide__grid { grid-template-columns: repeat(2, 1fr); }
+  .provide { min-height: 0; padding-bottom: 180px; }
+  .provide .section-title { font-size: 36px; max-width: 460px; }
+  /* Below the design width the fixed offset no longer lines up, so the sketch
+     is anchored to the section's bottom edge instead. */
+  .provide__art { top: auto; bottom: 0; width: 480px; height: 370px; }
+  .footer-grid { grid-template-columns: 1.4fr .8fr .8fr 1.2fr; gap: var(--sp-8); }
+  /* Narrower column: shrink the name rather than let nowrap overflow. */
+  .footer-brand__name { font-size: var(--fs-body); }
+
+  /* About page bands. Four 274px value columns need 1228px, so they pair up
+     below the design width; the MD quote drops its 94px inset. */
+  .value-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-10) 44px; }
+  .md__body, .md__person { margin-left: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Tablet  (768 – 1023)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  :root {
+    --page-margin: 40px;
+    --section-pad-y: 64px;
+    --grid-gap: 24px;
+    --fs-hero: 40px;  --lh-hero: 52px;
+    --fs-h2: 34px;    --lh-h2: 44px;
+  }
+
+  /* Nav collapses to the drawer */
+  .nav-menu,
+  .nav-search,
+  .navbar .btn--sm { display: none; }
+  .nav-toggle { display: grid; }
+  .nav-actions { margin-left: auto; }
+  .mobile-drawer { display: block; }
+
+  .utility-bar__region { display: none; }
+  .utility-bar__inner { justify-content: center; }
+  .utility-bar__contacts { gap: var(--sp-4); }
+
+  .hero { padding-top: var(--sp-8); }
+  .hero__tagline { position: static; transform: none; text-align: center; white-space: normal; margin-bottom: var(--sp-2); }
+  .hero__titles { justify-content: center; text-align: center; flex-wrap: nowrap; }
+  .hero__certified { justify-content: center; }
+  .hero__banner { text-align: center; }
+  .hero__skyline { display: none; }
+
+  /* Two-up grids */
+  .grid-3,
+  .feature-grid,
+  .value-grid,
+  .works-grid,
+  .testimonials__grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Bento collapses to two columns; the third column's cards follow on. */
+  .services-bento { grid-template-columns: repeat(2, 1fr); }
+  .service-card { height: 360px; }
+  .type-card__media { height: 300px; }
+
+  /* Process card stops overlapping and stacks over the photo */
+  .process__stage { grid-template-columns: 1fr; gap: var(--sp-6); }
+  .process__photo { grid-column: 1; grid-row: 1; width: 100%; height: 340px; justify-self: stretch; }
+  .process__card { grid-row: 2; }
+
+  .about { grid-template-columns: 1fr; gap: var(--sp-12); }
+  .collage { transform: none; height: 460px; max-width: 449px; margin-inline: auto; }
+  .about__stats { gap: var(--sp-10); }
+
+  .contact { grid-template-columns: 1fr; gap: var(--sp-12); }
+  .location { grid-template-columns: 1fr; gap: var(--sp-10); }
+
+  .connect__grid { grid-template-columns: 1fr; gap: var(--sp-10); }
+  .connect__photo { height: 420px; }
+  .connect__title, .visit__title { font-size: 34px; line-height: 44px; }
+  .mapview { height: 440px; }
+  .mapview__details { width: auto; right: var(--sp-4); left: var(--sp-4); top: var(--sp-4); }
+  .mapview__zoom { display: none; }
+  .mapview__pin { top: 68%; }
+  .founder { grid-template-columns: 1fr; gap: var(--sp-8); }
+
+  .compare { height: 420px; }
+
+  /* Photo drops out below the banner's two-column width; copy takes the panel. */
+  .cta-banner__inner { height: auto; padding: var(--sp-10); }
+  .cta-banner__copy { max-width: 100%; }
+  .cta-banner__photo { display: none; }
+  .cta-banner__title { font-size: var(--fs-h2); line-height: var(--lh-h2); }
+  .cta-banner__eyebrow { font-size: var(--fs-body); }
+
+  .service-hero { min-height: 420px; }
+  .service-hero__inner { grid-template-columns: 1fr; gap: var(--sp-6); padding-block: 56px var(--sp-12); }
+  .service-hero__lead { margin-top: 0; text-align: left; }
+  .service-hero__title { font-size: 40px; letter-spacing: .5px; }
+
+  .founder-band { padding-block: var(--sp-16); }
+  .founder { grid-template-columns: 1fr; gap: var(--sp-8); }
+  .founder__quote { font-size: 28px; }
+  .founder__body { text-align: left; }
+  .provide__art { display: none; }
+
+  .other-buildings { flex-direction: column; align-items: flex-start; gap: var(--sp-6); }
+
+  .footer-grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-10); }
+  .footer-base { flex-direction: column; align-items: flex-start; gap: var(--sp-4); }
+  /* Two-up columns are too narrow to hold the name on one line. */
+  .footer-brand__name { white-space: normal; font-size: var(--fs-body); }
+  .footer-stamp, .footer-qr { margin-top: var(--sp-8); }
+}
+
+/* --------------------------------------------------------------------------
+   Mobile  (< 768)
+   -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  :root {
+    --page-margin: 20px;
+    --section-pad-y: 48px;
+    --grid-gap: 16px;
+    --fs-hero: 30px;  --lh-hero: 40px;  --ls-hero: .5px;
+    --fs-hero-sub: 18px; --lh-hero-sub: 24px;
+    --fs-h2: 26px;    --lh-h2: 34px;
+    --fs-h3: 24px;    --lh-h3: 32px;
+    --fs-card: 24px;  --lh-card: 32px;
+    --fs-stat: 30px;
+    --fs-lead: 16px;  --lh-lead: 24px;
+    --nav-h: 64px;
+  }
+
+  .utility-bar { height: auto; padding-block: var(--sp-2); font-size: var(--fs-xs); }
+  .utility-bar__contacts { flex-direction: column; gap: var(--sp-1); align-items: center; }
+
+  .brand__mark { width: 44px; height: 42px; }
+
+  .hero__lead { margin-top: var(--sp-4); }
+  .hero__actions { flex-direction: column; align-items: stretch; margin-top: var(--sp-6); }
+  .hero__actions .btn { width: 100%; }
+  .hero__glyph { display: none; }
+  .hero__slide { width: 170px; height: 250px; }
+
+  /* Below tablet a single line would shrink the name past readability, so the
+     row is allowed to wrap here - the only breakpoint where it does. */
+  .hero__titles { flex-wrap: wrap; white-space: normal; font-size: var(--fs-hero); }
+  .hero__title { white-space: normal; }
+
+  /* Single column everywhere */
+  .grid-3,
+  .grid-2,
+  .feature-grid,
+  .value-grid,
+  .works-grid,
+  .testimonials__grid { grid-template-columns: 1fr; }
+  .grid-3 { gap: var(--sp-10); }
+
+  /* About page bands at phone width */
+  .values-band__title { font-size: 28px; margin-bottom: var(--sp-8); }
+  .value-grid { gap: var(--sp-8); }
+  .value__title { font-size: 22px; }
+  .md__quote { font-size: 18px; }
+  .md__mark { font-size: 24px; }
+
+  .services-bento { grid-template-columns: 1fr; }
+  .service-card { height: 300px; }
+  .service-card__body { padding: var(--sp-5); }
+  /* The always-on state for touch now lives in components.css under
+     @media (hover: none), so it covers tablets too, not just phone widths. */
+  .type-card__media { height: 240px; }
+
+  .section-head { margin-bottom: var(--sp-10); }
+
+  .process__card { padding: var(--sp-5); }
+  .process__photo { height: 240px; }
+  .process__num { width: 44px; height: 40px; font-size: var(--fs-lead); }
+
+  .collage { height: 320px; max-width: 320px; }
+  .collage__item--a { width: 176px; height: 176px; top: 4px; }
+  .collage__item--b { left: 190px; top: 52px;  width: 128px; height: 128px; }
+  .collage__item--c { left: 32px;  top: 192px; width: 128px; height: 128px; }
+  .collage__item--d { left: 176px; top: 192px; width: 96px;  height: 96px; }
+
+  .about__stats { flex-wrap: wrap; gap: var(--sp-6) var(--sp-10); }
+  .about__actions,
+  .cta-banner__actions,
+  .service-hero__actions { flex-direction: column; align-items: stretch; }
+  .about__actions .btn,
+  .cta-banner__actions .btn,
+  .service-hero__actions .btn { width: 100%; }
+
+  .compare { height: 300px; border-radius: var(--r-md); }
+  .compare__badge { top: var(--sp-4); font-size: var(--fs-sm); padding: var(--sp-2); }
+  .compare__grip { top: 40px; }
+
+  .form-card { padding: var(--sp-5); }
+  .form-row { grid-template-columns: 1fr; }
+  textarea.field__control { height: 140px; }
+
+  /* Background rules read as noise at phone width. */
+  .connect::before,
+  .has-grid::before { display: none; }
+
+  .provide__grid { grid-template-columns: 1fr; }
+  .provide { min-height: 0; padding-bottom: var(--section-pad-y); }
+  .provide .section-title { font-size: 28px; max-width: none; }
+  .provide__card { padding: var(--sp-4); }
+  .provide__title { font-size: 22px; }
+  .service-hero__title { font-size: 28px; line-height: 38px; }
+  .cta-banner__inner { padding: var(--sp-6); border-radius: var(--r-md); }
+  .founder__quote { font-size: var(--fs-lead); line-height: 28px; }
+  .connect__photo { height: 300px; }
+  .connect__title, .visit__title { font-size: 26px; line-height: 34px; }
+  .mapview { height: 380px; border-radius: var(--r-md); }
+  .mapview__details { padding: var(--sp-4); }
+  .mapview__heading { font-size: var(--fs-body); }
+
+  .service-hero__title { font-size: 32px; line-height: 42px; }
+  .service-hero { min-height: 440px; }
+
+  .cta-banner__inner { padding: var(--sp-6); }
+  .other-buildings { padding: var(--sp-6); }
+  .other-buildings__icon { width: 88px; height: 88px; }
+  .other-buildings__icon > img:not(.other-buildings__glow) { width: 48px; height: 48px; }
+  /* Narrow card: the art would otherwise sit right under the copy. */
+  .other-buildings__skyline { width: 260px; height: 150px; opacity: .22; }
+
+  .site-footer__inner { padding: var(--sp-6); }
+  .footer-grid { grid-template-columns: 1fr; gap: var(--sp-8); }
+  .footer-stamp { width: 88px; }
+  .footer-legal { flex-wrap: wrap; gap: var(--sp-4); }
+
+  .to-top { right: var(--sp-4); bottom: var(--sp-4); width: 44px; height: 44px; }
+
+  /* Both dialogs drop their fixed geometry and stack on small screens. */
+  .gt { padding: var(--sp-5); }
+  .gt__grid-2 { grid-template-columns: 1fr; gap: var(--sp-5); margin-top: var(--sp-6); }
+  .gt__skyline { display: none; }
+  .gt__title { font-size: 20px; }
+  .gt__close { right: var(--sp-5); top: var(--sp-5); }
+
+  .sc { height: auto; padding-bottom: 120px; }
+  .sc__body  { position: static; width: auto; padding: var(--sp-5) var(--sp-4) 0; }
+  .sc__close { position: static; width: auto; margin: var(--sp-5) var(--sp-4) 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Very small phones
+   -------------------------------------------------------------------------- */
+@media (max-width: 400px) {
+  :root { --page-margin: 16px; }
+  .hero__slide { width: 148px; height: 220px; }
+}

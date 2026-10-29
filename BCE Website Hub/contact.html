@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact Us — Bala Construction &amp; Engineering Pte Ltd</title>
+<meta name="description" content="Connect with the BCE team for construction, renovation, aircon, electrical, painting, demolition and waterproofing work in Singapore. Submit an enquiry and we will respond within the hour.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="images/brand/favicon-32.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="images/brand/favicon-180.png?v=3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/sections.css">
+<link rel="stylesheet" href="css/responsive.css">
+<script>try{var f='bce-intro',s=sessionStorage.getItem(f)==='1',x=/[?&]intro=1/.test(location.href);if(s&&!x){document.documentElement.classList.add('intro-seen')}else{sessionStorage.setItem(f,'1')}}catch(e){}</script>
+</head>
+<body data-active-nav="Contact Us">
+
+<!-- Intro loader (Figma 438:1536) - a 2.5s curtain, removed by main.js -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro__sky intro__sky--a"><img src="images/intro/skyline-a.webp" alt=""></div>
+  <div class="intro__sky intro__sky--b"><img src="images/intro/skyline-b.webp" alt=""></div>
+  <div class="intro__sky intro__sky--c"><img src="images/intro/skyline-c.webp" alt=""></div>
+  <div class="intro__brand">
+    <img class="intro__logo" src="images/brand/bce-logo.webp" alt="Bala Construction &amp; Engineering">
+    <span class="intro__bar"></span>
+    <p class="intro__tagline"><span>Quality - Innovation - Team Work - Passion</span></p>
+  </div>
+</div>
+
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-component="site-header"></header>
+
+<main id="main">
+
+  <!-- ===== Connect with us (Figma "Grid lines" 43:1656) ================== -->
+  <section class="connect has-grid">
+    <div class="container connect__grid">
+
+      <div class="connect__intro" data-reveal="left">
+        <h1 class="connect__title">Connect with us</h1>
+        <p class="connect__lead">
+          Tell us what needs doing and the BCE team will come back to you with a clear quote.
+        </p>
+        <figure class="connect__photo">
+          <img src="images/misc/contact-site-office.webp"
+               alt="A BCE coordinator taking a call at the site office" loading="lazy">
+        </figure>
+      </div>
+
+      <div class="form-card" id="enquiry" data-reveal="right">
+        <form data-enquiry-form novalidate>
+          <div data-render="enquiry-fields" data-form-scope="contact"></div>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== Visit us at our location (Figma 1:10645) ====================== -->
+  <section class="visit">
+    <div class="container">
+      <div class="section-head section-head--center" data-reveal>
+        <h2 class="visit__title">Visit us at our location</h2>
+        <p class="visit__lead">
+          Find us at Suntec Tower One, or call ahead and we&rsquo;ll come to you.
+        </p>
+      </div>
+
+      <div class="mapview" data-reveal="scale">
+        <img class="mapview__img" src="images/contact/map.webp"
+             alt="Map showing the BCE office at Suntec Tower One, Singapore" loading="lazy">
+        <span class="mapview__tint"></span>
+
+        <div class="mapview__details">
+          <h3 class="mapview__heading">Contact Details</h3>
+          <a class="mapview__row" href="tel:+6598945223">
+            <span class="mapview__icon"><img src="images/icons/phone.svg" alt=""></span>
+            <span>+65 98945223</span>
+          </a>
+          <a class="mapview__row" href="mailto:balaceplsg@gmail.com">
+            <span class="mapview__icon"><img src="images/icons/email.svg" alt=""></span>
+            <span>balaceplsg@gmail.com</span>
+          </a>
+
+          <h3 class="mapview__heading mapview__heading--spaced">Location</h3>
+          <p class="mapview__row mapview__row--static">
+            <span class="mapview__icon"><img src="images/icons/pin.svg" alt=""></span>
+            <span>7 Temasek Boulevard #12-07 Suntec Tower One, Singapore - 038987</span>
+          </p>
+        </div>
+
+        <div class="mapview__zoom">
+          <button type="button" class="mapview__zoom-btn" data-map-zoom="in"  aria-label="Zoom in">
+            <img src="images/icons/plus.svg" alt="">
+          </button>
+          <button type="button" class="mapview__zoom-btn" data-map-zoom="out" aria-label="Zoom out">
+            <img src="images/icons/minus.svg" alt="">
+          </button>
+        </div>
+
+        <span class="mapview__pin" aria-hidden="true">
+          <img src="images/icons/building.svg" alt="">
+        </span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div data-component="site-footer"></div>
+<div data-component="success-modal"></div>
+
+<script src="js/data/site.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/components.js"></script>
+<script src="js/renderers.js"></script>
+<script src="js/dropdown.js"></script>
+<script src="js/mailer.js"></script>
+<script src="js/forms.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
