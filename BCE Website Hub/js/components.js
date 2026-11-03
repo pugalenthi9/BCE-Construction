@@ -130,6 +130,12 @@
 
       return '<div class="scrim" id="drawer-scrim"></div>' +
              '<aside class="mobile-drawer" id="mobile-drawer" aria-label="Menu">' +
+               /* The open drawer covers the navbar toggle, so it carries its own close. */
+               '<div class="mobile-drawer__head">' +
+                 '<button class="mobile-drawer__close" id="drawer-close" type="button" aria-label="Close menu">' +
+                   '<img src="' + url('images/icons/close-line.svg') + '" alt="">' +
+                 '</button>' +
+               '</div>' +
                '<div class="mobile-drawer__section">' + links + '</div>' +
                '<div class="mobile-drawer__section">' +
                  BCE.button({ label: 'Get Quote', icon: 'invoice.svg', href: url('contact.html'), extra: 'btn--block' }) +

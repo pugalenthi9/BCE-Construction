@@ -362,12 +362,43 @@
   box-shadow: -8px 0 32px rgba(0, 0, 0, .16);
   padding: var(--sp-6);
   transform: translateX(100%);
-  transition: transform var(--dur-slow) var(--ease-out);
+  /* Hidden while closed, after the slide-out finishes: otherwise its shadow
+     bleeds onto the page edge, iOS can count it toward page width, and its
+     links stay reachable by keyboard while off screen. */
+  visibility: hidden;
+  transition: transform var(--dur-slow) var(--ease-out), visibility 0s linear var(--dur-slow);
   z-index: 150;
   overflow-y: auto;
+  overscroll-behavior: contain;
   display: none;
 }
-.mobile-drawer.is-open { transform: translateX(0); }
+.mobile-drawer.is-open {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform var(--dur-slow) var(--ease-out), visibility 0s;
+}
+/* Close row: pinned to the top while the link list scrolls. The negative
+   margins pull it over the drawer's padding so its white band runs edge to
+   edge; links then start below it. */
+.mobile-drawer__head {
+  position: sticky; top: calc(var(--sp-6) * -1); z-index: 1;
+  display: flex; justify-content: flex-end;
+  margin: calc(var(--sp-6) * -1) calc(var(--sp-6) * -1) var(--sp-2);
+  padding: var(--sp-3) var(--sp-3) 0;
+  background: var(--white);
+}
+.mobile-drawer__close {
+  display: grid; place-items: center;
+  width: 44px; height: 44px;              /* comfortable touch target */
+  border-radius: var(--r-sm);
+  transition: background-color var(--dur) var(--ease), transform 160ms var(--ease-out);
+}
+.mobile-drawer__close img { width: 28px; height: 28px; }
+.mobile-drawer__close:active { transform: scale(.94); }
+.mobile-drawer__close:focus-visible { outline: 2px solid var(--brand-1); outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) {
+  .mobile-drawer__close:hover { background: var(--bg-2); }
+}
 .mobile-drawer__section + .mobile-drawer__section { margin-top: var(--sp-6); }
 .mobile-drawer__link {
   display: block; padding: var(--sp-3) 0;

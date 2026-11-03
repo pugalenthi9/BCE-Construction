@@ -97,8 +97,26 @@
         toggle.setAttribute('aria-expanded', String(open));
         document.body.style.overflow = open ? 'hidden' : '';
       };
-      toggle.addEventListener('click', function () { setOpen(!drawer.classList.contains('is-open')); });
+      var closeBtn = document.getElementById('drawer-close');
+      /* Focus follows the drawer: into its close button on open, back to the
+         toggle on close, so keyboard and screen-reader users are not stranded. */
+      var close = function () {
+        if (!drawer.classList.contains('is-open')) return;
+        setOpen(false);
+        toggle.focus();
+      };
+      toggle.addEventListener('click', function (e) {
+        var open = !drawer.classList.contains('is-open');
+        setOpen(open);
+        /* Keyboard-activated clicks report detail 0. Only those move focus in;
+           on a tap, Safari would otherwise draw a focus ring on the close. */
+        if (open && closeBtn && e.detail === 0) closeBtn.focus();
+      });
       scrim.addEventListener('click', function () { setOpen(false); });
+      if (closeBtn) closeBtn.addEventListener('click', close);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') close();
+      });
       drawer.addEventListener('click', function (e) {
         if (e.target.closest('a')) setOpen(false);
       });
@@ -302,7 +320,8 @@
         var target = parseInt(el.getAttribute('data-count'), 10);
         var start = performance.now();
         (function step(now) {
-          var t = Math.min((now - start) / 1200, 1);
+          /* rAF stamps can predate `start`; clamp so the first frame never reads "-1+". */
+          var t = Math.min(Math.max((now - start) / 1200, 0), 1);
           var eased = 1 - Math.pow(1 - t, 3);
           el.textContent = Math.round(target * eased) + '+';
           if (t < 1) requestAnimationFrame(step);

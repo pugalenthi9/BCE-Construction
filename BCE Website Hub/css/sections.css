@@ -121,13 +121,20 @@
 }
 
 /* Corner ticks from the design */
+/* The banner reads as a measured frame, and these two squares are its corner
+   handles (as on a design-tool selection). They hang off .hero__frame, which
+   hugs the banner exactly, and are centred on its outer corners, so they stay
+   on the corners at any width or height. They cannot live inside the banner:
+   its overflow: hidden would clip the halves that sit outside the border. */
+.hero__frame { position: relative; }
 .hero__tick {
-  position: absolute;
+  position: absolute; z-index: 3;
   width: 15px; height: 15px;
   background: var(--stroke-hero);
+  pointer-events: none;
 }
-.hero__tick--tl { top: 40px; left: 96px; }
-.hero__tick--br { top: 212px; right: 97px; }
+.hero__tick--tl { top: 0;    left: 0;  transform: translate(-50%, -50%); }
+.hero__tick--br { bottom: 0; right: 0; transform: translate(50%, 50%); }
 
 /* Auto-scrolling gallery — full-bleed, bleeds past both edges by design ---- */
 .hero__gallery {

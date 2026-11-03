@@ -299,6 +299,34 @@
     slot.hidden = false;
   }
 
+  /* ---- Deep-link prefill -------------------------------------------------
+     Every service's "Book Now" links here with ?service=<slug> (and building
+     cards with ?type=), so that field arrives filled and the visitor completes
+     the rest. Combo-backed fields need their widget told, not just the hidden
+     input; setValue replaces the selection, so a second Book Now click swaps
+     the service rather than piling up. */
+  function prefill(form, query) {
+    var params = new URLSearchParams(query || '');
+    ['service', 'type'].forEach(function (key) {
+      var val = params.get(key);
+      if (!val) return;
+      var target = form.querySelector('[name="' + (key === 'type' ? 'buildingType' : 'service') + '"]');
+      if (!target) return;
+      var combo = target.closest('.combo');
+      if (combo && combo.__combo) { combo.__combo.setValue(val); }
+      else { target.value = val; syncFilled(target); }
+    });
+  }
+
+  /* For callers that change the query without a page load (the single-file
+     preview's hash router). `scope` keeps it to one view's form, so the
+     Get in Touch modal is left alone. */
+  BCE.prefillEnquiry = function (query, scope) {
+    (scope || document).querySelectorAll('form[data-enquiry-form]').forEach(function (form) {
+      prefill(form, query);
+    });
+  };
+
   /* ---- Wire up ---------------------------------------------------------- */
 
   BCE.initForms = function () {
@@ -318,18 +346,8 @@
         });
       });
 
-      /* Deep links carry intent: contact.html?service=aircon&type=Residential.
-         Combo-backed fields need their widget told, not just the hidden input. */
-      var params = new URLSearchParams(window.location.search);
-      ['service', 'type'].forEach(function (key) {
-        var val = params.get(key);
-        if (!val) return;
-        var target = form.querySelector('[name="' + (key === 'type' ? 'buildingType' : 'service') + '"]');
-        if (!target) return;
-        var combo = target.closest('.combo');
-        if (combo && combo.__combo) { combo.__combo.setValue(val); }
-        else { target.value = val; syncFilled(target); }
-      });
+      /* Deep links carry intent: contact.html?service=aircon&type=Residential. */
+      prefill(form, window.location.search);
 
       initVoice(form);
       initGeolocate(form);

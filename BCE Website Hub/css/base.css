@@ -18,6 +18,9 @@ body {
   font-size: var(--fs-body);
   line-height: var(--lh-body);
   -webkit-font-smoothing: antialiased;
+  /* Propagates to the viewport. Keep it `hidden` on body only: `clip` on html
+     or body stops IntersectionObserver firing in Chrome, so nothing with
+     data-reveal would ever appear. Real overflow must be fixed at the source. */
   overflow-x: hidden;
 }
 

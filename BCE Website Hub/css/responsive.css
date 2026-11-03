@@ -21,7 +21,6 @@
   }
 
   .hero__banner { height: auto; min-height: 150px; padding: var(--sp-4) var(--sp-6); }
-  .hero__tick { display: none; }
   /* Title stays on one line here - the cqi rule shrinks it to fit the banner. */
 
   .nav-menu { margin-left: var(--sp-6); gap: var(--sp-5); }
@@ -80,6 +79,11 @@
     --fs-h2: 34px;    --lh-h2: 44px;
   }
 
+  /* Columns stack here, so sideways reveals would push full-width blocks 32px
+     past the screen edge (iOS lets the page pan into that). Rise instead. */
+  .js-reveal [data-reveal="left"],
+  .js-reveal [data-reveal="right"] { transform: translateY(24px); }
+
   /* Nav collapses to the drawer */
   .nav-menu,
   .nav-search,
@@ -93,11 +97,25 @@
   .utility-bar__contacts { gap: var(--sp-4); }
 
   .hero { padding-top: var(--sp-8); }
-  .hero__tagline { position: static; transform: none; text-align: center; white-space: normal; margin-bottom: var(--sp-2); }
+  /* relative, not static: it must keep its z-index to sit above the skylines. */
+  .hero__tagline { position: relative; top: auto; left: auto; transform: none; text-align: center; white-space: normal; margin-bottom: var(--sp-2); }
   .hero__titles { justify-content: center; text-align: center; flex-wrap: nowrap; }
   .hero__certified { justify-content: center; }
   .hero__banner { text-align: center; }
-  .hero__skyline { display: none; }
+  /* Skylines stay, sized to the banner: anchored to the bottom corners, as
+     tall as the banner up to the design's 172px (so the taller phone banner
+     is not filled edge to edge), each capped at 38% of the width so the pair
+     never meets behind the title. Past the cap they crop from the inner edge,
+     keeping the outer towers whole. */
+  .hero__skyline {
+    top: auto; bottom: 0;
+    height: min(100%, 172px); width: auto; max-width: 38%;
+    /* The renders were exported with the banner's top border baked into
+       their top edge. Here they sit lower than the border, so trim it. */
+    clip-path: inset(2px 0 0 0);
+  }
+  .hero__skyline--left  { left: 0;  object-position: left bottom; }
+  .hero__skyline--right { right: 0; object-position: right bottom; }
 
   /* Two-up grids */
   .grid-3,
@@ -117,7 +135,10 @@
   .process__card { grid-row: 2; }
 
   .about { grid-template-columns: 1fr; gap: var(--sp-12); }
-  .collage { transform: none; height: 460px; max-width: 449px; margin-inline: auto; }
+  /* width: 100% matters: every photo is absolutely positioned, so without it
+     the auto margins shrink the box to 0px and park it at the column centre,
+     pushing the photos off the right edge. */
+  .collage { transform: none; width: 100%; height: 460px; max-width: 449px; margin-inline: auto; }
   .about__stats { gap: var(--sp-10); }
 
   .contact { grid-template-columns: 1fr; gap: var(--sp-12); }
@@ -195,6 +216,17 @@
   .hero__titles { flex-wrap: wrap; white-space: normal; font-size: var(--fs-hero); }
   .hero__title { white-space: normal; }
 
+  /* Phone hierarchy: small tagline label -> large company name -> quiet legal
+     suffix -> readable lead. The name scales with the screen (~36px at 375)
+     so it reads as the headline; tighter leading and tracking suit display
+     sizes. Banner padding drops to 16 so "Construction" keeps clear of the edge. */
+  .hero__banner { padding-inline: var(--sp-4); }
+  .hero__tagline { font-size: 13px; line-height: 20px; letter-spacing: .04em; text-wrap: balance; }
+  .hero__titles { font-size: clamp(30px, 9.6vw, 42px); justify-content: center; row-gap: var(--sp-1); }
+  .hero__title { line-height: 1.12; letter-spacing: -.005em; text-wrap: balance; }
+  .hero__suffix { flex-basis: 100%; font-size: var(--fs-sm); line-height: 20px; letter-spacing: .04em; }
+  .hero__lead { line-height: 26px; text-wrap: pretty; }
+
   /* Single column everywhere */
   .grid-3,
   .grid-2,
@@ -224,11 +256,13 @@
   .process__photo { height: 240px; }
   .process__num { width: 44px; height: 40px; font-size: var(--fs-lead); }
 
-  .collage { height: 320px; max-width: 320px; }
-  .collage__item--a { width: 176px; height: 176px; top: 4px; }
-  .collage__item--b { left: 190px; top: 52px;  width: 128px; height: 128px; }
-  .collage__item--c { left: 32px;  top: 192px; width: 128px; height: 128px; }
-  .collage__item--d { left: 176px; top: 192px; width: 96px;  height: 96px; }
+  /* A 320 square laid out in percentages, so it scales down on phones whose
+     content area is narrower than 320 instead of running off the screen. */
+  .collage { height: auto; max-width: 320px; aspect-ratio: 1; }
+  .collage__item--a { left: 0;       top: 1.25%;  width: 55%; height: 55%; }
+  .collage__item--b { left: 59.375%; top: 16.25%; width: 40%; height: 40%; }
+  .collage__item--c { left: 10%;     top: 60%;    width: 40%; height: 40%; }
+  .collage__item--d { left: 55%;     top: 60%;    width: 30%; height: 30%; }
 
   .about__stats { flex-wrap: wrap; gap: var(--sp-6) var(--sp-10); }
   .about__actions,
