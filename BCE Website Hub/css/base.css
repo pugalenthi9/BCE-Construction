@@ -74,9 +74,13 @@ a { color: inherit; text-decoration: none; }
 
 /* --------------------------------------------------------------------------
    Background grid rules
-   The design runs six vertical lines behind several sections, starting at 84px
+   The design runs six vertical lines behind several sections, starting at 85px
    on a 254px pitch (Figma lines at 85 / 339 / 593 / 847 / 1101 / 1355 against
    the 1440 frame). Add `has-grid` to any section to pick them up.
+
+   The lines are drawn on a 1440 frame centred in the viewport, the same frame
+   the .container sits in, so they keep their place against the content at any
+   width and meet the dashed lines of the service hero (.service-hero__grid).
    -------------------------------------------------------------------------- */
 .has-grid { position: relative; }
 .has-grid > * { position: relative; }
@@ -85,10 +89,13 @@ a { color: inherit; text-decoration: none; }
   position: absolute; inset: 0;
   background-image: repeating-linear-gradient(
     90deg,
-    transparent 0 84px,
-    var(--grid-line) 84px 85px,
-    transparent 85px 254px
+    transparent 0 85px,
+    var(--grid-line) 85px 86px,
+    transparent 86px 254px
   );
+  background-size: 1440px 100%;
+  background-position: center top;
+  background-repeat: no-repeat;
   pointer-events: none;
 }
 .has-grid--dark::before,

@@ -49,7 +49,8 @@
   .service-hero__lead { margin-top: var(--sp-12); }
 
   .founder-band { padding-block: var(--sp-20); }
-  .founder { grid-template-columns: 180px 1fr; gap: var(--sp-16); }
+  /* 204 holds "Founder & Director" on one line beside the avatar. */
+  .founder { grid-template-columns: 204px 1fr; gap: var(--sp-16); }
   .founder__quote { font-size: 36px; }
   .provide__grid { grid-template-columns: repeat(2, 1fr); }
   .provide { min-height: 0; padding-bottom: 180px; }

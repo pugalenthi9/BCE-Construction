@@ -409,9 +409,20 @@
   color: var(--white);
   isolation: isolate;
 }
+/* The floor's horizon stays 175px above the banner, and the grid is scaled
+   (at its own ratio, so the perspective holds) until its front edge reaches
+   the banner's bottom. Centred, it then covers the full width at every height.
+   max-width: none lifts the global img cap, which had cut it to the left half. */
 .cta-banner__grid {
-  position: absolute; left: -42%; top: -175px;
-  width: 184%; height: 365px;
+  position: absolute; left: 50%; top: -175px;
+  height: calc(100% + 175px); width: auto; max-width: none;
+  aspect-ratio: 2266.89 / 365.5;
+  transform: translateX(-50%);
+  /* The first three rows inside the banner stay solid; the rows below fade
+     out. 61.9% is the SVG's third-row line (y 226.35 of 365.5), so the stop
+     tracks the rows at any banner height. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 61.9%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 61.9%, transparent 100%);
   opacity: .9;
   pointer-events: none;
   z-index: 0;
@@ -662,10 +673,14 @@ a.mapview__row:hover { color: var(--brand-1); }
   background: rgba(28, 28, 30, .9);
   backdrop-filter: blur(2.5px);
 }
+/* Held at the 1440 design width and centred, never stretched to the viewport,
+   so its lines meet the `has-grid` lines of the founder band below. The SVG
+   uses preserveAspectRatio="none", so only its height follows the hero. */
 .service-hero__grid {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
+  position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 1440px; max-width: none; height: 100%;
+  transform: translateX(-50%);
+  object-fit: fill;
   pointer-events: none;
   opacity: .9;
 }
@@ -808,9 +823,11 @@ a.mapview__row:hover { color: var(--brand-1); }
   font-size: var(--fs-body); font-weight: 600;
   letter-spacing: .32px; color: var(--text-2);
 }
+/* One step below the name so it reads as a caption, held on one line. */
 .founder__role {
-  font-size: var(--fs-body); font-weight: 400;
-  letter-spacing: .32px; color: var(--text-2);
+  font-size: var(--fs-sm); font-weight: 400;
+  letter-spacing: .28px; color: var(--text-2);
+  white-space: nowrap;
 }
 /* 44px headline, with the service name picked out in blue. */
 .founder__quote {
@@ -951,6 +968,7 @@ a.mapview__row:hover { color: var(--brand-1); }
 .md__grid {
   position: absolute; top: -193px; left: 50%;
   width: 2267px; margin-left: -1133px;
+  max-width: none;   /* the global img cap had shrunk it to the band width, off centre */
   pointer-events: none; opacity: .5;
 }
 .md { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; }
@@ -972,7 +990,7 @@ a.mapview__row:hover { color: var(--brand-1); }
 .md__photo { width: 56px; height: 56px; flex: none; border-radius: var(--r-md); object-fit: cover; }
 .md__person figcaption { display: flex; flex-direction: column; gap: var(--sp-1); color: #f6f6f6; }
 .md__name { font-size: var(--fs-body); font-weight: 600; letter-spacing: .32px; }
-.md__role { font-size: var(--fs-body); font-weight: 400; letter-spacing: .32px; }
+.md__role { font-size: var(--fs-sm); font-weight: 400; letter-spacing: .28px; white-space: nowrap; }
 
 /* --------------------------------------------------------------------------
    Full-viewport band

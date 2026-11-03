@@ -22,8 +22,8 @@ BCE.company = {
   regNo:     'UEN NO: 202413369H',   /* shown in the footer only, under the company name */
   uen:       '202413369H',
   tagline:   'Quality - Innovation - Team Work - Passion',
-  /* Footer blurb - kept short; the "4+ years" claim must stay. */
-  blurb:     '4+ years of experience delivering residential, commercial and industrial ' +
+  /* Footer blurb - kept short; no year count by owner request. */
+  blurb:     'Proven experience delivering residential, commercial and industrial ' +
              'projects across Singapore.'
 };
 
@@ -271,7 +271,8 @@ BCE.process = [
    real reviews. Replace the entries with quotes BCE has permission to use and
    set the flag to false. Emptying the array instead hides the whole section.
    ########################################################################## */
-BCE.testimonialsAreSamples = true;
+/* Notice hidden at the owner's request (Nov 2026); the quotes are still samples. */
+BCE.testimonialsAreSamples = false;
 
 BCE.testimonials = [
   { category: 'Painting',   stars: 5, name: 'Daniel Tan',  role: 'Homeowner',
@@ -300,7 +301,7 @@ BCE.values = [
   { title: 'Innovation', icon: 'images/values/innovation.svg',
     desc: 'Better methods, not simply more hours. We bring current techniques and the right equipment to each site so the work lasts and the disruption is shorter.' },
   { title: 'Passion',   icon: 'images/values/passion.svg',
-    desc: 'We take the work personally. 4+ years on Singapore sites have not changed the fact that we would rather do a job properly than do it twice.' }
+    desc: 'We take the work personally. Every project we deliver proves the same thing: we would rather do a job properly than do it twice.' }
 ];
 
 /* "Meet our MD" band (Figma 437:1464). The design reads "BEC" here and in the
@@ -309,7 +310,7 @@ BCE.founder = {
   eyebrow: 'MEET OUR MD',
   lead:    'a vision built on trust & quality',
   name:    'Balamurugan',
-  role:    'Director',
+  role:    'Founder & Director',
   photo:   'images/about/md-balamurugan.webp',
   quote:   'At BCE, we believe every successful project begins with trust, thoughtful planning, ' +
            'and a commitment to quality. Our vision is to deliver reliable construction and ' +

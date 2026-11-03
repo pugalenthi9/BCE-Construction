@@ -1047,7 +1047,7 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
 /* Narrow enough to break over three lines, which keeps the brand column a
    readable measure instead of one long ribbon across the footer. */
 .footer-blurb {
-  margin-top: var(--sp-6); max-width: 300px;
+  margin-top: var(--sp-6); max-width: 400px;   /* blurb sets on two lines */
   font-size: var(--fs-sm); font-weight: 400; line-height: 27px;
   color: rgba(255, 255, 255, .75);
 }
