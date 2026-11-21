@@ -226,6 +226,47 @@
   <!-- ===== CTA banner =================================================== -->
   <div data-component="cta-banner"></div>
 
+  <!-- ===== FAQ (Figma 495:1320) ==========================================
+       The stage pins under the navbar while the section scrolls past, and
+       the skyline rises behind the questions (initFaqScene in main.js). The
+       extra scroll that drives it is a runway (.faq::after) after the stage.
+       The skyline comes after the content on purpose: it is a sticky layer
+       that sits on the bottom edge of the screen until the section's own
+       bottom arrives (see .faq__skyline). -->
+  <section class="faq" id="faq" aria-labelledby="faq-title">
+    <div class="faq__stage">
+      <div class="container faq__inner">
+        <div class="faq__head" data-reveal>
+          <span class="faq__tag">FAQ</span>
+          <h2 class="faq__title" id="faq-title">
+            <span class="faq__title-muted">Got Questions?</span> We&rsquo;ve Got Answers.
+          </h2>
+          <p class="faq__lead">
+            Get answers to common questions about our services, pricing, and booking before contacting us.
+          </p>
+        </div>
+
+        <div class="faq__list" data-render="faq" data-reveal></div>
+
+        <div class="faq-cta" data-reveal>
+          <h3 class="faq-cta__title">Still Need Assistance</h3>
+          <p class="faq-cta__text">
+            Can&rsquo;t find the answer you&rsquo;re looking for? Share your requirements with us, and our team will be happy to help.
+          </p>
+          <a class="btn btn--light faq-cta__btn" href="#enquiry">
+            <span class="btn__icon" data-icon="star-fall"></span>
+            <span>Submit Your Query</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="faq__skyline" aria-hidden="true">
+        <img class="faq__bld faq__bld--wide" src="images/faq/skyline-wide.png" alt="" loading="lazy" decoding="async">
+        <img class="faq__bld faq__bld--tall" src="images/faq/skyline-tall.png" alt="" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </section>
+
   <!-- ===== Testimonials ================================================= -->
   <section class="section testimonials" id="testimonials">
     <div class="container">
@@ -240,37 +281,54 @@
   </section>
 
   <!-- ===== Contact ====================================================== -->
-  <section class="section section--tint has-grid" id="contact">
-    <div class="container contact">
-      <div data-reveal="left">
-        <h2 class="contact__heading">Contact Us</h2>
-        <p class="contact__lead">
-          We&rsquo;re here to help! Reach out to the BCE team, and we&rsquo;ll be at your doorstep.
+  <!-- Figma 136:2055 - home only. contact.html keeps its own layout. -->
+  <section class="section section--tint reach" id="contact">
+    <div class="container reach__grid">
+      <div class="reach__info" data-reveal="left">
+        <h2 class="reach__title">Contact Us</h2>
+        <p class="reach__lead">
+          We&rsquo;re here to help! Reach out to the BCE team, and we&rsquo;ll reach your doorstep.
         </p>
 
-        <h3 class="contact__subhead">Contact Details</h3>
-        <div class="contact__list">
-          <a class="contact-chip" href="tel:+6598945223">
-            <span class="contact-chip__icon"><img src="images/icons/phone.svg" alt=""></span>
-            <span>+65 98945223</span>
-          </a>
-          <a class="contact-chip" href="mailto:balaceplsg@gmail.com">
-            <span class="contact-chip__icon"><img src="images/icons/email.svg" alt=""></span>
-            <span>balaceplsg@gmail.com</span>
-          </a>
-        </div>
+        <ul class="reach__list">
+          <li>
+            <a class="reach-line" href="tel:+6598945223">
+              <span class="reach-line__icon"><img src="images/icons/contact-call.svg" alt="" width="32" height="32"></span>
+              <span class="reach-line__body">
+                <span class="reach-line__label">Call</span>
+                <span class="reach-line__value">+65 98945223</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a class="reach-line" href="mailto:balaceplsg@gmail.com">
+              <span class="reach-line__icon"><img src="images/icons/contact-email.svg" alt="" width="32" height="32"></span>
+              <span class="reach-line__body">
+                <span class="reach-line__label">Email</span>
+                <span class="reach-line__value">balaceplsg@gmail.com</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <div class="reach-line reach-line--top">
+              <span class="reach-line__icon"><img src="images/icons/contact-building.svg" alt="" width="32" height="32"></span>
+              <span class="reach-line__body">
+                <span class="reach-line__label reach-line__label--tall">Location</span>
+                <span class="reach-line__value reach-line__value--address">
+                  7 Temasek Boulevard #12-07 Suntec Tower One, Singapore - 038987 Reg No: 202413369H
+                </span>
+              </span>
+            </div>
+          </li>
+        </ul>
 
-        <h3 class="contact__subhead">Location</h3>
-        <p class="contact__address">
-          7 Temasek Boulevard #12-07 Suntec Tower One, Singapore - 038987
-        </p>
-        <img class="contact__qr" src="images/misc/qr-location.webp" alt="QR code linking to the BCE office location">
-        <p class="contact__qr-note">(Scan me for exact location)</p>
+        <p class="reach__qr-note">(Scan me for office location)</p>
+        <img class="reach__qr" src="images/misc/qr-location.svg" alt="QR code linking to the BCE office location" width="152" height="152" loading="lazy">
       </div>
 
-      <div class="form-card" id="enquiry" data-reveal="right">
+      <div class="form-card form-card--compact" id="enquiry" data-reveal="right">
         <form data-enquiry-form novalidate>
-          <div data-render="enquiry-fields" data-form-scope="home"></div>
+          <div data-render="enquiry-fields" data-form-scope="home" data-form-variant="compact"></div>
         </form>
       </div>
     </div>

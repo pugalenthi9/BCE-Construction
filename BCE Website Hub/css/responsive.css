@@ -31,6 +31,7 @@
   .collage { transform: scale(.86); transform-origin: left center; }
 
   .contact { grid-template-columns: 380px 1fr; gap: var(--sp-16); }
+  .reach__grid { grid-template-columns: minmax(0, 380px) minmax(0, 1fr); }
   .connect__grid { grid-template-columns: 320px minmax(0, 1fr); gap: var(--sp-12); }
   .connect__photo { height: 480px; }
   .process__stage { grid-template-columns: 380px 1fr; }
@@ -142,6 +143,8 @@
   .about__stats { gap: var(--sp-10); }
 
   .contact { grid-template-columns: 1fr; gap: var(--sp-12); }
+  .reach__grid { grid-template-columns: 1fr; }
+  .faq { --bld-s: .8; }
   .location { grid-template-columns: 1fr; gap: var(--sp-10); }
 
   .connect__grid { grid-template-columns: 1fr; gap: var(--sp-10); }
@@ -279,6 +282,19 @@
   .form-card { padding: var(--sp-5); }
   .form-row { grid-template-columns: 1fr; }
   textarea.field__control { height: 140px; }
+
+  /* FAQ + Contact Us (home). The skyline shrinks so the drawings still read
+     as a street, not as one building filling the screen. */
+  .faq { --bld-s: .56; }
+  .faq__title { font-size: 28px; line-height: 36px; }
+  .faq__lead { line-height: 24px; }
+  .faq__list { margin-top: var(--sp-8); gap: var(--sp-4); }
+  .faq-cta { margin-top: var(--sp-10); padding: var(--sp-5); border-radius: var(--r-lg); }
+  .faq-cta__title { font-size: 26px; line-height: 34px; }
+  .faq-cta__text { line-height: 20px; }
+  .faq-cta__btn { width: 100%; }
+  .reach__title { font-size: 30px; line-height: 40px; letter-spacing: .4px; }
+  .reach-line__value--address { max-width: none; }
 
   /* Background rules read as noise at phone width. */
   .connect::before,

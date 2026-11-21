@@ -1021,3 +1021,285 @@ a.mapview__row:hover { color: var(--brand-1); }
 .location { display: grid; grid-template-columns: 1fr 400px; gap: var(--sp-16); align-items: center; }
 .location__media { border-radius: var(--r-lg); overflow: hidden; }
 .location__media img { width: 100%; height: 420px; object-fit: cover; }
+
+/* ==========================================================================
+   FAQ - home (Figma 495:1320)
+   The stage is sticky: while the runway after it scrolls past, the questions
+   hold still and the skyline rises out of the stage's bottom edge.
+   initFaqScene (main.js) sets --faq-pin (the runway) and --faq-top (where the
+   stage sticks), and moves each building with transform/opacity only.
+   Without JS, or with reduced motion, both stay 0: a normal static section
+   with the skyline already standing.
+   ========================================================================== */
+.faq {
+  --faq-dur: 300ms;   /* accordion open/close */
+  --bld-s: 1;         /* skyline scale; smaller on narrow screens */
+  position: relative;
+  background: var(--faq-bg);
+}
+/* The runway is in-flow content, not padding: a sticky element can only
+   travel inside its parent's content box. */
+.faq::after { content: ""; display: block; height: var(--faq-pin, 0px); }
+
+/* No overflow clipping here: an overflow:hidden stage would become the
+   skyline's scroll container and stop it sticking to the screen. */
+.faq__stage {
+  position: sticky;
+  top: var(--faq-top, 0px);
+  padding-top: var(--sp-12);
+  background: var(--faq-bg);
+}
+
+/* Skyline - the design's own line drawings, stretched to their Figma frames
+   (object-fit: fill reproduces that), at 50% with layer blur 5. Figma's layer
+   blur value is twice the CSS radius, so 5 there is blur(2.5px) here.
+
+   The layer is the stage's last child, pulled up over the content by its own
+   height, and sticky to the bottom of the screen. So its bottom edge - the
+   ground the buildings stand on - is the bottom of the screen while the
+   section runs past it, and the stage's own bottom (exactly as the 955px
+   frame crops it) once that arrives. Done by the browser's sticky
+   positioning, so it never lags behind the scroll. overflow: clip (not
+   hidden) trims the drawings at that ground line without making a scroll
+   container. */
+.faq__skyline {
+  position: sticky; bottom: 0; z-index: 0;
+  height: calc(600px * var(--bld-s));
+  margin-top: calc(-600px * var(--bld-s));
+  overflow: clip;
+  pointer-events: none;
+}
+.faq__bld {
+  position: absolute;
+  max-width: none;
+  object-fit: fill;
+  opacity: .5;
+  filter: blur(2.5px);
+}
+.faq__bld--wide { left: calc(-375px * var(--bld-s));      bottom: calc(-40.59px * var(--bld-s));
+                  width: calc(750.75px * var(--bld-s));   height: calc(539.59px * var(--bld-s)); }
+/* Mirrored left-to-right, as in the design (rotate 180 + flip Y). The mirror
+   uses the standalone scale property so the JS transform stays translate-only. */
+.faq__bld--tall { right: calc(-154.42px * var(--bld-s));  bottom: calc(-53.26px * var(--bld-s));
+                  width: calc(518.42px * var(--bld-s));   height: calc(644.26px * var(--bld-s));
+                  scale: -1 1; }
+
+/* Set by initFaqScene only while the scene is live, so a static page never
+   holds four promoted layers it does not need. */
+.faq.is-live .faq__bld { will-change: transform, opacity; }
+
+.faq__inner {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; align-items: center;
+  padding-bottom: var(--sp-12);
+}
+
+.faq__head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+
+.faq__tag {
+  display: inline-flex;
+  padding: 7px;                    /* + 1px border = the design's 8px */
+  border: 1px solid var(--stroke-1);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  font-size: var(--fs-xs); font-weight: 500; line-height: 16px; letter-spacing: .24px;
+  color: var(--brand-1);
+}
+
+.faq__title {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-h2); font-weight: 500; line-height: 54px;
+  color: var(--text-1);
+  text-wrap: balance;
+}
+.faq__title-muted { color: var(--text-3); }
+
+.faq__lead {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-sm); line-height: 27px;
+  color: var(--text-3);
+  text-wrap: pretty;
+}
+
+.faq__list {
+  display: flex; flex-direction: column; gap: var(--sp-5);
+  width: 100%; max-width: 632px;
+  margin-top: var(--sp-10);
+}
+
+/* ---- Accordion item ----------------------------------------------------- */
+.faq-item__head { position: relative; margin: 0; font: inherit; }
+
+/* The paler card peeking 8px below each closed question (Figma 505:1403 and
+   its siblings, at 75%) - a stack that reads as more underneath. It tucks
+   away as its item opens. */
+.faq-item__head::before {
+  content: "";
+  position: absolute; left: var(--sp-3); right: var(--sp-3); top: 0; bottom: 0;
+  border: .5px solid var(--stroke-1);
+  border-radius: var(--r-sm);
+  background: var(--white);
+  opacity: .75;
+  transform: translateY(8px);
+  transition: transform var(--faq-dur) var(--ease-out), opacity var(--faq-dur) var(--ease-out);
+}
+.faq-item.is-open .faq-item__head::before { opacity: 0; transform: translateY(0); }
+
+.faq-item__q {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  width: 100%;
+  padding: 11px;                   /* + 1px border = 12px, 51px tall */
+  border: 1px solid var(--stroke-1);
+  border-radius: var(--r-sm);
+  background: var(--white);
+  font-size: var(--fs-sm); line-height: 27px; font-weight: 400;
+  color: var(--text-2);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease),
+              transform 160ms var(--ease-out);
+}
+.faq-item__q:active { transform: scale(.99); }
+.faq-item__q:focus-visible { outline: 2px solid var(--brand-1); outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) {
+  .faq-item__q:hover { border-color: var(--stroke-hero); box-shadow: var(--shadow-card); }
+}
+
+.faq-item__chev {
+  flex: none;
+  width: 20px; height: 20px;
+  transition: transform var(--faq-dur) var(--ease-out);
+}
+.faq-item.is-open .faq-item__chev { transform: rotate(180deg); }
+
+/* Height animates by grid row (0fr -> 1fr): no measuring and no max-height
+   guess. visibility follows the row, so a closed answer leaves the
+   accessibility tree only once it has finished folding away. */
+.faq-item__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows var(--faq-dur) var(--ease-out),
+              visibility 0s linear var(--faq-dur);
+}
+.faq-item.is-open .faq-item__panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition: grid-template-rows var(--faq-dur) var(--ease-out), visibility 0s;
+}
+.faq-item__clip { min-height: 0; overflow: hidden; }
+
+/* The answer card scales up out of its question as the row opens - from 92%,
+   anchored to the top edge so it grows out of the question rather than
+   swelling from its middle. It fades in a beat after the row starts so it
+   arrives into space that already exists, and fades faster on the way out
+   so a closing answer never lingers over the next question. */
+.faq-item__a {
+  margin-top: var(--sp-1);
+  padding: 11px;                   /* + 1px border = 12px */
+  border: 1px solid var(--md-orange);
+  border-radius: var(--r-md);
+  background: var(--white);
+  font-size: var(--fs-sm); line-height: 26px; font-weight: 500;
+  color: var(--text-1);
+  opacity: 0;
+  transform: scale(.92);
+  transform-origin: 50% 0;
+  transition: opacity 160ms var(--ease-out), transform var(--faq-dur) var(--ease-out);
+}
+.faq-item.is-open .faq-item__a {
+  opacity: 1;
+  transform: none;
+  transition: opacity 220ms var(--ease-out) 40ms, transform var(--faq-dur) var(--ease-out);
+}
+
+/* ---- "Still Need Assistance" (Figma 517:1398) ---------------------------- */
+.faq-cta {
+  display: flex; flex-direction: column; align-items: flex-start;
+  width: 100%; max-width: 632px;
+  margin-top: var(--sp-12);
+  padding: var(--sp-6);
+  border-radius: var(--r-xl);
+  background: var(--md-orange);
+  color: var(--white);
+}
+.faq-cta__title { font-size: 36px; font-weight: 500; line-height: 49px; }
+.faq-cta__text  { margin-top: var(--sp-3); font-size: var(--fs-sm); line-height: 19px; }
+.faq-cta__btn   { margin-top: var(--sp-8); }
+
+/* Fewer, gentler: the answers still open, without the slide. */
+@media (prefers-reduced-motion: reduce) {
+  .faq { --faq-dur: 0ms; }
+  .faq-item__a,
+  .faq-item.is-open .faq-item__a { transform: none; transition: opacity 160ms var(--ease-out); }
+}
+
+/* ==========================================================================
+   Contact Us - home (Figma 136:2055)
+   ========================================================================== */
+.reach { padding-block: var(--sp-12); }
+.reach__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 442px) minmax(0, 666px);
+  justify-content: space-between;
+  gap: var(--sp-12);
+  align-items: start;
+}
+
+.reach__title {
+  font-size: var(--fs-h2); font-weight: 600; line-height: 54px; letter-spacing: .8px;
+  color: var(--text-1);
+}
+.reach__lead {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-body); line-height: 22px; letter-spacing: .32px;
+  color: var(--text-2);
+}
+
+.reach__list { margin-top: 28px; border-top: 1px solid var(--stroke-divider); }
+.reach__list li { border-bottom: 1px solid var(--stroke-divider); }
+
+/* 16px above each line, and 16px below it counting the 1px rule - except the
+   first, which the design keeps 4px tighter. */
+.reach-line {
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-4) 0 15px;
+  color: inherit;
+}
+.reach__list li:first-child .reach-line { padding-bottom: 11px; }
+.reach-line--top { align-items: flex-start; }
+
+.reach-line__icon {
+  display: grid; place-items: center; flex: none;
+  width: 48px; height: 48px;
+  border-radius: var(--r-md);
+  background: var(--white);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.reach-line__icon img { width: 32px; height: 32px; }
+
+.reach-line__body { display: flex; flex-direction: column; gap: var(--sp-1); min-width: 0; }
+.reach-line__label {
+  font-size: var(--fs-xs); font-weight: 500; line-height: 16px;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.reach-line__value {
+  font-size: var(--fs-sm); font-weight: 500; line-height: 24px;
+  color: var(--text-1);
+  transition: color var(--dur) var(--ease);
+}
+.reach-line--top .reach-line__body { gap: 0; }
+.reach-line__label--tall { line-height: 28px; }
+.reach-line__value--address { max-width: 320px; line-height: 28px; }
+
+a.reach-line:focus-visible { outline: 2px solid var(--brand-1); outline-offset: 4px; border-radius: var(--r-sm); }
+@media (hover: hover) and (pointer: fine) {
+  a.reach-line:hover .reach-line__value { color: var(--brand-2); }
+  a.reach-line:hover .reach-line__icon  { transform: translateY(-1px); box-shadow: var(--shadow-card); }
+}
+
+.reach__qr-note { margin-top: var(--sp-8); font-size: var(--fs-sm); line-height: 28px; color: var(--text-3); }
+.reach__qr { display: block; width: 152px; height: 152px; margin-top: var(--sp-2); }

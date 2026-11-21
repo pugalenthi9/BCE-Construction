@@ -470,6 +470,135 @@
     });
   }
 
+  /* ---- FAQ accordion (home) --------------------------------------------- */
+
+  /* One answer open at a time: opening a question folds the other away in
+     the same 300ms, so the list's total height barely changes while the
+     stage around it is pinned. The motion itself is all CSS (sections.css). */
+  function initFaq() {
+    var list = document.querySelector('.faq__list');
+    if (!list) return;
+
+    function set(item, open) {
+      item.classList.toggle('is-open', open);
+      item.querySelector('.faq-item__q').setAttribute('aria-expanded', String(open));
+    }
+
+    list.addEventListener('click', function (e) {
+      var btn = e.target.closest('.faq-item__q');
+      if (!btn) return;
+      var item = btn.closest('.faq-item');
+      var open = !item.classList.contains('is-open');
+      list.querySelectorAll('.faq-item.is-open').forEach(function (other) {
+        if (other !== item) set(other, false);
+      });
+      set(item, open);
+    });
+  }
+
+  /* ---- FAQ skyline scene (home) ------------------------------------------ */
+
+  /* The stage pins for a short runway and the four drawings rise out of the
+     ground line as you scroll - each over its own slice of the scroll and
+     from its own depth, so the street assembles front-to-back (parallax)
+     rather than lifting as one sheet. Where that ground line sits (bottom of
+     the screen, or of the section) is CSS's job; see .faq__skyline.
+
+     Scroll-linked, so it is driven from scroll rather than timed; the value
+     is eased toward the scroll position each frame, which keeps wheel steps
+     from reading as jumps. transform and opacity only, on the images
+     themselves - nothing here triggers layout or paint per frame. */
+  function initFaqScene() {
+    var section = document.querySelector('.faq');
+    if (!section || reduceMotion) return;
+    var stage = section.querySelector('.faq__stage');
+    var nav = document.querySelector('.navbar');
+
+    /* [start, end] of each building's slice of progress, and how far below
+       its resting place it starts. Larger drawings travel further. */
+    var PLAN = { wide: [0, .8, 150], tall: [.16, .96, 190] };
+    var parts = [].map.call(section.querySelectorAll('.faq__bld'), function (el) {
+      var p = PLAN[(el.className.match(/faq__bld--(\w+)/) || [])[1]] || [0, 1, 120];
+      return { el: el, from: p[0], to: p[1], rise: p[2] };
+    });
+    if (!stage || !parts.length) return;
+
+    /* start/span are relative to the section's own top, and that top is read
+       live: lazy images above the FAQ keep shifting it after load. */
+    var start = 0, span = 1, target = 0, current = 0, raf = 0, last = 0;
+
+    function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+
+    function apply(p) {
+      parts.forEach(function (b) {
+        var t = clamp((p - b.from) / (b.to - b.from));
+        var e = 1 - Math.pow(1 - t, 3);          /* ease-out: quick lift, soft landing */
+        b.el.style.transform = 'translate3d(0,' + ((1 - e) * b.rise).toFixed(1) + 'px,0)';
+        b.el.style.opacity = (.5 * e).toFixed(3); /* .5 is the design's resting opacity */
+      });
+    }
+
+    /* The stage always pins just under the navbar, so the questions hold
+       still where they are being read. On a screen shorter than the stage the
+       orange card waits below the fold until the runway ends - the skyline
+       does not, because it rides the bottom of the screen.
+
+       Progress runs from "section top 30% down the screen" to "pin ends", so
+       the street starts going up as the section arrives, does most of its
+       rising while the questions hold still, and is complete before they
+       move on. Phones get a shorter runway. */
+    var phone = window.matchMedia('(max-width: 767px)');
+
+    function measure() {
+      var vh = window.innerHeight;
+      var top = nav ? nav.offsetHeight : 0;
+      var pin = phone.matches
+        ? Math.round(Math.min(Math.max(vh * .45, 260), 420))
+        : Math.round(Math.min(Math.max(vh * .6, 320), 640));
+      section.style.setProperty('--faq-pin', pin + 'px');
+      section.style.setProperty('--faq-top', top + 'px');
+      start = -vh * .3;                          /* scrolled past the section top by this much */
+      span = Math.max(pin - top - start, 1);
+    }
+
+    function progress() { return clamp((-section.getBoundingClientRect().top - start) / span); }
+
+    function frame(now) {
+      raf = 0;
+      /* Frame-rate independent ease toward the scroll position. */
+      var k = 1 - Math.pow(1 - .16, Math.min((now - last) || 16.7, 64) / 16.7);
+      last = now;
+      current += (target - current) * k;
+      if (Math.abs(target - current) < .0005) current = target;
+      apply(current);
+      if (current !== target) raf = requestAnimationFrame(frame);
+    }
+
+    function onScroll() {
+      target = progress();
+      if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
+    }
+
+    function remeasure() { measure(); onScroll(); }
+
+    measure();
+    target = current = progress();   /* no replay on reload */
+    apply(current);
+    section.classList.add('is-live');
+
+    /* Only listen while the section is near the screen. */
+    var listening = false;
+    new IntersectionObserver(function (entries) {
+      var near = entries[0].isIntersecting;
+      if (near === listening) return;
+      listening = near;
+      if (near) { window.addEventListener('scroll', onScroll, { passive: true }); onScroll(); }
+      else window.removeEventListener('scroll', onScroll);
+    }, { rootMargin: '50% 0px' }).observe(section);
+
+    window.addEventListener('resize', remeasure);
+  }
+
   /* ---- Boot -------------------------------------------------------------- */
 
   function boot() {
@@ -490,6 +619,8 @@
     initNavCta();
     initProcessScan();
     initToTop();
+    initFaq();
+    initFaqScene();
     BCE.initModal();
     if (BCE.initCombos) BCE.initCombos(document);   /* before forms: deep links need the widgets */
     BCE.initForms();

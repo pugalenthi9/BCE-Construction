@@ -289,6 +289,26 @@ BCE.testimonials = [
     quote: 'Strip-out was completed ahead of programme with hoarding and dust control in place. Adjoining units had no complaints.' }
 ];
 
+/* Home FAQ (Figma 495:1320) - the owner's copy (Nov 2026). The section
+   renders whatever this list holds, and the first entry opens by default. */
+BCE.faqs = [
+  { q: 'How can I request a service from BCE?',
+    a: 'You can submit your requirements through our contact form or call our team ' +
+       'directly to discuss your service needs.' },
+  { q: 'How can I contact your team for support?',
+    a: 'You can reach us through our contact form, phone number, or email for service ' +
+       'enquiries and assistance.' },
+  { q: 'How soon can I expect to hear back from your team after submitting an enquiry?',
+    a: 'Our team will review your enquiry and get back to you within 24 hours. ' +
+       'We’ll discuss your requirements and guide you through the next steps.' },
+  { q: 'Do you provide free quotations?',
+    a: 'Yes, we will provide you with a free quotation before starting the work. ' +
+       'On your approval, we will proceed to the next steps.' },
+  { q: 'Do you provide services for both residential and commercial properties?',
+    a: 'Yes, BCE caters to residential and commercial service requirements, depending ' +
+       'on the type and scope of work.' }
+];
+
 /* "Your reliable partner" band (Figma 437:1221). The four headings are the
    company tagline - Quality, Innovation, Team Work, Passion - and the order
    below matches the design's columns left to right. Icons are the supplied

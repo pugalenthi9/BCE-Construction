@@ -95,6 +95,10 @@
 .btn--submit:hover { background: var(--brand-1); }
 .btn--submit:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
 
+/* White on a coloured card — FAQ "Submit Your Query" (Figma 517:1402) */
+.btn--light { height: 44px; background: var(--white); color: var(--cta-fill); }
+.btn--light:hover { background: var(--cta-fill); color: var(--white); }
+
 /* Neutral — modal "Close" */
 .btn--ghost { background: var(--white); color: var(--text-1); border-color: var(--stroke-field); }
 .btn--ghost:hover { background: var(--bg-2); border-color: var(--stroke-1); }
@@ -707,6 +711,82 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
   font-size: var(--fs-xs); color: var(--danger);
 }
 .field__error.is-shown { display: block; }
+
+/* --------------------------------------------------------------------------
+   Compact form - home page Contact Us (Figma 136:2055)
+   Labels live inside the fields as placeholders (the <label>s are sr-only),
+   so the card is denser: 24px between rows, 16px across them.
+   -------------------------------------------------------------------------- */
+.form-card--compact {
+  padding: var(--sp-8);
+  box-shadow: 0 24px 27px rgba(102, 102, 102, .04),
+              0 97px 48.5px rgba(102, 102, 102, .03),
+              0 219px 65.5px rgba(102, 102, 102, .02),
+              0 389px 78px rgba(102, 102, 102, .01);
+}
+.form-card--compact .form-note { color: var(--text-3); letter-spacing: .24px; line-height: 16px; }
+.form-card--compact .form-note span { font-size: var(--fs-body); line-height: 22px; font-style: normal; color: #ff1616; }
+.form-card--compact .form-note:empty { display: none; }
+.form-card--compact .form-grid { gap: var(--sp-6); margin-top: var(--sp-4); }
+.form-card--compact .btn--submit { margin-top: var(--sp-2); letter-spacing: .32px; }
+
+.form-card--compact .field__control,
+.form-card--compact .combo__control { border-color: var(--stroke-input); }
+.form-card--compact .field__control { padding: 0 var(--sp-3); letter-spacing: .28px; }
+.form-card--compact .field__control::placeholder,
+.form-card--compact .combo__input::placeholder {
+  font-size: var(--fs-sm);
+  letter-spacing: .28px;
+  color: var(--text-3);
+}
+.form-card--compact .field__control:hover,
+.form-card--compact .combo__control:hover { border-color: var(--text-3); }
+.form-card--compact .field__control:focus,
+.form-card--compact .combo.is-open .combo__control,
+.form-card--compact .combo__control:focus-within { border-color: var(--brand-2); }
+
+/* "Country  Singapore": the label stays visible, inline, ahead of the value. */
+.field--inline { opacity: .75; }
+.field__label--inline {
+  position: absolute; left: var(--sp-3); top: 0; z-index: 1;
+  display: flex; align-items: center;
+  height: 48px; margin: 0;
+  font-size: var(--fs-sm); letter-spacing: .28px;
+  color: var(--text-3);
+  pointer-events: none;
+}
+/* Fixed value, so it keeps the plain outline rather than the "answered" one. */
+.form-card--compact .field--inline .field__control {
+  padding-left: 81px;
+  border: 1px solid var(--stroke-input);
+  font-weight: 500;
+  color: var(--text-1);
+}
+
+/* block: an inline textarea leaves a baseline gap that pushed the button down */
+.form-card--compact textarea.field__control { display: block; height: 174px; padding: var(--sp-2) 14px; resize: none; }
+
+.form-card--compact .field__geo { right: 9px; }
+.field__geo .field__geo-icon { width: 17.33px; height: 17.33px; }
+
+/* The export is an up-chevron; it points down at rest and flips up when open.
+   Scoped to the card so it outranks the generic .combo .field__chevron below. */
+.form-card--compact .combo .field__chevron--prime {
+  right: 11px; width: 20px; height: 20px;
+  margin-top: -10px; padding: 0;
+  transform: rotate(180deg);
+}
+.form-card--compact .combo.is-open .field__chevron--prime { transform: rotate(0deg); }
+
+.form-card--compact .voice-btn {
+  right: 14px; bottom: 14px;
+  padding: 0 var(--sp-2);
+  border-radius: var(--r-md);
+  background: var(--voice-bg);
+  box-shadow: 0 0 0 5px var(--voice-ring);
+  color: var(--voice-text);
+}
+.form-card--compact .voice-btn:hover { background: #d2eef6; }
 
 /* --------------------------------------------------------------------------
    Combobox (single select + multi select with chips)

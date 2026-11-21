@@ -85,6 +85,14 @@
   --values-bg:  #f8f8f8;   /* "Your reliable partner"  437:1221 */
   --md-orange:  #ff5b1b;   /* "Meet our MD"            437:1464 */
 
+  /* Home FAQ (Figma 495:1320) and Contact Us (136:2055) */
+  --faq-bg:         #fcf5f2;  /* warm ground behind the skyline */
+  --stroke-divider: #e2ebf8;  /* rules between the contact lines */
+  --stroke-input:   #dadfe5;  /* compact form field outline */
+  --voice-bg:       #e1f5fa;  /* "Voice Input" chip */
+  --voice-ring:     #effcff;
+  --voice-text:     #033172;
+
   /* Loading overlay */
   --progress-green: #16a34a;
 
