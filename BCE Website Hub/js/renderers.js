@@ -276,7 +276,9 @@
 
     { name: 'message', label: 'What is the issue you are facing?', textarea: true,
       short: 'More about your problem',
-      hint: 'e.g. Ceiling leak in the master bathroom after heavy rain.' }
+      hint: 'e.g. Ceiling leak in the master bathroom after heavy rain.',
+      /* What happens after Submit, said where the visitor is about to commit. */
+      note: 'Our team will reply within 24 hours and arrange a site visit before we quote.' }
   ];
 
   /* Compact variant - the home page Contact Us (Figma 136:2055). The design
@@ -304,7 +306,9 @@
     var cls = 'field' + (f.textarea ? ' field--area' : '') + (f.combo ? ' field--combo' : '') +
               (inline ? ' field--inline' : '');
 
-    var described = ' aria-describedby="' + eid + '"' + (f.optional ? '' : ' aria-required="true"');
+    var nid = 'n-' + scope + '-' + f.name;
+    var described = ' aria-describedby="' + eid + (f.note ? ' ' + nid : '') + '"' +
+                    (f.optional ? '' : ' aria-required="true"');
     var common = ' class="field__control" id="' + id + '" name="' + f.name + '"' + described;
 
     /* In the compact form the placeholder IS the label text. */
@@ -368,6 +372,7 @@
              '<label class="' + labelCls + '" for="' + id + '">' + esc(f.label) + '</label>' +
              control +
              '<p class="field__error" id="' + eid + '" role="alert"></p>' +
+             (f.note ? '<p class="field__note" id="' + nid + '">' + esc(f.note) + '</p>' : '') +
            '</div>';
   }
 

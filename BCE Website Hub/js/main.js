@@ -365,7 +365,7 @@
 
   /* ---- Nav CTA colour ---------------------------------------------------- */
 
-  /* "Get Quote" is charcoal while the top of the page is on screen and brand
+  /* "Get a Free Quote" is charcoal while the top of the page is on screen and brand
      blue once you scroll past it.
 
      The trigger is each page's FIRST section, not ".hero" specifically, so the

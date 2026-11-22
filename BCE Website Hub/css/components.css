@@ -712,6 +712,14 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
 }
 .field__error.is-shown { display: block; }
 
+/* Standing information under a field (not a hint about the format and not an
+   error): sets the expectation for what happens after Submit. */
+.field__note {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-xs); line-height: 18px;
+  color: var(--text-2);
+}
+
 /* --------------------------------------------------------------------------
    Compact form - home page Contact Us (Figma 136:2055)
    Labels live inside the fields as placeholders (the <label>s are sr-only),

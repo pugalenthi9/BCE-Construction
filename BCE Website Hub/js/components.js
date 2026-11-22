@@ -106,7 +106,7 @@
               '</div>' +
               '<div class="search-results" id="search-results" role="listbox"></div>' +
             '</div>' +
-            BCE.button({ label: 'Get Quote', icon: 'invoice.svg', variant: 'btn--primary', extra: 'btn--sm', href: url('contact.html') }) +
+            BCE.button({ label: 'Get a Free Quote', icon: 'invoice.svg', variant: 'btn--primary', extra: 'btn--sm', href: url('contact.html') }) +
             '<button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">' +
               '<span></span><span></span><span></span>' +
             '</button>' +
@@ -138,7 +138,7 @@
                '</div>' +
                '<div class="mobile-drawer__section">' + links + '</div>' +
                '<div class="mobile-drawer__section">' +
-                 BCE.button({ label: 'Get Quote', icon: 'invoice.svg', href: url('contact.html'), extra: 'btn--block' }) +
+                 BCE.button({ label: 'Get a Free Quote', icon: 'invoice.svg', href: url('contact.html'), extra: 'btn--block' }) +
                '</div>' +
                '<div class="mobile-drawer__section">' +
                  contactChip('phone.svg', C.phone, C.phoneHref) +

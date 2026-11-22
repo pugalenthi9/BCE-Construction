@@ -37,12 +37,19 @@
       .join(', ');
   }
 
-  /* BCE-2610-4821 : short, sortable by month, unique enough to quote on a call. */
+  /* BCE112251 : BCE + month + day (Singapore time) + two random digits.
+     Short enough to read out on a call. The date part means only enquiries
+     from the same day can share an ID, and two of those match 1 time in 90;
+     the name in the subject tells them apart if it ever happens. */
   function reference(date) {
-    var yy = String(date.getFullYear()).slice(2);
-    var mm = ('0' + (date.getMonth() + 1)).slice(-2);
-    var rand = String(Math.floor(1000 + Math.random() * 9000));
-    return 'BCE-' + yy + mm + '-' + rand;
+    var mm = date.getMonth() + 1, dd = date.getDate();
+    try {
+      /* Same calendar day as the "Received" stamp, wherever the visitor is. */
+      var sg = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }));
+      if (!isNaN(sg)) { mm = sg.getMonth() + 1; dd = sg.getDate(); }
+    } catch (e) { /* no time-zone data: fall back to the visitor's clock */ }
+    var rand = String(Math.floor(10 + Math.random() * 90));
+    return 'BCE' + ('0' + mm).slice(-2) + ('0' + dd).slice(-2) + rand;
   }
 
   function stamp(date) {
@@ -87,7 +94,10 @@
     var who  = record.fullName || 'Website visitor';
     var svc  = prettyServices(record.service) || 'General enquiry';
 
-    var subject = 'New Service Request — ' + svc + ' — ' + who + ' [' + ref + ']';
+    /* BCE112251 - New Service Request! | Tan Wei Ming | Aircon, Electrical
+       The ID leads so every enquiry is its own email thread and can be found
+       by searching the inbox for the number a customer reads out. */
+    var subject = ref + ' - New Service Request! | ' + who + ' | ' + svc;
 
     /* ---- plain text ---------------------------------------------------- */
     var pad = 0;

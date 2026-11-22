@@ -183,9 +183,11 @@
 
 /* Full-bleed tinted band the stage sits on, matching the design where the
    heading stays on white and the photo/card sit on pale blue. */
+/* Given more air (Nov 2026): taller band, photo and card, and wider gaps
+   between steps, so the three steps scan as separate items. */
 .process__band {
   margin-top: var(--sp-10);
-  padding-block: var(--sp-12);
+  padding-block: var(--sp-16);
   background: var(--bg-2);
 }
 
@@ -194,13 +196,13 @@
   display: grid;
   grid-template-columns: 422px 1fr;
   align-items: center;
-  min-height: 440px;
+  min-height: 540px;
 }
 .process__photo {
   grid-column: 1 / -1; grid-row: 1;
   justify-self: end;
   width: calc(100% - 188px);
-  height: 440px;
+  height: 540px;
   border-radius: var(--r-lg);
   overflow: hidden;
 }
@@ -213,7 +215,7 @@
 .process__card {
   grid-column: 1; grid-row: 1;
   z-index: 2;
-  padding: var(--sp-6);
+  padding: var(--sp-10) var(--sp-8);
   background: var(--white);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-lift);
@@ -221,9 +223,9 @@
 .process__card-title {
   font-size: 32px; line-height: 44px; font-weight: 600;
   color: var(--brand-1);
-  margin-bottom: var(--sp-6);
+  margin-bottom: var(--sp-8);
 }
-.process__step + .process__step { margin-top: var(--sp-6); }
+.process__step + .process__step { margin-top: var(--sp-10); }
 .process__step-head { display: flex; align-items: center; gap: var(--sp-3); }
 .process__num {
   display: grid; place-items: center;
@@ -239,7 +241,7 @@
 .process__step:hover .process__num,
 .process__step.is-scanning .process__num { background: var(--brand-2); color: var(--white); }
 .process__step-title { font-size: var(--fs-lead); font-weight: 600; }
-.process__step-desc { margin-top: var(--sp-3); font-size: var(--fs-sm); line-height: 22px; color: var(--text-2); }
+.process__step-desc { margin-top: var(--sp-3); font-size: var(--fs-sm); line-height: 24px; color: var(--text-2); }
 
 /* --------------------------------------------------------------------------
    Before / After comparison slider
@@ -410,7 +412,7 @@
   position: relative;
   height: 419px;
   padding: 72px 60px;
-  background: var(--brand-2);
+  background: var(--md-orange);   /* brand orange, Nov 2026 - was brand blue */
   border-radius: var(--r-lg);
   overflow: hidden;
   color: var(--white);
@@ -430,22 +432,41 @@
      tracks the rows at any banner height. */
   -webkit-mask-image: linear-gradient(to bottom, #000 61.9%, transparent 100%);
           mask-image: linear-gradient(to bottom, #000 61.9%, transparent 100%);
-  opacity: .9;
+  /* The export's lines are pale blue (#7EA3DB), drawn for the old blue
+     panel. brightness(0) invert(1) turns them white without touching the
+     asset; white reads far stronger on orange than the blue did on blue, so
+     the layer drops to 45% to keep the grid a texture, not a pattern. */
+  filter: brightness(0) invert(1);
+  opacity: .45;
   pointer-events: none;
   z-index: 0;
 }
 .cta-banner__copy { position: relative; z-index: 2; max-width: 769px; }
+/* Supporting line, not a second headline: regular weight, 75% white and well
+   under the title's size, so the eye lands on the title first. */
 .cta-banner__eyebrow {
-  font-size: 24px; line-height: normal; letter-spacing: .48px;
-  color: var(--white);
+  font-size: var(--fs-lead); font-weight: 400; line-height: 24px; letter-spacing: .36px;
+  color: rgba(255, 255, 255, .75);
 }
+/* Tight to the tagline so the two read as one block. */
 .cta-banner__title {
-  margin-top: var(--sp-3);
+  margin-top: var(--sp-1);
   font-size: 48px; line-height: 1.14; font-weight: 600;
   letter-spacing: .96px;
 }
 .cta-banner__actions { display: flex; gap: var(--sp-5); margin-top: var(--sp-10); }
 .cta-banner__actions .btn { height: 44px; }
+
+/* "Call Us" is the secondary action here: a white outline with a white label
+   and icon (the icon paints with currentColor). Hover adds a faint white fill
+   on top of the shared .btn lift. Scoped to the banner so .btn--outline
+   elsewhere is untouched. */
+.cta-banner .btn--outline {
+  background: transparent;
+  border-color: var(--white);
+  color: var(--white);
+}
+.cta-banner .btn--outline:hover { background: rgba(255, 255, 255, .14); border-color: var(--white); color: var(--white); }
 
 .cta-banner__photo {
   position: absolute; left: 50%; top: 0;

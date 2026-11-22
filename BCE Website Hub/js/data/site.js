@@ -44,7 +44,7 @@ BCE.company = {
 BCE.mail = {
   to:        'balaceplsg@gmail.com',
   provider:  'web3forms',
-  accessKey: '3c01a683-7c75-4824-808e-ba004e0b22d1',
+  accessKey: '8c08dd96-4403-478c-89ba-d133e1bb8a60',
   endpoint:  ''
 };
 
@@ -255,7 +255,7 @@ BCE.buildingTypes = [
 
 BCE.process = [
   { n: '01', title: 'Request a Service',         desc: 'Fill out our online form or give us a quick call with your service needs.' },
-  { n: '02', title: 'Get Confirmation',          desc: 'Our expert will confirm the schedule and provide a clear service quote.' },
+  { n: '02', title: 'Get Confirmation',          desc: 'Our expert will confirm the schedule, visit your site and provide a clear service quotation.' },
   { n: '03', title: 'Enjoy Hassle-Free Service', desc: 'Our experts will arrive on time, complete the job, and make sure everything is working smoothly before they leave.' }
 ];
 

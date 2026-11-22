@@ -35,12 +35,12 @@
   .connect__grid { grid-template-columns: 320px minmax(0, 1fr); gap: var(--sp-12); }
   .connect__photo { height: 480px; }
   .process__stage { grid-template-columns: 380px 1fr; }
-  .process__photo { width: calc(100% - 150px); height: 480px; }
+  .process__photo { width: calc(100% - 150px); height: 580px; }
 
   /* Banner keeps the design ratio but scales with the container. */
   .cta-banner__inner { height: 380px; padding: 56px 44px; }
   .cta-banner__title { font-size: 40px; }
-  .cta-banner__eyebrow { font-size: var(--fs-lead); }
+  .cta-banner__eyebrow { font-size: var(--fs-body); line-height: 24px; }
   .cta-banner__photo { width: 620px; height: 420px; margin-left: 0; }
 
   .service-hero { min-height: 500px; }
@@ -132,7 +132,7 @@
 
   /* Process card stops overlapping and stacks over the photo */
   .process__stage { grid-template-columns: 1fr; gap: var(--sp-6); }
-  .process__photo { grid-column: 1; grid-row: 1; width: 100%; height: 340px; justify-self: stretch; }
+  .process__photo { grid-column: 1; grid-row: 1; width: 100%; height: 380px; justify-self: stretch; }
   .process__card { grid-row: 2; }
 
   .about { grid-template-columns: 1fr; gap: var(--sp-12); }
@@ -163,7 +163,7 @@
   .cta-banner__copy { max-width: 100%; }
   .cta-banner__photo { display: none; }
   .cta-banner__title { font-size: var(--fs-h2); line-height: var(--lh-h2); }
-  .cta-banner__eyebrow { font-size: var(--fs-body); }
+  .cta-banner__eyebrow { font-size: var(--fs-sm); line-height: 22px; }
 
   .service-hero { min-height: 420px; }
   .service-hero__inner { grid-template-columns: 1fr; gap: var(--sp-6); padding-block: 56px var(--sp-12); }
@@ -255,8 +255,10 @@
 
   .section-head { margin-bottom: var(--sp-10); }
 
-  .process__card { padding: var(--sp-5); }
-  .process__photo { height: 240px; }
+  .process__card { padding: var(--sp-6) var(--sp-5); }
+  .process__card-title { margin-bottom: var(--sp-6); }
+  .process__step + .process__step { margin-top: var(--sp-8); }
+  .process__photo { height: 260px; }
   .process__num { width: 44px; height: 40px; font-size: var(--fs-lead); }
 
   /* A 320 square laid out in percentages, so it scales down on phones whose

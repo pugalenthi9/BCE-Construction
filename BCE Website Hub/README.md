@@ -99,9 +99,9 @@ Your endpoint then receives a JSON `POST`:
 
 ```json
 {
-  "_subject":  "New Service Request — Aircon — Aravind T [BCE-2610-4821]",
+  "_subject":  "BCE112251 - New Service Request! | Tan Wei Ming | Aircon, Electrical",
   "_replyto":  "customer@example.com",
-  "reference": "BCE-2610-4821",
+  "reference": "BCE112251",
   "message":   "...plain-text version...",
   "html":      "...HTML version...",
   "fields": {
