@@ -95,6 +95,31 @@
     return true;
   }
 
+  /* While someone moves through the form, an empty field is left alone:
+     clicking into one and out again is not a mistake. Only a value that is
+     there but wrong gets flagged. Submit still checks everything. */
+  function checkTyped(input) {
+    if (!(input.value || '').trim()) { clearError(input); return; }
+    validateField(input);
+  }
+
+  /* The submit button waits until every required field holds something. It
+     tests "filled", not "valid", on purpose: a typo in the email still lets
+     the button on, and pressing it then points at the field - better than a
+     dimmed button that never says what it is waiting for. */
+  function allFilled(fields) {
+    return Array.prototype.every.call(fields, function (input) {
+      var rule = rules[input.name];
+      return !rule || !rule.required || !!(input.value || '').trim();
+    });
+  }
+
+  /* For values set by script (voice, location, deep links): announce them the
+     way typing would, so the filled style and the submit button follow. */
+  function changed(input) {
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
   /* ---- Success modal ---------------------------------------------------- */
 
   var lastFocused = null;
@@ -187,6 +212,7 @@
     recog.addEventListener('result', function (e) {
       var text = Array.prototype.map.call(e.results, function (r) { return r[0].transcript; }).join(' ');
       area.value = (area.value ? area.value + ' ' : '') + text;
+      changed(area);
       validateField(area);
     });
 
@@ -259,13 +285,13 @@
             if (data && data.display_name) {
               input.value = data.display_name;
               var pc = data.address && (data.address.postcode || '');
-              if (pc && postal && !postal.value) { postal.value = pc; syncFilled(postal); }
+              if (pc && postal && !postal.value) { postal.value = pc; changed(postal); }
               setHint(wrap, 'Filled from your current location - edit it if the unit number is missing.');
             } else {
               input.value = lat.toFixed(6) + ', ' + lon.toFixed(6);
               setHint(wrap, 'Address lookup was unavailable, so coordinates were used instead.', true);
             }
-            syncFilled(input);
+            changed(input);
             validateField(input);
             btn.disabled = false;
             btn.classList.remove('is-busy');
@@ -314,7 +340,7 @@
       if (!target) return;
       var combo = target.closest('.combo');
       if (combo && combo.__combo) { combo.__combo.setValue(val); }
-      else { target.value = val; syncFilled(target); }
+      else { target.value = val; changed(target); }
     });
   }
 
@@ -332,19 +358,27 @@
   BCE.initForms = function () {
     document.querySelectorAll('form[data-enquiry-form]').forEach(function (form) {
       var fields = form.querySelectorAll('[name]');
+      var submit = form.querySelector('button[type="submit"]');
+
+      function syncSubmit() { if (submit) submit.disabled = !allFilled(fields); }
 
       fields.forEach(function (input) {
         syncFilled(input);
-        input.addEventListener('blur', function () { validateField(input); });
+        input.addEventListener('blur', function () { checkTyped(input); });
         ['input', 'change'].forEach(function (evt) {
           input.addEventListener(evt, function () {
             syncFilled(input);
             /* Only re-validate a field already showing an error, so typing a
                fresh entry is not interrupted mid-keystroke. */
-            if (input.getAttribute('aria-invalid') === 'true') validateField(input);
+            if (input.getAttribute('aria-invalid') === 'true') checkTyped(input);
           });
         });
       });
+
+      /* Typing, autofill and the dropdowns' hidden fields all bubble up here. */
+      form.addEventListener('input', syncSubmit);
+      form.addEventListener('change', syncSubmit);
+      syncSubmit();
 
       /* Deep links carry intent: contact.html?service=aircon&type=Residential. */
       prefill(form, window.location.search);
@@ -393,6 +427,7 @@
           if (c.__combo) c.__combo.clear();
         });
         fields.forEach(function (input) { clearError(input); syncFilled(input); });
+        syncSubmit();
         openModal('success-modal');
       });
     });

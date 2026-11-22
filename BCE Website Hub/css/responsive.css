@@ -31,7 +31,8 @@
   .collage { transform: scale(.86); transform-origin: left center; }
 
   .contact { grid-template-columns: 380px 1fr; gap: var(--sp-16); }
-  .reach__grid { grid-template-columns: minmax(0, 380px) minmax(0, 1fr); }
+  /* 1024px leaves ~460px for the form once the panel keeps 32px sides. */
+  .reach__grid { grid-template-columns: minmax(0, 340px) minmax(0, 666px); padding-inline: var(--sp-8); }
   .connect__grid { grid-template-columns: 320px minmax(0, 1fr); gap: var(--sp-12); }
   .connect__photo { height: 480px; }
   .process__stage { grid-template-columns: 380px 1fr; }
@@ -143,7 +144,11 @@
   .about__stats { gap: var(--sp-10); }
 
   .contact { grid-template-columns: 1fr; gap: var(--sp-12); }
-  .reach__grid { grid-template-columns: 1fr; }
+  /* Stacked: no pinning below 1024 (see initReachScene), so the panel is
+     just a card and the form follows the details. */
+  .reach { padding-block: var(--sp-16); }
+  .reach__grid { grid-template-columns: 1fr; row-gap: var(--sp-10); padding: var(--sp-10) var(--sp-8); }
+  .reach__info { padding-top: 0; }
   .faq { --bld-s: .8; }
   .location { grid-template-columns: 1fr; gap: var(--sp-10); }
 
@@ -295,6 +300,9 @@
   .faq-cta__title { font-size: 26px; line-height: 34px; }
   .faq-cta__text { line-height: 20px; }
   .faq-cta__btn { width: 100%; }
+  .reach { padding-block: var(--section-pad-y); }
+  .reach__panel { border-radius: var(--r-lg); }
+  .reach__grid { row-gap: var(--sp-8); padding: var(--sp-6) var(--sp-4); }
   .reach__title { font-size: 30px; line-height: 40px; letter-spacing: .4px; }
   .reach-line__value--address { max-width: none; }
 

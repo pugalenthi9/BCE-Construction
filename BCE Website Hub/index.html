@@ -281,55 +281,68 @@
   </section>
 
   <!-- ===== Contact ====================================================== -->
-  <!-- Figma 136:2055 - home only. contact.html keeps its own layout. -->
-  <section class="section section--tint reach" id="contact">
-    <div class="container reach__grid">
-      <div class="reach__info" data-reveal="left">
-        <h2 class="reach__title">Contact Us</h2>
-        <p class="reach__lead">
-          We&rsquo;re here to help! Reach out to the BCE team, and we&rsquo;ll reach your doorstep.
-        </p>
+  <!-- Figma 537:2216 - home only. The panel layout is the home page's own;
+       the form inside it is the same one contact.html uses.
+       The track is the panel's scroll runway: on desktop the panel pins under
+       the navbar and the form scrolls inside it while the details hold still
+       (js/main.js). The columns are wrappers so the scroll offset never fights
+       data-reveal. -->
+  <section class="reach" id="contact" aria-labelledby="reach-title">
+    <div class="container reach__track">
+      <div class="reach__panel">
+        <div class="reach__grid">
+          <div class="reach__col reach__col--info">
+            <div class="reach__info" data-reveal="left">
+              <h2 class="reach__title" id="reach-title">Contact Us</h2>
+              <p class="reach__lead">
+                We&rsquo;re here to help! Reach out to the BCE team, and we&rsquo;ll reach your doorstep.
+              </p>
 
-        <ul class="reach__list">
-          <li>
-            <a class="reach-line" href="tel:+6598945223">
-              <span class="reach-line__icon"><img src="images/icons/contact-call.svg" alt="" width="32" height="32"></span>
-              <span class="reach-line__body">
-                <span class="reach-line__label">Call</span>
-                <span class="reach-line__value">+65 98945223</span>
-              </span>
-            </a>
-          </li>
-          <li>
-            <a class="reach-line" href="mailto:balaceplsg@gmail.com">
-              <span class="reach-line__icon"><img src="images/icons/contact-email.svg" alt="" width="32" height="32"></span>
-              <span class="reach-line__body">
-                <span class="reach-line__label">Email</span>
-                <span class="reach-line__value">balaceplsg@gmail.com</span>
-              </span>
-            </a>
-          </li>
-          <li>
-            <div class="reach-line reach-line--top">
-              <span class="reach-line__icon"><img src="images/icons/contact-building.svg" alt="" width="32" height="32"></span>
-              <span class="reach-line__body">
-                <span class="reach-line__label reach-line__label--tall">Location</span>
-                <span class="reach-line__value reach-line__value--address">
-                  7 Temasek Boulevard #12-07 Suntec Tower One, Singapore - 038987 Reg No: 202413369H
-                </span>
-              </span>
+              <ul class="reach__list">
+                <li>
+                  <a class="reach-line" href="tel:+6598945223">
+                    <span class="reach-line__icon"><img src="images/icons/contact-call.svg" alt="" width="32" height="32"></span>
+                    <span class="reach-line__body">
+                      <span class="reach-line__label">Call</span>
+                      <span class="reach-line__value">+65 98945223</span>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a class="reach-line" href="mailto:balaceplsg@gmail.com">
+                    <span class="reach-line__icon"><img src="images/icons/contact-email.svg" alt="" width="32" height="32"></span>
+                    <span class="reach-line__body">
+                      <span class="reach-line__label">Email</span>
+                      <span class="reach-line__value">balaceplsg@gmail.com</span>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <div class="reach-line reach-line--top">
+                    <span class="reach-line__icon"><img src="images/icons/contact-building.svg" alt="" width="32" height="32"></span>
+                    <span class="reach-line__body">
+                      <span class="reach-line__label reach-line__label--tall">Location</span>
+                      <span class="reach-line__value reach-line__value--address">
+                        7 Temasek Boulevard #12-07 Suntec Tower One, Singapore - 038987 Reg No: 202413369H
+                      </span>
+                    </span>
+                  </div>
+                </li>
+              </ul>
+
+              <p class="reach__qr-note">(Scan me for office location)</p>
+              <img class="reach__qr" src="images/misc/qr-location.svg" alt="QR code linking to the BCE office location" width="152" height="152" loading="lazy">
             </div>
-          </li>
-        </ul>
+          </div>
 
-        <p class="reach__qr-note">(Scan me for office location)</p>
-        <img class="reach__qr" src="images/misc/qr-location.svg" alt="QR code linking to the BCE office location" width="152" height="152" loading="lazy">
-      </div>
-
-      <div class="form-card form-card--compact" id="enquiry" data-reveal="right">
-        <form data-enquiry-form novalidate>
-          <div data-render="enquiry-fields" data-form-scope="home" data-form-variant="compact"></div>
-        </form>
+          <div class="reach__col reach__col--form">
+            <div class="form-card" id="enquiry" data-reveal="right">
+              <form data-enquiry-form novalidate>
+                <div data-render="enquiry-fields" data-form-scope="home"></div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>

@@ -1260,14 +1260,37 @@ a.mapview__row:hover { color: var(--brand-1); }
 /* ==========================================================================
    Contact Us - home (Figma 136:2055)
    ========================================================================== */
-.reach { padding-block: var(--sp-12); }
+/* Figma 537:2216 - a 1232px tinted panel on white, 96px clear above and
+   below. Inside: 48px side margins, the info column 48px down, the form card
+   24px down and 76px clear of the panel's bottom edge. */
+.reach { padding-block: var(--sp-24); }
+.reach__panel {
+  position: relative;        /* offsetParent for the columns, which main.js measures */
+  border-radius: var(--r-xl);
+  background: var(--bg-2);
+  overflow: clip;            /* the scroll window when pinned; never a scroll container */
+}
 .reach__grid {
   display: grid;
   grid-template-columns: minmax(0, 442px) minmax(0, 666px);
   justify-content: space-between;
-  gap: var(--sp-12);
+  column-gap: 28px;
   align-items: start;
+  padding: var(--sp-6) var(--sp-12) 76px;
 }
+.reach__info { padding-top: var(--sp-6); }
+/* #enquiry links (FAQ button) land with the panel just pinned and the card's
+   top edge showing: html's scroll-padding (nav + 16) + 32 = nav + the 24px
+   pin gap + the panel's 24px top padding. */
+.reach #enquiry { scroll-margin-top: var(--sp-8); }
+
+/* Pinned (set by initReachScene in main.js, desktop only, never under reduced
+   motion). The panel holds under the navbar at a height that fits the screen;
+   the track grows by the distance the form still has to travel, so the pin
+   lasts exactly as long as there is form left to show. */
+.reach.is-pinned .reach__track::after { content: ''; display: block; height: var(--reach-run); }
+.reach.is-pinned .reach__panel { position: sticky; top: var(--reach-top); height: var(--reach-h); }
+.reach.is-pinned .reach__col { will-change: transform; }
 
 .reach__title {
   font-size: var(--fs-h2); font-weight: 600; line-height: 54px; letter-spacing: .8px;

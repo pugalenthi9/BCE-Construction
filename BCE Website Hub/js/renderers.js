@@ -275,48 +275,21 @@
       hint: 'Add one or more services' },
 
     { name: 'message', label: 'What is the issue you are facing?', textarea: true,
-      short: 'More about your problem',
       hint: 'e.g. Ceiling leak in the master bathroom after heavy rain.',
       /* What happens after Submit, said where the visitor is about to commit. */
       note: 'Our team will reply within 24 hours and arrange a site visit before we quote.' }
   ];
 
-  /* Compact variant - the home page Contact Us (Figma 136:2055). The design
-     puts each label inside its field as the placeholder, so the visible
-     <label> becomes screen-reader-only (never dropped), the two dropdowns
-     share a row, and the icons are that frame's own exports. */
-  var CHEVRON_COMPACT = '<img class="field__chevron field__chevron--prime" src="images/icons/chevron-up-prime.svg" alt="">';
-  var MIC_COMPACT     = '<img src="images/icons/mic-ai.svg" alt="">';
-
-  function pairCombos(list) {
-    var out = [];
-    for (var i = 0; i < list.length; i++) {
-      var e = list[i], n = list[i + 1];
-      if (e.combo && n && n.combo) { out.push({ row: [e, n] }); i++; }
-      else out.push(e);
-    }
-    return out;
-  }
-
-  function field(f, scope, compact) {
+  function field(f, scope) {
     var id  = 'f-' + scope + '-' + f.name;
     var eid = 'e-' + scope + '-' + f.name;
     var lid = 'l-' + scope + '-' + f.name;
-    var inline = compact && f.readonly;   /* "Country  Singapore" */
-    var cls = 'field' + (f.textarea ? ' field--area' : '') + (f.combo ? ' field--combo' : '') +
-              (inline ? ' field--inline' : '');
+    var cls = 'field' + (f.textarea ? ' field--area' : '') + (f.combo ? ' field--combo' : '');
 
     var nid = 'n-' + scope + '-' + f.name;
     var described = ' aria-describedby="' + eid + (f.note ? ' ' + nid : '') + '"' +
                     (f.optional ? '' : ' aria-required="true"');
     var common = ' class="field__control" id="' + id + '" name="' + f.name + '"' + described;
-
-    /* In the compact form the placeholder IS the label text. */
-    if (compact) f = Object.create(f, { hint: { value: f.short || f.label } });
-    var chevron = compact ? CHEVRON_COMPACT : CHEVRON;
-    var mic     = compact ? MIC_COMPACT : MIC;
-    var geoIcon = compact ? '<img class="field__geo-icon" src="images/icons/locate.svg" alt="" width="17.33" height="17.33">'
-                          : '<img src="images/icons/pin.svg" alt="">';
 
     var control;
 
@@ -333,7 +306,7 @@
                    ' role="combobox" aria-expanded="false" aria-autocomplete="list"' +
                    ' aria-controls="' + lid + '"' + described +
                    ' placeholder="' + esc(f.hint) + '">' +
-            chevron +
+            CHEVRON +
           '</div>' +
           '<ul class="combo__panel" id="' + lid + '" role="listbox"' +
               (f.multi ? ' aria-multiselectable="true"' : '') + ' hidden></ul>' +
@@ -344,14 +317,14 @@
       control = '<div class="field__wrap">' +
                   '<textarea' + common + ' placeholder="' + esc(f.hint) + '" rows="4"></textarea>' +
                   '<button class="voice-btn" type="button" aria-label="Dictate your message">' +
-                    mic + '<span>Voice Input</span></button>' +
+                    MIC + '<span>Voice Input</span></button>' +
                 '</div>';
 
     } else {
       control = '<div class="field__wrap">' +
                   '<input' + common +
                     ' type="' + f.type + '"' +
-                    (f.hint && !inline ? ' placeholder="' + esc(f.hint) + '"' : '') +
+                    (f.hint ? ' placeholder="' + esc(f.hint) + '"' : '') +
                     (f.value ? ' value="' + esc(f.value) + '"' : '') +
                     (f.autocomplete ? ' autocomplete="' + f.autocomplete + '"' : '') +
                     (f.inputmode ? ' inputmode="' + f.inputmode + '"' : '') +
@@ -359,20 +332,20 @@
                   (f.geo
                     ? '<button class="field__geo" type="button" data-geolocate' +
                             ' aria-label="Use my current location">' +
-                        geoIcon +
+                        '<img src="images/icons/pin.svg" alt="">' +
                       '</button>'
                     : '') +
                 '</div>';
     }
 
-    /* The inline "Country" label stays visible inside its field; every other
-       compact label is announced but not shown. */
-    var labelCls = 'field__label' + (inline ? ' field__label--inline' : compact ? ' sr-only' : '');
     return '<div class="' + cls + '">' +
-             '<label class="' + labelCls + '" for="' + id + '">' + esc(f.label) + '</label>' +
+             '<label class="field__label" for="' + id + '">' + esc(f.label) + '</label>' +
              control +
              '<p class="field__error" id="' + eid + '" role="alert"></p>' +
-             (f.note ? '<p class="field__note" id="' + nid + '">' + esc(f.note) + '</p>' : '') +
+             (f.note ? '<p class="field__note" id="' + nid + '">' +
+                         '<span class="field__note-icon" data-icon="info"></span>' +
+                         '<span>' + esc(f.note) + '</span>' +
+                       '</p>' : '') +
            '</div>';
   }
 
@@ -387,16 +360,14 @@
 
   R['enquiry-fields'] = function (host) {
     var scope = (host && host.getAttribute('data-form-scope')) || 'x';
-    var compact = !!host && host.getAttribute('data-form-variant') === 'compact';
-    var entries = compact ? pairCombos(ENQUIRY_FIELDS) : ENQUIRY_FIELDS;
 
-    var body = entries.map(function (entry) {
+    var body = ENQUIRY_FIELDS.map(function (entry) {
       if (entry.row) {
         return '<div class="form-row">' +
-                 entry.row.map(function (f) { return field(f, scope, compact); }).join('') +
+                 entry.row.map(function (f) { return field(f, scope); }).join('') +
                '</div>';
       }
-      return field(entry, scope, compact);
+      return field(entry, scope);
     }).join('');
 
     return '<p class="form-note"><span aria-hidden="true">*</span> All fields are mandatory</p>' +

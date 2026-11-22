@@ -599,6 +599,116 @@
     window.addEventListener('resize', remeasure);
   }
 
+  /* ---- Contact Us (home): pinned panel, the form scrolls inside -----------
+     Figma 537:2216. When the screen is too short for the whole panel, the
+     panel holds under the navbar and the form scrolls up through it 1:1 with
+     the page, so it reads as scrolling the form itself. The details column
+     (title, contact lines, QR) stays where it is. When the form's end
+     arrives the pin releases and the panel leaves with the page.
+
+     On a screen too short to show even the details column whole, it holds
+     for as long as it can and only moves over the last stretch, so its end
+     arrives together with the form's and the title stays up the longest.
+
+     If the panel already fits there is nothing to reveal, and holding the
+     page still with nothing moving would only feel stuck, so it doesn't pin.
+     Desktop only: below 1024 the columns stack and scroll normally. */
+  function initReachScene() {
+    var section = document.querySelector('.reach');
+    if (!section || reduceMotion) return;
+    var track = section.querySelector('.reach__track');
+    var panel = section.querySelector('.reach__panel');
+    var info  = section.querySelector('.reach__col--info');
+    var form  = section.querySelector('.reach__col--form');
+    var nav   = document.querySelector('.navbar');
+    if (!track || !panel || !info || !form) return;
+
+    var desktop = window.matchMedia('(min-width: 1024px)');
+    var GAP = 24;       /* clear space above and below the pinned panel */
+    var MIN_RUN = 40;   /* less travel than this is not worth a pin */
+    var top = 0, run = 1, infoRun = 0, formRun = 0, pinned = false;
+
+    function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+    /* Whole device pixels keep the form's text crisp while it moves. */
+    function px(v) { var d = window.devicePixelRatio || 1; return Math.round(v * d) / d; }
+    /* Bottom of a column in the panel's resting layout (offsets ignore transforms). */
+    function end(col) { return col.offsetTop + col.offsetHeight; }
+
+    function apply() {
+      if (!pinned) return;
+      /* How far the page has scrolled since the panel pinned. */
+      var s = clamp((top - track.getBoundingClientRect().top) / run) * run;
+      form.style.transform = 'translate3d(0,' + px(-Math.min(s, formRun)) + 'px,0)';
+      info.style.transform = 'translate3d(0,' + px(-Math.max(0, s - (run - infoRun))) + 'px,0)';
+    }
+
+    function measure() {
+      pinned = false;
+      section.classList.remove('is-pinned');
+      info.style.transform = form.style.transform = '';
+      if (!desktop.matches) return;
+
+      top = (nav ? nav.offsetHeight : 0) + GAP;
+      var h = window.innerHeight - top - GAP;
+      /* Each column ends its travel 24px above the pinned panel's bottom. */
+      formRun = Math.max(0, end(form) + GAP - h);
+      infoRun = Math.max(0, end(info) + GAP - h);
+      run = Math.max(formRun, infoRun);
+      if (run < MIN_RUN) return;
+
+      section.style.setProperty('--reach-top', top + 'px');
+      section.style.setProperty('--reach-h', h + 'px');
+      section.style.setProperty('--reach-run', run + 'px');
+      section.classList.add('is-pinned');
+      pinned = true;
+      apply();
+    }
+
+    /* Keep what the visitor is working in inside the window: a field reached
+       with Tab, or an open dropdown list. The form tracks the page 1:1 while
+       pinned, so scrolling the page by the overshoot brings it into view. */
+    var pending = 0;
+    function keepInView() {
+      pending = 0;
+      if (!pinned) return;
+      var list = form.querySelector('.combo.is-open .combo__panel');
+      var el = list || (form.contains(document.activeElement) ? document.activeElement : null);
+      if (!el) return;
+      var r = el.getBoundingClientRect(), w = panel.getBoundingClientRect();
+      var above = (w.top + GAP) - r.top;
+      var below = Math.min(r.bottom - (w.bottom - GAP), -above);  /* never push its top out */
+      var by = above > 0 ? -above : below > 0 ? below : 0;
+      if (by) window.scrollBy({ top: by, behavior: list ? 'smooth' : 'instant' });
+    }
+    function check() { if (!pending) pending = requestAnimationFrame(keepInView); }
+    ['focusin', 'click', 'keyup'].forEach(function (t) { form.addEventListener(t, check); });
+
+    measure();
+
+    var listening = false;
+    new IntersectionObserver(function (entries) {
+      var near = entries[0].isIntersecting;
+      if (near === listening) return;
+      listening = near;
+      if (near) { window.addEventListener('scroll', apply, { passive: true }); apply(); }
+      else window.removeEventListener('scroll', apply);
+    }, { rootMargin: '50% 0px' }).observe(section);
+
+    /* Error messages, chips in the multi-select and late web fonts all
+       change the columns' height, and with it how far they travel. */
+    var queued = 0;
+    function remeasure() {
+      if (queued) return;
+      queued = requestAnimationFrame(function () { queued = 0; measure(); });
+    }
+    window.addEventListener('resize', remeasure);
+    if (desktop.addEventListener) desktop.addEventListener('change', remeasure);
+    if ('ResizeObserver' in window) {
+      var ro = new ResizeObserver(remeasure);
+      ro.observe(form); ro.observe(info);
+    }
+  }
+
   /* ---- Boot -------------------------------------------------------------- */
 
   function boot() {
@@ -621,6 +731,7 @@
     initToTop();
     initFaq();
     initFaqScene();
+    initReachScene();
     BCE.initModal();
     if (BCE.initCombos) BCE.initCombos(document);   /* before forms: deep links need the widgets */
     BCE.initForms();

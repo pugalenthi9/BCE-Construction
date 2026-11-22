@@ -91,9 +91,24 @@
   color: var(--white);
   letter-spacing: .5px;
   text-transform: uppercase;
+  /* + opacity, so the button eases on when the last field is filled */
+  transition:
+    background-color var(--dur) var(--ease),
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    opacity var(--dur) var(--ease-out);
 }
 .btn--submit:hover { background: var(--brand-1); }
-.btn--submit:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
+/* Held until every field is filled (js/forms.js). It fades rather than turning
+   grey, so it still reads as the form's action, just not available yet. */
+.btn--submit:disabled,
+.btn--submit:disabled:hover {
+  background: var(--brand-2);
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
 
 /* White on a coloured card — FAQ "Submit Your Query" (Figma 517:1402) */
 .btn--light { height: 44px; background: var(--white); color: var(--cta-fill); }
@@ -613,7 +628,9 @@
 .form-note span { color: var(--danger); }
 
 .form-grid { display: grid; gap: var(--sp-4); margin-top: var(--sp-4); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+/* minmax(0, …): a bare 1fr won't shrink below the inputs' intrinsic width, so
+   on a narrow card (home form at 1024-1279) the row spilled out of it. */
+.form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-4); }
 
 /* Label sits above its control, so nothing competes with the typed value and
    the example hint can stay visible the whole time. */
@@ -715,86 +732,14 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
 /* Standing information under a field (not a hint about the format and not an
    error): sets the expectation for what happens after Submit. */
 .field__note {
+  display: flex; align-items: flex-start; gap: 6px;
   margin-top: var(--sp-2);
   font-size: var(--fs-xs); line-height: 18px;
   color: var(--text-2);
 }
-
-/* --------------------------------------------------------------------------
-   Compact form - home page Contact Us (Figma 136:2055)
-   Labels live inside the fields as placeholders (the <label>s are sr-only),
-   so the card is denser: 24px between rows, 16px across them.
-   -------------------------------------------------------------------------- */
-.form-card--compact {
-  padding: var(--sp-8);
-  box-shadow: 0 24px 27px rgba(102, 102, 102, .04),
-              0 97px 48.5px rgba(102, 102, 102, .03),
-              0 219px 65.5px rgba(102, 102, 102, .02),
-              0 389px 78px rgba(102, 102, 102, .01);
-}
-.form-card--compact .form-note { color: var(--text-3); letter-spacing: .24px; line-height: 16px; }
-.form-card--compact .form-note span { font-size: var(--fs-body); line-height: 22px; font-style: normal; color: #ff1616; }
-.form-card--compact .form-note:empty { display: none; }
-.form-card--compact .form-grid { gap: var(--sp-6); margin-top: var(--sp-4); }
-.form-card--compact .btn--submit { margin-top: var(--sp-2); letter-spacing: .32px; }
-
-.form-card--compact .field__control,
-.form-card--compact .combo__control { border-color: var(--stroke-input); }
-.form-card--compact .field__control { padding: 0 var(--sp-3); letter-spacing: .28px; }
-.form-card--compact .field__control::placeholder,
-.form-card--compact .combo__input::placeholder {
-  font-size: var(--fs-sm);
-  letter-spacing: .28px;
-  color: var(--text-3);
-}
-.form-card--compact .field__control:hover,
-.form-card--compact .combo__control:hover { border-color: var(--text-3); }
-.form-card--compact .field__control:focus,
-.form-card--compact .combo.is-open .combo__control,
-.form-card--compact .combo__control:focus-within { border-color: var(--brand-2); }
-
-/* "Country  Singapore": the label stays visible, inline, ahead of the value. */
-.field--inline { opacity: .75; }
-.field__label--inline {
-  position: absolute; left: var(--sp-3); top: 0; z-index: 1;
-  display: flex; align-items: center;
-  height: 48px; margin: 0;
-  font-size: var(--fs-sm); letter-spacing: .28px;
-  color: var(--text-3);
-  pointer-events: none;
-}
-/* Fixed value, so it keeps the plain outline rather than the "answered" one. */
-.form-card--compact .field--inline .field__control {
-  padding-left: 81px;
-  border: 1px solid var(--stroke-input);
-  font-weight: 500;
-  color: var(--text-1);
-}
-
-/* block: an inline textarea leaves a baseline gap that pushed the button down */
-.form-card--compact textarea.field__control { display: block; height: 174px; padding: var(--sp-2) 14px; resize: none; }
-
-.form-card--compact .field__geo { right: 9px; }
-.field__geo .field__geo-icon { width: 17.33px; height: 17.33px; }
-
-/* The export is an up-chevron; it points down at rest and flips up when open.
-   Scoped to the card so it outranks the generic .combo .field__chevron below. */
-.form-card--compact .combo .field__chevron--prime {
-  right: 11px; width: 20px; height: 20px;
-  margin-top: -10px; padding: 0;
-  transform: rotate(180deg);
-}
-.form-card--compact .combo.is-open .field__chevron--prime { transform: rotate(0deg); }
-
-.form-card--compact .voice-btn {
-  right: 14px; bottom: 14px;
-  padding: 0 var(--sp-2);
-  border-radius: var(--r-md);
-  background: var(--voice-bg);
-  box-shadow: 0 0 0 5px var(--voice-ring);
-  color: var(--voice-text);
-}
-.form-card--compact .voice-btn:hover { background: #d2eef6; }
+/* 16px icon centred on the first 18px line, so it stays put if the text wraps. */
+.field__note-icon { display: block; flex: none; width: 16px; height: 16px; margin-top: 1px; color: var(--brand-2); }
+.field__note-icon svg { display: block; width: 16px; height: 16px; }
 
 /* --------------------------------------------------------------------------
    Combobox (single select + multi select with chips)
