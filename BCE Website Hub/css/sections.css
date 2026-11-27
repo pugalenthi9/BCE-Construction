@@ -259,7 +259,8 @@
   font-size: 32px; line-height: 44px; font-weight: 500;
   letter-spacing: .64px;
   color: var(--text-1);
-  transition: color var(--dur) var(--ease);
+  transform-origin: left center;
+  transition: color var(--dur) var(--ease), transform 300ms var(--ease-out);
 }
 .steps__n { font-weight: 300; color: var(--text-3); transition: color var(--dur) var(--ease); }
 .steps__desc {
@@ -267,12 +268,23 @@
   font-size: var(--fs-body); line-height: 22px;
   letter-spacing: .32px;
   color: var(--text-2);
+  transform-origin: left top;
+  transition: color var(--dur) var(--ease), transform 300ms var(--ease-out);
 }
 
-/* Reached: the square fills. Current: the title lights up too. */
+/* Reached: the square fills. Current: the title lights up, and the step
+   grows 6% - title and description together, anchored to the rail side -
+   so it reads as lifted above the others. A transform, not a font-size, so
+   nothing below it moves; the step it hands over to eases back as it goes. */
 .steps__item.is-done .steps__dot { background: var(--steps-orange); border-color: var(--stroke-1); }
 .steps__item.is-current .steps__name,
 .steps__item.is-current .steps__n { color: var(--steps-orange); }
+.steps__item.is-current .steps__name,
+.steps__item.is-current .steps__desc { transform: scale(1.06); }
+.steps__item.is-current .steps__desc { color: var(--text-1); }
+@media (prefers-reduced-motion: reduce) {
+  .steps__name, .steps__desc { transition: color var(--dur) var(--ease); }
+}
 
 @media (hover: hover) and (pointer: fine) {
   .steps__photo:hover img { transform: scale(1.04); }

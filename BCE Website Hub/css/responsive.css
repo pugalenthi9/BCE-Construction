@@ -336,6 +336,9 @@
   .steps__dot { left: -36px; top: 8px; }
   .steps__rail { top: 8px; }
   .steps__item + .steps__item { margin-top: var(--sp-8); }
+  /* Narrow column: a gentler lift keeps the text inside the screen edge. */
+  .steps__item.is-current .steps__name,
+  .steps__item.is-current .steps__desc { transform: scale(1.04); }
   .steps__name { font-size: 22px; line-height: 32px; letter-spacing: .3px; }
   .steps__desc { font-size: var(--fs-sm); }
 
