@@ -37,75 +37,85 @@
 
 <main id="main">
 
-  <!-- ===== Connect with us (Figma "Grid lines" 43:1656) ================== -->
+  <!-- ===== Our Journey Begins Here (Figma "Grid lines" 734:1202) =========
+       Title | lead on one line; the 446px photo | the 666px form card under
+       them, 120px apart. The form takes its labels inside the fields
+       (data-form-style="inline"). -->
   <section class="connect has-grid">
     <div class="container connect__grid">
-
-      <div class="connect__intro" data-reveal="left">
-        <h1 class="connect__title">Connect with us</h1>
-        <p class="connect__lead">
-          Tell us what needs doing and the BCE team will come back to you with a clear quote.
-        </p>
-        <figure class="connect__photo">
-          <img src="images/misc/contact-site-office.webp"
-               alt="A BCE coordinator taking a call at the site office" loading="lazy">
-        </figure>
-      </div>
-
-      <div class="form-card" id="enquiry" data-reveal="right">
+      <h1 class="connect__title" data-reveal>Our Journey <span class="connect__title-tail">Begins Here</span></h1>
+      <p class="connect__lead" data-reveal style="--reveal-delay:90ms">
+        Share a few details about the work you need. Our team will get in touch to fix a convenient
+        time, visit your site and give you a clear quotation.
+      </p>
+      <figure class="connect__photo" data-reveal="left">
+        <img src="images/misc/contact-site-office.webp"
+             alt="A BCE coordinator taking a call at the site office" loading="lazy">
+      </figure>
+      <div class="form-card form-card--inline" id="enquiry" data-reveal="right">
         <form data-enquiry-form novalidate>
-          <div data-render="enquiry-fields" data-form-scope="contact"></div>
+          <div data-render="enquiry-fields" data-form-scope="contact" data-form-style="inline"></div>
         </form>
       </div>
-
     </div>
   </section>
 
-  <!-- ===== Visit us at our location (Figma 1:10645) ====================== -->
-  <section class="visit">
+  <!-- ===== Visit us at our location (Figma 637:1556) ====================
+       A live Google map, set up by initGoogleMap (main.js):
+       - with a Maps JavaScript API key (BCE.maps.apiKey in site.js), the
+         details card rides beside the office pin and the map can't be panned
+         far enough to lose them;
+       - without one, Google's keyless embed below, framed so the pin sits in
+         the open space beside the card.
+       Either way the Map / Satellite switch is Google's own control. -->
+  <section class="visit" aria-labelledby="visit-title">
     <div class="container">
-      <div class="section-head section-head--center" data-reveal>
-        <h2 class="visit__title">Visit us at our location</h2>
-        <p class="visit__lead">
-          Find us at Suntec Tower One, or call ahead and we&rsquo;ll come to you.
+      <div class="visit__head">
+        <h2 class="visit__title" id="visit-title" data-reveal><span class="title-lead">Visit us at</span> our location</h2>
+        <p class="visit__lead" data-reveal style="--reveal-delay:90ms">
+          Find us at Suntec Tower One, a short walk from Promenade MRT. Prefer a site visit? Our team comes to you anywhere in Singapore.
         </p>
       </div>
 
       <div class="mapview" data-reveal="scale">
-        <img class="mapview__img" src="images/contact/map.webp"
-             alt="Map showing the BCE office at Suntec Tower One, Singapore" loading="lazy">
-        <span class="mapview__tint"></span>
-
-        <div class="mapview__details">
-          <h3 class="mapview__heading">Contact Details</h3>
-          <a class="mapview__row" href="tel:+6598945223">
-            <span class="mapview__icon"><img src="images/icons/phone.svg" alt=""></span>
-            <span>+65 98945223</span>
-          </a>
-          <a class="mapview__row" href="mailto:balaceplsg@gmail.com">
-            <span class="mapview__icon"><img src="images/icons/email.svg" alt=""></span>
-            <span>balaceplsg@gmail.com</span>
-          </a>
-
-          <h3 class="mapview__heading mapview__heading--spaced">Location</h3>
-          <p class="mapview__row mapview__row--static">
-            <span class="mapview__icon"><img src="images/icons/pin.svg" alt=""></span>
-            <span>7 Temasek Boulevard #12-07 Suntec Tower One, Singapore - 038987</span>
-          </p>
+        <div class="mapview__map" data-gmap>
+          <iframe class="mapview__frame"
+                  src="https://maps.google.com/maps?q=Suntec+Tower+One%2C+7+Temasek+Boulevard%2C+Singapore+038987&amp;t=m&amp;z=17&amp;output=embed"
+                  title="Google map of the BCE office at Suntec Tower One, Singapore"
+                  loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
         </div>
+        <div class="mapview__card">
+          <figure class="mapview__photo">
+            <img src="images/contact/suntec-tower.webp" alt="Suntec Tower One at night, where the BCE office is" loading="lazy">
+            <!-- Google Maps directions to the office; initDirections adds the
+                 visitor's own position as the start point when they allow it. -->
+            <a class="mapview__open" data-directions href="https://www.google.com/maps/dir/?api=1&amp;destination=Suntec+Tower+One%2C+7+Temasek+Boulevard%2C+Singapore+038987"
+               target="_blank" rel="noopener">
+              <img src="images/icons/google-maps.svg" alt="" width="24" height="24">
+              <span>Get Directions</span>
+              <svg class="mapview__open-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </figure>
 
-        <div class="mapview__zoom">
-          <button type="button" class="mapview__zoom-btn" data-map-zoom="in"  aria-label="Zoom in">
-            <img src="images/icons/plus.svg" alt="">
-          </button>
-          <button type="button" class="mapview__zoom-btn" data-map-zoom="out" aria-label="Zoom out">
-            <img src="images/icons/minus.svg" alt="">
-          </button>
+          <div class="mapview__rows">
+            <p class="mapview__row">
+              <span class="mapview__icon"><img src="images/icons/contact-building.svg" alt=""></span>
+              <span>
+                <span class="mapview__label">Location</span>
+                <span class="mapview__value" data-company="address">7 Temasek Boulevard #12-07 Suntec Tower One, Singapore - 038987</span>
+              </span>
+            </p>
+            <p class="mapview__row">
+              <span class="mapview__icon"><img src="images/icons/contact-building.svg" alt=""></span>
+              <span>
+                <span class="mapview__label">Working Days</span>
+                <span class="mapview__value" data-company="hours">MON - SAT 9:00 AM - 7:00 PM</span>
+              </span>
+            </p>
+          </div>
         </div>
-
-        <span class="mapview__pin" aria-hidden="true">
-          <img src="images/icons/building.svg" alt="">
-        </span>
       </div>
     </div>
   </section>

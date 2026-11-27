@@ -74,34 +74,48 @@
             'stroke-linecap="round" stroke-linejoin="round"/>' +
     '</svg>';
 
-  /* Shared arrow glyph for "Get Free Quote" style links. */
-  var ARROW = '<svg viewBox="0 0 22 12" fill="none" aria-hidden="true">' +
-                '<path d="M0 6h20M15 1l5 5-5 5" stroke="currentColor" stroke-width="1.6" ' +
-                      'stroke-linecap="round" stroke-linejoin="round"/>' +
-              '</svg>';
-
+  /* Sectors We Serve (Figma 715:3657). One label on every card, "Request a
+     Site Visit"; it lands on the contact page's form (#enquiry) with the
+     building type already chosen. The hidden "for <type>" keeps the six
+     links apart in screen-reader link lists. */
   R['building-types'] = function () {
     return BCE.buildingTypes.map(function (t, i) {
-      return '<article class="type-card" data-reveal style="--reveal-delay:' + (i % 3) * 90 + 'ms">' +
+      return '<article class="type-card" data-reveal style="--reveal-delay:' + (i % 2) * 90 + 'ms">' +
                '<div class="type-card__media"><img src="' + t.image + '" alt="' + esc(t.title) + '" loading="lazy"></div>' +
-               '<h3 class="type-card__title">' + esc(t.title) + '</h3>' +
-               '<p class="type-card__desc">' + esc(t.desc) + '</p>' +
-               '<a class="link-arrow type-card__link" href="contact.html?type=' + encodeURIComponent(t.title) + '">' +
-                 '<span>Get Free Quote</span>' + ARROW +
+               '<div class="type-card__body">' +
+                 '<h3 class="type-card__title">' + esc(t.title) + '</h3>' +
+                 '<p class="type-card__desc">' + esc(t.desc) + '</p>' +
+               '</div>' +
+               '<a class="type-card__link" href="contact.html?type=' + encodeURIComponent(t.title) + '#enquiry">' +
+                 '<span>Request a Site Visit<span class="sr-only"> for ' + esc(t.title) + '</span></span>' +
+                 '<img class="type-card__arrow" src="images/icons/arrow-site-visit.svg" alt="">' +
                '</a>' +
              '</article>';
     }).join('');
   };
 
+  /* How it works timeline (Figma 1:1990 / 636:1436), on the home and service
+     pages. The first step ships lit so the list reads right before main.js
+     runs; initSteps then moves the light down the rail as the page scrolls. */
   R['process-steps'] = function () {
-    return BCE.process.map(function (p) {
-      return '<div class="process__step">' +
-               '<div class="process__step-head">' +
-                 '<span class="process__num">' + esc(p.n) + '</span>' +
-                 '<h3 class="process__step-title">' + esc(p.title) + '</h3>' +
-               '</div>' +
-               '<p class="process__step-desc">' + esc(p.desc) + '</p>' +
-             '</div>';
+    return BCE.process.map(function (p, i) {
+      return '<li class="steps__item' + (i === 0 ? ' is-current is-done' : '') + '">' +
+               '<span class="steps__dot" aria-hidden="true"></span>' +
+               '<h3 class="steps__name"><span class="steps__n">' + esc(p.n) + '</span> ' + esc(p.title) + '</h3>' +
+               '<p class="steps__desc">' + esc(p.desc) + '</p>' +
+             '</li>';
+    }).join('');
+  };
+
+  /* "Why choose us" on the service pages (Figma 597:1351). Supplied icons8
+     art carrying its own colour, shown as-is at 48px. */
+  R['why-choose'] = function () {
+    return (BCE.whyChoose || []).map(function (v, i) {
+      return '<article class="why__item" data-reveal style="--reveal-delay:' + i * 90 + 'ms">' +
+               '<span class="why__icon"><img src="' + v.icon + '" alt="" width="48" height="48" loading="lazy"></span>' +
+               '<h3 class="why__name">' + esc(v.title) + '</h3>' +
+               '<p class="why__desc">' + esc(v.desc) + '</p>' +
+             '</article>';
     }).join('');
   };
 
@@ -119,30 +133,12 @@
     /* Marked, not disguised: while the quotes are samples the section says so
        in plain sight. Set BCE.testimonialsAreSamples = false once real,
        permissioned quotes replace them and this disappears. */
-    var notice = BCE.testimonialsAreSamples
-      ? '<p class="testimonials__notice">' +
-          '<strong>Sample content.</strong> These quotes are placeholders for layout only ' +
-          '&mdash; they are not real customer reviews, and must be replaced before launch.' +
-        '</p>'
-      : '';
+    var notice = section && section.querySelector('.reviews__notice');
+    if (notice) notice.hidden = !BCE.testimonialsAreSamples;
 
-    return notice + BCE.testimonials.map(function (t, i) {
-      var stars = '';
-      for (var n = 0; n < 5; n++) stars += '<span aria-hidden="true">' + (n < t.stars ? '★' : '☆') + '</span>';
-      return '<article class="testimonial" data-reveal style="--reveal-delay:' + (i % 3) * 90 + 'ms">' +
-               '<div class="testimonial__stars">' + stars +
-                 '<span class="sr-only">' + t.stars + ' out of 5</span>' +
-               '</div>' +
-               '<p class="testimonial__category">' + esc(t.category) + '</p>' +
-               '<p class="testimonial__quote">' + esc(t.quote) + '</p>' +
-               '<div class="testimonial__client">' +
-                 '<span class="testimonial__avatar">' + esc(t.name.charAt(0)) + '</span>' +
-                 '<span>' +
-                   '<span class="testimonial__name">' + esc(t.name) + '</span><br>' +
-                   '<span class="testimonial__role">' + esc(t.role) + '</span>' +
-                 '</span>' +
-               '</div>' +
-             '</article>';
+    /* One card per review, in a list; the strip's motion lives in main.js. */
+    return BCE.testimonials.map(function (t) {
+      return '<li class="reviews__item">' + BCE.reviewCard(t, { stars: 'row' }) + '</li>';
     }).join('');
   };
 
@@ -172,42 +168,30 @@
     }).join('');
   };
 
-  /* Figma 437:1221. The icons are supplied SVGs carrying their own colour, so
-     they go in as <img> at the design's 60x60 - never recoloured or inlined. */
-  R['values'] = function () {
-    return BCE.values.map(function (v, i) {
-      return '<article class="value" data-reveal style="--reveal-delay:' + i * 90 + 'ms">' +
-               '<img class="value__icon" src="' + v.icon + '" alt="" aria-hidden="true" width="60" height="60" loading="lazy">' +
-               '<h3 class="value__title">' + esc(v.title) + '</h3>' +
-               '<p class="value__desc">' + esc(v.desc) + '</p>' +
-             '</article>';
-    }).join('');
+  /* The fact timeline (Figma 697:2998, 437:1464): one square on the rail
+     over each fact. initCounters ticks each count up when it comes into view.
+     The licence is the supplied bizSAFE STAR artwork, wreath included. */
+  R['facts'] = function () {
+    return (BCE.facts || []).map(function (f) {
+      return '<li class="facts__item">' +
+               '<p class="facts__label">' + esc(f.label) + '</p>' +
+               '<p class="facts__value" data-count="' + Number(f.count) + '">' + Number(f.count) + '+</p>' +
+             '</li>';
+    }).join('') +
+    '<li class="facts__item facts__item--license">' +
+      '<p class="facts__label">License</p>' +
+      '<img class="facts__license" src="images/brand/bizsafe-wreath.webp" alt="bizSAFE STAR certified" width="153" height="64" loading="lazy">' +
+    '</li>';
   };
 
-  /* Figma 437:1464 - the orange "Meet our MD" band. */
-  R['founder-band'] = function () {
+  /* About page: words from the MD (Figma 437:1464). */
+  R['md-words'] = function () {
     var f = BCE.founder;
-    return '<img class="md__grid" src="images/misc/perspective-grid.svg" alt="" aria-hidden="true">' +
-           '<div class="container md">' +
-             /* .eyebrow is already the design's pill: 20px radius, 12px medium,
-                uppercase, 8px padding - only the colours differ here. */
-             '<span class="eyebrow eyebrow--on-orange" data-reveal>' + esc(f.eyebrow) + '</span>' +
-             '<div class="md__body" data-reveal>' +
-               '<p class="md__lead">' + esc(f.lead) + '</p>' +
-               '<blockquote class="md__quote">' +
-                 '<span class="md__mark">&ldquo;</span>' +
-                 esc(f.quote).replace('BCE', '<b>BCE</b>') +
-                 '<span class="md__mark">&rdquo;</span>' +
-               '</blockquote>' +
-             '</div>' +
-             '<figure class="md__person" data-reveal>' +
-               '<img class="md__photo" src="' + f.photo + '" alt="' + esc(f.name) + '" width="56" height="56" loading="lazy">' +
-               '<figcaption>' +
-                 '<span class="md__name">' + esc(f.name) + '</span>' +
-                 '<span class="md__role">' + esc(f.role) + '</span>' +
-               '</figcaption>' +
-             '</figure>' +
-           '</div>';
+    return '<blockquote class="md-words__quote">' + esc(f.quote) + '</blockquote>' +
+           '<figcaption class="md-words__by">' +
+             '<span class="md-words__name">' + esc(f.name) + '</span>' +
+             '<span class="md-words__role">' + esc(f.role) + '</span>' +
+           '</figcaption>';
   };
 
   /* Hero marquee — the set is duplicated so the CSS loop is seamless. */
@@ -238,9 +222,15 @@
      aria-describedby pointing at its error node.
      -------------------------------------------------------------------------- */
 
-  /* Icons exported from the design, not redrawn. */
+  /* Icons exported from the design, not redrawn. The contact page's inline
+     form (Figma 734:1214) has its own chevron, location and mic exports. */
   var CHEVRON = '<img class="field__chevron" src="images/icons/arrow-down.svg" alt="">';
   var MIC     = '<img src="images/icons/mic.svg" alt="">';
+  var ICONS_INLINE = {
+    chevron: '<img class="field__chevron" src="images/icons/chevron-up-20.svg" alt="">',
+    mic:     '<img src="images/icons/mic-ai.svg" alt="">',
+    geo:     'images/icons/location-target.svg'
+  };
 
   /* Placeholders are generic examples on purpose. They previously echoed BCE's
      own name, phone, street and postal code, which read as if the form had been
@@ -275,19 +265,28 @@
       hint: 'Add one or more services' },
 
     { name: 'message', label: 'What is the issue you are facing?', textarea: true,
+      inlineLabel: 'More about your problem',
       hint: 'e.g. Ceiling leak in the master bathroom after heavy rain.',
       /* What happens after Submit, said where the visitor is about to commit. */
       note: 'Our team will reply within 24 hours and arrange a site visit before we quote.' }
   ];
 
-  function field(f, scope) {
+  /* `inline`: the label sits inside the field where the design shows it and
+     lifts onto the top border once the field is focused or filled (CSS);
+     the example hint only appears under it while the field has focus. */
+  function field(f, scope, inline) {
     var id  = 'f-' + scope + '-' + f.name;
     var eid = 'e-' + scope + '-' + f.name;
     var lid = 'l-' + scope + '-' + f.name;
-    var cls = 'field' + (f.textarea ? ' field--area' : '') + (f.combo ? ' field--combo' : '');
+    var cls = 'field' + (f.textarea ? ' field--area' : '') + (f.combo ? ' field--combo' : '') +
+              (inline ? ' field--inline' : '') + (inline && f.readonly ? ' field--fixed' : '');
+    var label   = inline && f.inlineLabel ? f.inlineLabel : f.label;
+    var chevron = inline ? ICONS_INLINE.chevron : CHEVRON;
+    var mic     = inline ? ICONS_INLINE.mic : MIC;
+    var note    = inline ? '' : f.note;
 
     var nid = 'n-' + scope + '-' + f.name;
-    var described = ' aria-describedby="' + eid + (f.note ? ' ' + nid : '') + '"' +
+    var described = ' aria-describedby="' + eid + (note ? ' ' + nid : '') + '"' +
                     (f.optional ? '' : ' aria-required="true"');
     var common = ' class="field__control" id="' + id + '" name="' + f.name + '"' + described;
 
@@ -306,7 +305,7 @@
                    ' role="combobox" aria-expanded="false" aria-autocomplete="list"' +
                    ' aria-controls="' + lid + '"' + described +
                    ' placeholder="' + esc(f.hint) + '">' +
-            CHEVRON +
+            chevron +
           '</div>' +
           '<ul class="combo__panel" id="' + lid + '" role="listbox"' +
               (f.multi ? ' aria-multiselectable="true"' : '') + ' hidden></ul>' +
@@ -317,7 +316,7 @@
       control = '<div class="field__wrap">' +
                   '<textarea' + common + ' placeholder="' + esc(f.hint) + '" rows="4"></textarea>' +
                   '<button class="voice-btn" type="button" aria-label="Dictate your message">' +
-                    MIC + '<span>Voice Input</span></button>' +
+                    mic + '<span>Voice Input</span></button>' +
                 '</div>';
 
     } else {
@@ -332,19 +331,19 @@
                   (f.geo
                     ? '<button class="field__geo" type="button" data-geolocate' +
                             ' aria-label="Use my current location">' +
-                        '<img src="images/icons/pin.svg" alt="">' +
+                        '<img src="' + (inline ? ICONS_INLINE.geo : 'images/icons/pin.svg') + '" alt="">' +
                       '</button>'
                     : '') +
                 '</div>';
     }
 
     return '<div class="' + cls + '">' +
-             '<label class="field__label" for="' + id + '">' + esc(f.label) + '</label>' +
+             '<label class="field__label" for="' + id + '">' + esc(label) + '</label>' +
              control +
              '<p class="field__error" id="' + eid + '" role="alert"></p>' +
-             (f.note ? '<p class="field__note" id="' + nid + '">' +
+             (note ? '<p class="field__note" id="' + nid + '">' +
                          '<span class="field__note-icon" data-icon="info"></span>' +
-                         '<span>' + esc(f.note) + '</span>' +
+                         '<span>' + esc(note) + '</span>' +
                        '</p>' : '') +
            '</div>';
   }
@@ -359,15 +358,24 @@
   }, []);
 
   R['enquiry-fields'] = function (host) {
-    var scope = (host && host.getAttribute('data-form-scope')) || 'x';
+    var scope  = (host && host.getAttribute('data-form-scope')) || 'x';
+    /* data-form-style="inline" (contact page, Figma 734:1214): labels inside
+       the fields, and Building Type + Choose Service share one row. */
+    var inline = !!host && host.getAttribute('data-form-style') === 'inline';
+    var entries = !inline ? ENQUIRY_FIELDS : ENQUIRY_FIELDS.reduce(function (out, e) {
+      var prev = out[out.length - 1];
+      if (e.name === 'service' && prev && prev.name === 'buildingType') out[out.length - 1] = { row: [prev, e] };
+      else out.push(e);
+      return out;
+    }, []);
 
-    var body = ENQUIRY_FIELDS.map(function (entry) {
+    var body = entries.map(function (entry) {
       if (entry.row) {
         return '<div class="form-row">' +
-                 entry.row.map(function (f) { return field(f, scope); }).join('') +
+                 entry.row.map(function (f) { return field(f, scope, inline); }).join('') +
                '</div>';
       }
-      return field(entry, scope);
+      return field(entry, scope, inline);
     }).join('');
 
     return '<p class="form-note"><span aria-hidden="true">*</span> All fields are mandatory</p>' +

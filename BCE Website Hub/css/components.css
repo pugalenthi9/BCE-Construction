@@ -224,7 +224,7 @@
   content: "";
   position: absolute;
   left: 0; right: 0; bottom: 0;
-  height: 2px;
+  height: 4px;
   background: var(--brand-1);
   border-radius: 2px 2px 0 0;
   transform: scaleX(0);
@@ -498,9 +498,13 @@
 .service-card__badge { color: var(--white); }
 .service-card__badge svg { width: 18px; height: 18px; }
 
+/* At rest the title sits 28px off the card's foot: the hidden buttons
+   (24px gap + 40px) wait below the edge, and the body rises to show them. */
 .service-card__body {
+  --card-reveal: calc(var(--sp-6) + 40px);
   position: absolute; inset: auto 0 0 0;
   padding: 28px;
+  transform: translateY(var(--card-reveal));
   transition: transform var(--dur-slow) var(--ease-out);
 }
 .service-card__title {
@@ -518,7 +522,8 @@
 }
 .service-card:hover .service-card__actions,
 .service-card:focus-within .service-card__actions { opacity: 1; transform: translateY(0); }
-.service-card:hover .service-card__body { transform: translateY(-4px); }
+.service-card:hover .service-card__body,
+.service-card:focus-within .service-card__body { transform: translateY(-4px); }
 
 /* Invisible link filling the card, so a click or tap anywhere opens the
    service page. It comes before the badge and the body in the DOM, and all
@@ -531,6 +536,7 @@
    Keyed to the input device rather than screen width, so it covers tablets. */
 @media (hover: none) {
   .service-card__glow { opacity: 1; }
+  .service-card__body { transform: none; }
   .service-card__actions { opacity: 1; transform: none; }
   .service-card__badge { background: var(--white); color: var(--brand-1); }
 }
@@ -554,13 +560,20 @@
 /* --------------------------------------------------------------------------
    Building-type card (dark section)
    -------------------------------------------------------------------------- */
-/* Cards stretch to the tallest in the row and push their link to the bottom,
-   so every "Get Free Quote" lines up regardless of description length. */
-.type-card { display: flex; flex-direction: column; height: 100%; }
+/* Figma 715:3657: two 604px columns 24px apart, rows 48px apart. Each card
+   is photo (604 x 374) / 16 / title + description / 24 / "Request a Site
+   Visit". Cards in a row stretch to the taller one and push the link to the
+   bottom, so the two links line up however the descriptions wrap. */
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-12) var(--sp-6);
+}
+.type-card { position: relative; display: flex; flex-direction: column; }
 
 .type-card__media {
-  height: 300px;
-  border-radius: 2px;
+  aspect-ratio: 604 / 374;
+  border-radius: 4px;
   overflow: hidden;
   background: var(--bg-dark-soft);
 }
@@ -568,51 +581,96 @@
   width: 100%; height: 100%; object-fit: cover;
   transition: transform var(--dur-slow) var(--ease-out);
 }
-.type-card:hover .type-card__media img { transform: scale(1.06); }
+.type-card__body { margin: var(--sp-4) 0 var(--sp-6); }
 .type-card__title {
-  margin-top: var(--sp-4);
-  font-size: 24px; line-height: 32px; font-weight: 600;
-  color: var(--text-on-dark);
-  transition: color var(--dur) var(--ease);
+  font-size: 32px; line-height: normal; font-weight: 500;
+  letter-spacing: .64px;
+  color: var(--white);
 }
-.type-card:hover .type-card__title { color: var(--brand-selected); }
 .type-card__desc {
-  margin-top: var(--sp-3);
-  font-size: var(--fs-sm); line-height: 22px;
-  color: var(--text-on-dark-muted);
+  margin-top: var(--sp-2);
+  font-size: var(--fs-sm); line-height: 28px;
+  color: rgba(255, 255, 255, .75);
 }
-.type-card__link { margin-top: auto; padding-top: var(--sp-5); }
+.type-card__link {
+  display: inline-flex; align-items: center; gap: var(--sp-3);
+  align-self: flex-start;
+  margin-top: auto;
+  font-size: 18px; line-height: normal; font-weight: 500;
+  letter-spacing: .36px;
+  color: var(--sector-link);
+}
+/* The link's hit area covers the whole card, so the photo is clickable too
+   and hovering it never promises a click that does nothing. */
+.type-card__link::after { content: ""; position: absolute; inset: 0; }
+.type-card__arrow { flex: none; transition: transform var(--dur) var(--ease-out); }
+
+/* Pointer hover only: the photo eases in a touch and the arrow leans forward. */
+@media (hover: hover) and (pointer: fine) {
+  .type-card:hover .type-card__media img { transform: scale(1.04); }
+  .type-card:hover .type-card__arrow { transform: translateX(4px); }
+}
+.type-card__link:focus-visible .type-card__arrow { transform: translateX(4px); }
 
 /* --------------------------------------------------------------------------
-   Testimonial card
+   Review card (Figma 616:2590 / 599:1511) - built by BCE.reviewCard()
+   324 x 364: stars, 12, category, 16, quote mark, 8, quote; the client sits
+   on the bottom edge.
    -------------------------------------------------------------------------- */
-.testimonial {
-  padding: var(--sp-4);
-  background: var(--white);
-  border-radius: var(--r-md);
-  box-shadow: var(--shadow-card);
-  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+.review-card {
+  display: flex; flex-direction: column;
+  width: 324px; min-height: 364px;
+  margin: 0;
+  padding: var(--sp-6);
+  border: 1px solid var(--review-line);
+  border-radius: 16px;
+  background: var(--bg-1);
+  color: var(--text-1);
+  box-shadow: 0 12px 13.5px rgba(148, 148, 148, .02), 0 49px 24.5px rgba(148, 148, 148, .02),
+              0 110px 33px rgba(148, 148, 148, .01);
 }
-.testimonial:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
-.testimonial__stars { display: flex; gap: 2px; color: var(--star); font-size: 18px; }
-.testimonial__category {
-  margin-top: var(--sp-4);
-  font-size: var(--fs-body); font-weight: 600; color: var(--brand-2);
+/* Home strip: the design's five-star row is the mask; the fill under it is
+   gold up to the rating (each star is 20px with a 2px gap). */
+.review-card__rating {
+  display: block;
+  width: 108px; height: 20px;
+  background: linear-gradient(90deg,
+    var(--rating-on) calc(var(--rating, 5) * 22px - 1px),
+    var(--rating-off) 0);
+  -webkit-mask: url("../images/icons/rating-stars.svg") no-repeat 0 0 / 108px 20px;
+          mask: url("../images/icons/rating-stars.svg") no-repeat 0 0 / 108px 20px;
 }
-.testimonial__quote {
-  margin-top: var(--sp-2);
-  font-size: var(--fs-sm); line-height: 22px; color: var(--text-2);
+/* Recent Work: separate stars, 4px apart. */
+.review-card__stars { display: flex; gap: var(--sp-1); }
+.review-card__star { width: 20px; height: 20px; }
+.review-card__star.is-off { filter: grayscale(1); opacity: .35; }
+.review-card__category {
+  margin-top: var(--sp-3);
+  font-size: 20px; line-height: 28px; font-weight: 700;
+  color: var(--brand-1);
 }
-.testimonial__client { display: flex; align-items: center; gap: var(--sp-3); margin-top: var(--sp-6); }
-.testimonial__avatar {
+/* codicon:quote is drawn facing the other way in both frames. */
+.review-card__mark { margin-top: var(--sp-4); transform: scaleX(-1); }
+.review-card__quote {
+  margin: var(--sp-2) 0 0;
+  font-size: var(--fs-sm); line-height: 28px;
+  font-stretch: condensed;
+  color: var(--text-1);
+}
+.review-card__client {
+  display: flex; align-items: center; gap: var(--sp-2);
+  margin-top: auto; padding-top: var(--sp-6);
+}
+.review-card__avatar {
   display: grid; place-items: center;
   width: 40px; height: 40px; flex: none;
-  border-radius: var(--r-pill);
-  background: #7f9fd4; color: var(--white);
-  font-weight: 600;
+  border-radius: var(--r-sm);
+  background: var(--review-avatar);
+  font-size: 18px; font-weight: 500; color: var(--white);
 }
-.testimonial__name { font-size: var(--fs-sm); font-weight: 600; }
-.testimonial__role { font-size: var(--fs-xs); color: var(--text-3); }
+.review-card__who { display: flex; flex-direction: column; }
+.review-card__name { font-size: var(--fs-sm); line-height: 21px; font-weight: 500; }
+.review-card__role { font-size: var(--fs-xs); line-height: 18px; color: var(--text-2); }
 
 /* --------------------------------------------------------------------------
    Form
@@ -873,6 +931,110 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
 .voice-btn img { width: 16px; height: 16px; }
 
 /* --------------------------------------------------------------------------
+   Inline-label form - contact page (Figma 734:1214)
+   At rest each field shows only its name, inside the field, as drawn. On
+   focus or once filled the name lifts onto the top border (a small white
+   notch), so it stays readable while the visitor types; the example hint
+   appears in the field only while it has focus. The label is a real
+   <label> throughout - nothing depends on the placeholder.
+   -------------------------------------------------------------------------- */
+.form-card--inline {
+  padding: var(--sp-8);
+  border-color: var(--stroke-card);
+  box-shadow: 0 24px 27px rgba(102, 102, 102, .04), 0 97px 48.5px rgba(102, 102, 102, .03),
+              0 219px 65.5px rgba(102, 102, 102, .02), 0 389px 78px rgba(102, 102, 102, .01);
+}
+.form-card--inline .form-note { align-items: baseline; height: 22px; line-height: 22px; color: var(--text-3); letter-spacing: .24px; }
+.form-card--inline .form-note > span[aria-hidden] { font-size: var(--fs-body); font-style: normal; }
+/* The status line under the button only takes room once it has words. It
+   stays rendered (it is a live region); empty, it is lifted out of the grid
+   so it adds no row or gap. */
+.form-card--inline [data-storage-note]:empty { position: absolute; }
+.form-card--inline .form-grid { gap: var(--sp-6); margin-top: var(--sp-4); }
+.form-card--inline .btn--submit { margin-top: var(--sp-2); letter-spacing: .32px; }
+.form-card--inline .btn--submit .btn__icon { width: 24px; height: 24px; }
+
+.field--inline .field__label {
+  position: absolute; left: 9px; top: 24px; z-index: 2;
+  margin: 0; padding: 0 4px;
+  font-size: var(--fs-sm); line-height: 18px; letter-spacing: .28px;
+  color: var(--text-3);
+  background: var(--white);
+  border-radius: 2px;
+  white-space: nowrap;
+  transform: translateY(-50%);
+  transform-origin: left center;
+  pointer-events: none;
+  transition: transform 180ms var(--ease-out), color var(--dur) var(--ease);
+}
+/* Lifted: centred on the top border at 12px. Filled is read from the class
+   forms.js sets, and also from the control itself, so browser autofill
+   (which may not announce an input event) lifts it too. */
+.field--inline:focus-within .field__label,
+.field--inline.is-filled .field__label,
+.field--inline:has(.field__control:not(:placeholder-shown)) .field__label,
+.field--inline:has(.field__control:-webkit-autofill) .field__label {
+  transform: translateY(calc(-50% - 24px)) scale(.857);
+}
+/* :where() keeps this at one class, so the shared hover, focus, filled and
+   error borders still win over the design's resting grey. */
+.field--inline :where(.field__control, .combo__control) { border-color: #dadfe5; }
+.field--inline .field__control { padding-inline: 12px; }
+.field--inline .combo__control { padding-left: 12px; }
+.field--inline .field__control::placeholder,
+.field--inline .combo__input::placeholder { color: transparent; transition: color var(--dur) var(--ease); }
+.field--inline:focus-within .field__control::placeholder,
+.field--inline:focus-within .combo__input::placeholder { color: var(--text-3); }
+
+/* The design's 20px chevron points up; it turns down at rest, up when open. */
+.field--inline .combo .field__chevron {
+  right: 10px; top: 24px;
+  width: 28px; height: 28px; margin-top: -14px;
+  transform: rotate(180deg);
+}
+.field--inline .combo.is-open .field__chevron { transform: none; }
+.field--inline .field__geo img { width: auto; height: auto; }
+
+/* Country is fixed: its name stays inside, with the value beside it. */
+.field--fixed { opacity: .75; }
+.field--fixed.field--inline .field__label,
+.field--fixed.field--inline.is-filled .field__label,
+.field--fixed.field--inline:focus-within .field__label,
+.field--fixed.field--inline:has(.field__control:not(:placeholder-shown)) .field__label {
+  transform: translateY(-50%);
+  color: var(--text-3);
+}
+.field--fixed .field__control[readonly] {
+  padding-left: 81px;
+  border: 1px solid #dadfe5;     /* not the blue "answered" stroke - it was never asked */
+  font-weight: 500; color: var(--text-1);
+}
+
+/* Message: name top-left, Voice Input top-right with its soft ring; the
+   text column stops short of the button. */
+.field--inline.field--area .field__label { top: 17px; left: 11px; }
+.field--inline.field--area:focus-within .field__label,
+.field--inline.field--area.is-filled .field__label,
+.field--inline.field--area:has(.field__control:not(:placeholder-shown)) .field__label {
+  transform: translateY(calc(-50% - 17px)) scale(.857);
+}
+/* display:block - an inline textarea leaves a descender gap under itself. */
+.field--inline textarea.field__control { display: block; height: 174px; padding: 12px 136px 12px 14px; }
+.field--inline .voice-btn {
+  top: 15px; right: 14px; bottom: auto;
+  padding: 0 var(--sp-2);
+  border-radius: 12px;
+  background: #e1f5fa;
+  box-shadow: 0 0 0 5px #effcff;
+  color: #033172;
+}
+.field--inline .voice-btn:hover { background: #d2eef6; }
+.field--inline .voice-btn.is-recording { background: #ffe5e0; color: var(--danger); box-shadow: 0 0 0 5px #fff1ee; }
+@media (prefers-reduced-motion: reduce) {
+  .field--inline .field__label { transition: color var(--dur) var(--ease); }
+}
+
+/* --------------------------------------------------------------------------
    Success modal — mirrors "Submission Confirmation" (284:1900)
    -------------------------------------------------------------------------- */
 .modal {
@@ -886,7 +1048,10 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
 }
 .modal.is-open { opacity: 1; visibility: visible; }
 
+/* Panels size against the viewport: the modal is a centring grid whose track
+   is sized by the panel itself, so a percentage max-width never caps it. */
 .modal__panel {
+  --panel-room: calc(100vw - 2 * var(--sp-6));
   position: relative;
   background: var(--white);
   overflow: hidden;
@@ -900,12 +1065,14 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
 /* --------------------------------------------------------------------------
    Submission Confirmation (Figma 284:1900 — 337 x 320)
    -------------------------------------------------------------------------- */
-/* Widened from the frame's 337px so the body copy settles on two lines
-   instead of three; the vertical rhythm is tightened to match. */
+/* The frame's own 337px (body copy on three lines, as designed). The head is
+   fixed - it carries the absolute-positioned tick and titles; everything
+   under it flows on the design's offsets (88 / 169 / 196 / 256, 24 below),
+   so the panel still fits its content if the copy changes. */
 .sc {
-  width: 400px; max-width: 100%;
-  height: 300px;
-  border-radius: var(--r-md);
+  width: min(337px, var(--panel-room));
+  padding-bottom: var(--sp-6);
+  border-radius: 12px;
 }
 .sc__head {
   position: relative;
@@ -921,7 +1088,14 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
   background: #06c082;
   filter: blur(40px);
 }
+/* The tick pops in once the panel has risen - this dialog is seen once per
+   enquiry, so it can afford the moment. */
 .sc__tick  { position: absolute; left: 16px; top: 16px; width: 48px; height: 48px; }
+.modal--success .sc__tick { transform: scale(.6); opacity: 0; }
+.modal--success.is-open .sc__tick {
+  transform: none; opacity: 1;
+  transition: transform 460ms cubic-bezier(.34, 1.56, .64, 1) 160ms, opacity 200ms var(--ease-out) 160ms;
+}
 .sc__title {
   position: absolute; left: 72px; top: 18px; width: 249px;
   font-size: 20px; font-weight: 600; line-height: normal;
@@ -932,36 +1106,81 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
   font-size: var(--fs-xs); line-height: normal;
   letter-spacing: .24px; color: var(--cta-fill);
 }
+.sc__body,
+.sc__ref,
+.sc__fallback,
+.sc__close { position: relative; z-index: 2; margin-inline: var(--sp-4); }
 .sc__body {
-  position: absolute; left: 16px; top: 96px; width: 368px;
-  font-size: var(--fs-sm); line-height: 22px;
+  margin-top: var(--sp-2);
+  font-size: var(--fs-sm); line-height: normal;
   letter-spacing: .28px; color: var(--cta-fill);
 }
-.sc__ref {
-  position: absolute; left: 16px; top: 142px; width: 368px;
-  font-size: var(--fs-xs); letter-spacing: .4px;
-  color: var(--brand-2); font-weight: 600;
+
+/* Reference ID (Figma 636:1470 / 636:1469) */
+/* A column, so the ID button is a block and adds no baseline space. */
+.sc__ref { display: flex; flex-direction: column; align-items: flex-start; margin-top: var(--sp-6); }
+.sc__ref-label {
+  font-size: var(--fs-sm); line-height: normal; font-weight: 300;
+  letter-spacing: .28px; color: var(--text-3);
 }
+.sc__ref-id {
+  position: relative;
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  /* 6 + the 2px padding = the design's 8px gap above the ID. */
+  margin-top: 6px; margin-left: -6px;
+  padding: 2px 6px;
+  border-radius: var(--r-xs);
+  font-size: var(--fs-body); line-height: 22px; font-weight: 600;
+  letter-spacing: .32px; color: var(--brand-1);
+  transition: background-color var(--dur) var(--ease);
+}
+.sc__ref-copy { display: grid; color: var(--text-3); opacity: 0; transition: opacity var(--dur) var(--ease), color var(--dur) var(--ease); }
+.sc__ref-id:focus-visible { outline: 2px solid var(--brand-2); outline-offset: 2px; }
+.sc__ref-id:focus-visible .sc__ref-copy { opacity: 1; }
+.sc__ref-done {
+  position: absolute; left: calc(100% + 6px); top: 50%;
+  font-size: var(--fs-xs); font-weight: 500; color: var(--success);
+  white-space: nowrap;
+  opacity: 0; transform: translate(-4px, -50%);
+  transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+}
+.sc__ref-id.is-copied .sc__ref-done { opacity: 1; transform: translate(0, -50%); }
+.sc__ref-id.is-copied .sc__ref-copy { opacity: 1; color: var(--success); }
+/* Placeholder while the send is in flight. */
+.sc__ref-id.is-pending .sc__ref-value {
+  color: transparent;
+  border-radius: var(--r-xs);
+  background: linear-gradient(90deg, #e8eef8 25%, #f5f8fd 50%, #e8eef8 75%) 0 0 / 200% 100%;
+  animation: ref-shimmer 1.2s linear infinite;
+}
+@keyframes ref-shimmer { to { background-position: -200% 0; } }
+
 .sc__fallback {
-  position: absolute; left: 16px; top: 212px; width: 368px;
+  margin-top: var(--sp-2);
   font-size: var(--fs-xs); color: var(--text-3);
-  z-index: 2;
 }
 .sc__fallback a { color: var(--brand-2); text-decoration: underline; }
 
 .sc__close {
-  position: absolute; left: 16px; top: 164px;
   display: flex; align-items: center; justify-content: center;
-  width: 368px; height: 40px;
+  width: calc(100% - var(--sp-8)); height: 40px;
+  margin-top: 36px;
   background: var(--white);
   border: 1px solid var(--cta-outline);
   border-radius: var(--r-md);
   font-size: var(--fs-sm); font-weight: 600; color: var(--cta-fill);
-  z-index: 2;
   transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease),
-              border-color var(--dur) var(--ease);
+              border-color var(--dur) var(--ease), transform var(--dur-fast) var(--ease-out);
 }
-.sc__close:hover { background: var(--brand-1); border-color: var(--brand-1); color: var(--white); }
+.sc__close:active { transform: scale(.98); }
+@media (hover: hover) and (pointer: fine) {
+  .sc__close:hover { background: var(--brand-1); border-color: var(--brand-1); color: var(--white); }
+  .sc__ref-id:not(:disabled):hover { background: var(--bg-2); }
+  .sc__ref-id:not(:disabled):hover .sc__ref-copy { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sc__ref-id.is-pending .sc__ref-value { animation: none; }
+}
 
 /* Height is explicit: the source is landscape, so width alone collapsed these
    to ~86px and the negative offsets pushed them out of the clipped panel. */
@@ -972,25 +1191,27 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
   object-fit: cover; object-position: bottom center;
   pointer-events: none;
 }
-.sc__art--a { right: 16px; bottom: -67px; transform: scaleX(-1); }
+.sc__art--a { left: 185px; bottom: -67px; transform: scaleX(-1); }
 .sc__art--b { left: 10px;  bottom: -87px; }
 
 /* --------------------------------------------------------------------------
    Get in Touch (Figma 197:2134 — 616 x 498)
    -------------------------------------------------------------------------- */
 .gt {
-  width: 616px; max-width: 100%;
-  padding: var(--sp-6);
+  width: min(616px, var(--panel-room));
+  /* 14px under the QR code: the frame is 498 tall and the code ends at 484. */
+  padding: var(--sp-6) var(--sp-6) 14px;
   border-radius: 16px;
 }
+/* The grey header band with its dashed column lines (168px of the frame). */
 .gt__grid {
   position: absolute; left: 0; top: 0;
-  width: 100%; height: 160px;
+  width: 100%; height: 168px;
   object-fit: cover; object-position: left top;
   pointer-events: none;
 }
 .gt__skyline {
-  position: absolute; right: 0; bottom: -48px;
+  position: absolute; right: -6px; bottom: -26px;
   width: 218px; height: 271px;
   opacity: .25;
   object-fit: cover; object-position: bottom center;
@@ -1004,10 +1225,13 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
   width: 24px; height: 24px;
   border-radius: var(--r-xs);
   z-index: 3;
-  transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+  transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease-out);
 }
-.gt__close:hover { background: var(--bg-2); transform: rotate(90deg); }
 .gt__close img { width: 24px; height: 24px; }
+.gt__close:active { transform: scale(.92); }
+@media (hover: hover) and (pointer: fine) {
+  .gt__close:hover { background: var(--bg-2); transform: rotate(90deg); }
+}
 
 .gt__brand { position: relative; display: flex; align-items: center; height: 52px; z-index: 2; }
 .gt__mark  { width: 42px; height: 52px; object-fit: contain; }
@@ -1017,45 +1241,57 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
 .gt__word .c { color: var(--brand-deep); }
 .gt__word .e { color: var(--brand-cyan-2); }
 
-.gt__head { position: relative; margin-top: var(--sp-4); z-index: 2; }
+.gt__head { position: relative; margin-top: var(--sp-3); z-index: 2; }
+/* 44 + 4 + 20: the frame's 68px heading block. */
 .gt__title {
-  font-size: 24px; font-weight: 600; line-height: normal;
-  letter-spacing: .48px; color: var(--text-1);
+  font-size: 32px; font-weight: 500; line-height: 44px;
+  letter-spacing: .64px; color: var(--text-1);
 }
 .gt__sub {
   margin-top: var(--sp-1);
-  font-size: var(--fs-sm); line-height: normal;
+  font-size: var(--fs-sm); line-height: 20px;
   letter-spacing: .28px; color: var(--text-2);
 }
 
-.gt__grid-2 {
+/* Call at x 24, Email at x 272 - a 248px first column. */
+.gt__contacts {
   position: relative; z-index: 2;
-  display: grid; grid-template-columns: 164px 1fr; gap: var(--sp-6);
+  display: grid; grid-template-columns: 248px minmax(0, 1fr);
   margin-top: 36px;
 }
-
-.gt__item { position: relative; z-index: 2; display: flex; flex-direction: column; gap: var(--sp-1); }
-.gt__item--wide { margin-top: var(--sp-6); max-width: 553px; }
-.gt__item-head { display: flex; align-items: center; gap: var(--sp-2); }
-.gt__icon {
+.gt__item { position: relative; z-index: 2; display: flex; align-items: center; gap: var(--sp-3); }
+.gt__item--location { align-items: flex-start; margin-top: 36px; }
+.gt__tile {
   display: grid; place-items: center;
-  width: 24px; height: 24px; flex: none;
-  background: #f4f9ff;
-  border-radius: var(--r-sm);
+  width: 48px; height: 48px; flex: none;
+  border-radius: 12px;
+  background: var(--tile-bg);
+  transition: transform var(--dur) var(--ease-out);
 }
-.gt__icon img { width: 16px; height: 16px; }
-.gt__label { font-size: var(--fs-sm); letter-spacing: .28px; color: var(--text-2); }
+.gt__tile img { width: 32px; height: 32px; }
+.gt__text { display: flex; flex-direction: column; gap: var(--sp-1); min-width: 0; }
+.gt__label {
+  font-size: var(--fs-xs); line-height: 16px; font-weight: 500;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
 .gt__value {
-  font-size: var(--fs-body); font-weight: 500; line-height: 28px;
+  font-size: var(--fs-sm); line-height: 24px; font-weight: 500;
   color: var(--text-1);
 }
+.gt__item--location .gt__text { gap: 0; max-width: 320px; }
+.gt__item--location .gt__label,
+.gt__item--location .gt__value { line-height: 28px; }
 .gt__value a { transition: color var(--dur) var(--ease); }
-.gt__value a:hover { color: var(--brand-2); }
+@media (hover: hover) and (pointer: fine) {
+  .gt__value a:hover { color: var(--brand-2); }
+  .gt__item:hover .gt__tile { transform: translateY(-2px); }
+}
 
 .gt__qr {
   position: relative; z-index: 2;
   display: flex; align-items: center; gap: var(--sp-2);
-  margin-top: var(--sp-5);
+  margin-top: 28px;
 }
 .gt__qr img { width: 96px; height: 96px; }
 .gt__qr p { width: 96px; font-size: var(--fs-xs); line-height: 20px; color: var(--text-3); }
@@ -1118,7 +1354,9 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
 /* The design draws the seal at 150px, but that was against a brand column
    carrying a logo mark and a wider blurb. With neither, 150 read as the
    heaviest thing in the footer, so it sits at 110 to balance the column. */
-.footer-stamp { margin-top: var(--sp-10); width: 110px; opacity: .9; }
+.footer-certs { display: flex; align-items: center; gap: var(--sp-8); margin-top: var(--sp-10); }
+.footer-stamp { width: 110px; flex: none; opacity: .9; }
+.footer-bizsafe { width: 153px; height: auto; flex: none; }
 /* 18px per Figma 437:1165 / 1172 / 1180 / 1193. */
 .footer-heading { font-size: var(--fs-lead); line-height: 27px; font-weight: 600; margin-bottom: var(--sp-5); }
 /* One rhythm for both link columns. The design sets Services to a 20px gap,
@@ -1349,10 +1587,62 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
 .footer-legal a:hover { color: var(--white); }
 
 /* --------------------------------------------------------------------------
-   Back-to-top
+   WhatsApp float (Figma 626:2979) - bottom right on every page.
+   A 48px green tile with a 16px radius and the design's five-step shadow.
+   Behind it, two concentric light-green halos breathe out and back: each
+   swell eases out with a slight overshoot (easeOutBack) and settles, the
+   outer ring a beat behind the inner, then both ease back in and rest.
+   Transform and opacity only, so it stays on the compositor.
+   -------------------------------------------------------------------------- */
+.wa-float {
+  position: fixed; right: var(--sp-8); bottom: var(--sp-8);
+  width: 48px; height: 48px;
+  z-index: 90;
+  border-radius: 16px;
+  -webkit-tap-highlight-color: transparent;
+}
+.wa-float__btn {
+  position: relative;
+  display: grid; place-items: center;
+  width: 100%; height: 100%;
+  border-radius: inherit;
+  background: var(--wa-green);
+  box-shadow: var(--wa-shadow);
+  transition: transform 160ms var(--ease-out);
+}
+.wa-float__halo {
+  position: absolute; inset: -8px;
+  border-radius: 24px;
+  background: var(--wa-halo);
+  pointer-events: none;
+  animation: wa-halo 3.2s infinite;
+}
+.wa-float__halo--outer {
+  inset: -16px;
+  border-radius: 32px;
+  opacity: .55;
+  animation-delay: .18s;
+}
+@keyframes wa-halo {
+  0%   { transform: scale(.82); animation-timing-function: cubic-bezier(.34, 1.56, .64, 1); }
+  38%  { transform: scale(1);   animation-timing-function: linear; }
+  62%  { transform: scale(1);   animation-timing-function: var(--ease-in-out); }
+  100% { transform: scale(.82); }
+}
+@media (hover: hover) and (pointer: fine) {
+  .wa-float:hover .wa-float__btn { transform: translateY(-2px); }
+}
+.wa-float:active .wa-float__btn { transform: scale(.97); }
+.wa-float:focus-visible { outline-offset: 20px; border-radius: 34px; }
+@media (prefers-reduced-motion: reduce) {
+  .wa-float__halo { animation: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Back-to-top - bottom left, clear of the WhatsApp float.
    -------------------------------------------------------------------------- */
 .to-top {
-  position: fixed; right: var(--sp-8); bottom: var(--sp-8);
+  position: fixed; left: var(--sp-8); bottom: var(--sp-8);
   display: grid; place-items: center;
   width: 48px; height: 48px;
   background: var(--cta-fill); color: var(--white);

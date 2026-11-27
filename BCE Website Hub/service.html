@@ -37,92 +37,172 @@
 
 <main id="main" data-service-page>
 
-  <!-- ===== Hero (Figma 49:2930 / Image 8 49:2931) ======================= -->
-  <section class="service-hero">
+  <!-- ===== Hero (Figma 734:1306 / Image 8 734:1307) =====================
+       One column: the title beside a 4px white rule, the lead under it,
+       then Book Now. Photo, a 90% veil with a 7.5px blur, dashed rules. -->
+  <section class="service-hero" data-svc-hero>
     <img class="service-hero__photo" data-field="heroImage" src="images/misc/service-hero.webp" alt="">
     <span class="service-hero__veil" aria-hidden="true"></span>
     <img class="service-hero__grid" src="images/misc/grid-lines-hero.svg" alt="" aria-hidden="true">
     <div class="container service-hero__inner">
-      <div class="service-hero__main">
-        <h1 class="service-hero__title" data-field="heroTitle" data-reveal>Services &amp; Solutions</h1>
-        <div class="service-hero__actions" data-reveal style="--reveal-delay:180ms">
-          <a class="btn btn--brand" data-field="bookLink" href="contact.html">
-            <span class="btn__icon btn__icon--sm" data-icon="star-fall"></span>
-            <span>Book Now</span>
+      <h1 class="service-hero__title" data-field="heroTitle" data-reveal>Services &amp; Solutions</h1>
+      <p class="service-hero__lead" data-field="heroLead" data-reveal style="--reveal-delay:90ms"></p>
+      <div class="service-hero__actions" data-reveal style="--reveal-delay:180ms">
+        <a class="btn btn--brand" data-field="bookLink" href="contact.html">
+          <span class="btn__icon btn__icon--sm" data-icon="star-fall"></span>
+          <span>Book Now</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Sub-services (Figma 606:2048 "We provide") ====================
+       Both groups are listed in full on one page. The two pills are a
+       contents bar for them, not tab panels: they pin under the navbar while
+       the lists scroll and follow whichever group is at the top
+       (initSubsvc in main.js). Each row books that job. -->
+  <section class="subsvc" aria-labelledby="subsvc-title">
+    <div class="container subsvc__head">
+      <h2 class="subsvc__title" id="subsvc-title" data-field="listTitle" data-reveal></h2>
+      <p class="subsvc__lead" data-field="listLead" data-reveal style="--reveal-delay:90ms"></p>
+    </div>
+
+    <!-- The pills live inside the lists' own container: same edges, one
+         group, and the sticky hold ends where the lists end. -->
+    <div class="container">
+      <div class="subsvc__bar" data-subsvc-bar>
+        <nav class="subsvc__tabs" aria-label="Service groups">
+          <a class="subsvc__tab subsvc__tab--homes is-active" href="#subsvc-homes" data-subsvc-tab="homes" aria-current="true">
+            <span class="subsvc__tab-dot" aria-hidden="true"></span>
+            <span>Homes &amp; Small Offices</span>
+          </a>
+          <a class="subsvc__tab subsvc__tab--commercial" href="#subsvc-commercial" data-subsvc-tab="commercial">
+            <span class="subsvc__tab-dot" aria-hidden="true"></span>
+            <span>Commercial &amp; Industrial</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="subsvc__group" id="subsvc-homes" data-subsvc-group="homes">
+        <h3 class="sr-only">For homes and small offices</h3>
+        <ol class="subsvc__list" data-field="homes"></ol>
+      </div>
+      <div class="subsvc__group subsvc__group--commercial" id="subsvc-commercial" data-subsvc-group="commercial">
+        <h3 class="sr-only">For commercial and industrial premises</h3>
+        <ol class="subsvc__list" data-field="commercial"></ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== How it works (Figma 1:1990) - shared with the home page ====== -->
+  <section class="section steps" aria-labelledby="steps-title">
+    <div class="container">
+      <div class="section-head steps__head" data-reveal>
+        <span class="eyebrow">How it works</span>
+        <h2 class="steps__title" id="steps-title"><span class="title-lead">We Will Reach You</span> In Few Clicks</h2>
+      </div>
+      <div class="steps__body">
+        <figure class="steps__photo" data-reveal="right">
+          <img src="images/misc/process-team.webp" alt="BCE engineers reviewing plans on site" loading="lazy">
+        </figure>
+        <div class="steps__track" data-steps>
+          <span class="steps__rail" aria-hidden="true"><span class="steps__fill"></span></span>
+          <ol class="steps__list" data-render="process-steps"></ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Why choose us (Figma 597:1351) =============================== -->
+  <section class="why" aria-labelledby="why-title">
+    <div class="container">
+      <div class="why__head" data-reveal>
+        <span class="eyebrow">Why choose us</span>
+        <h2 class="why__title" id="why-title">
+          <span class="title-lead">Your reliable partner for</span> construction related services
+        </h2>
+      </div>
+      <div class="why__grid" data-render="why-choose"></div>
+    </div>
+  </section>
+
+  <!-- ===== Our recent work (Figma 599:1511) ============================== -->
+  <!-- Plays its entrance each time it is scrolled into view and resets once
+       it has left the screen (initWorkReveal in js/main.js); each title line
+       rises out of its own mask. -->
+  <section class="work" aria-labelledby="work-title" data-field="workSection" data-work-reveal>
+    <div class="container">
+      <div class="work__head">
+        <div>
+          <span class="chip-dark work__tag">Our Recent Work</span>
+          <h2 class="work__title" id="work-title">
+            <span class="work__line title-lead"><span>Built with Quality</span></span>
+            <span class="work__line"><span>Delivered with Care.</span></span>
+          </h2>
+        </div>
+        <p class="work__lead">
+          Each work reflects our focus on quality workmanship, practical solutions and attention to detail.
+        </p>
+      </div>
+      <div data-field="work"></div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ (Figma 603:1600) - the home FAQ with the MD's card =======
+       Same pinned stage and rising skyline as the home page (initFaqScene). -->
+  <section class="faq" id="faq" aria-labelledby="faq-title">
+    <div class="faq__stage">
+      <div class="container faq__inner">
+        <div class="faq__head" data-reveal>
+          <span class="faq__tag">FAQ</span>
+          <h2 class="faq__title" id="faq-title">
+            <span class="title-lead">Got Questions?</span> We&rsquo;ve Got Answers.
+          </h2>
+          <p class="faq__lead">
+            Get answers to common questions about our services, pricing, and booking before contacting us.
+          </p>
+        </div>
+
+        <div class="faq__list" data-render="faq" data-reveal></div>
+
+        <div class="faq-cta faq-cta--md" data-reveal>
+          <p class="faq-cta__kicker">Still Need Assistance ?</p>
+          <h3 class="faq-cta__title">Hi, I&rsquo;m Bala, MD of Bala Construction &amp; Engineering.</h3>
+          <p class="faq-cta__text">
+            Can&rsquo;t find the answer you&rsquo;re looking for? Share your requirements with us, and our team will be happy to help.
+          </p>
+          <a class="faq-cta__ask" data-field="askLink" href="contact.html#enquiry">
+            <span>Ask Your Doubt</span>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+              <path d="M9.5 6.5L15 12l-5.5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </a>
         </div>
       </div>
-      <p class="service-hero__lead" data-field="heroLead" data-reveal style="--reveal-delay:90ms"></p>
-    </div>
-  </section>
 
-  <!-- ===== Words from the founder (Figma 49:2951) ======================= -->
-  <section class="section founder-band has-grid">
-    <div class="container founder">
-      <div class="founder__aside" data-reveal="left">
-        <span class="eyebrow">Words From</span>
-        <div class="founder__person">
-          <span class="founder__avatar">B</span>
-          <span>
-            <span class="founder__name">Balamurugan</span><br>
-            <span class="founder__role">Founder &amp; Director</span>
-          </span>
-        </div>
-      </div>
-      <div data-reveal="right">
-        <p class="founder__quote" data-field="intro"></p>
-        <p class="founder__body" data-field="body"></p>
+      <div class="faq__skyline" aria-hidden="true">
+        <img class="faq__bld faq__bld--wide" src="images/faq/skyline-wide.png" alt="" loading="lazy" decoding="async">
+        <img class="faq__bld faq__bld--tall" src="images/faq/skyline-tall.png" alt="" loading="lazy" decoding="async">
       </div>
     </div>
   </section>
 
-  <!-- ===== Service process (Figma 1:2079 "We provide") ================== -->
-  <section class="section provide">
-    <div class="container">
-      <img class="provide__art" src="images/misc/service-process.svg" alt="" aria-hidden="true">
-      <div class="section-head" data-reveal>
-        <h2 class="section-title" data-field="processTitle">Complete Service Process</h2>
-        <p class="section-lead" data-field="processLead"></p>
-      </div>
-      <div class="provide__grid" data-field="steps"></div>
-    </div>
-  </section>
-
-  <!-- ===== How it works ================================================= -->
-  <section class="section process">
+  <!-- ===== Other services (Figma 1:2017) ================================ -->
+  <section class="section has-grid other-svc">
     <div class="container">
       <div class="section-head" data-reveal>
-        <span class="eyebrow">How it works</span>
-        <h2 class="section-title">We Will Reach You In a Few Clicks</h2>
-      </div>
-    </div>
-    <div class="process__band">
-      <div class="container">
-        <div class="process__stage">
-          <figure class="process__photo" data-reveal="right">
-            <img src="images/misc/process-team.webp" alt="BCE engineers reviewing plans on site" loading="lazy">
-          </figure>
-          <div class="process__card" data-reveal="left">
-            <h3 class="process__card-title">The Process</h3>
-            <div data-render="process-steps"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== Other services (Figma 1:2017) =============================== -->
-  <section class="section has-grid">
-    <div class="container">
-      <div class="section-head" data-reveal>
-        <h2 class="section-title">Services</h2>
+        <h2 class="other-svc__title"><span class="title-lead">Other</span> Services</h2>
       </div>
       <div class="grid-3" data-field="related"></div>
     </div>
   </section>
 
-  <!-- ===== CTA ========================================================== -->
-  <div data-component="cta-banner"></div>
+  <!-- Service badge (Figma 734:1350): names the service, top centre, for as
+       long as the hero is out of view (initSectionBadge in main.js). -->
+  <div class="svc-badge" data-svc-badge aria-hidden="true">
+    <img class="svc-badge__dot" src="images/icons/badge-dot.svg" alt="">
+    <span class="svc-badge__label"></span>
+  </div>
 
 </main>
 

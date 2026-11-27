@@ -311,10 +311,62 @@
 
   /* ---- Confirmation extras ----------------------------------------------- */
 
-  function showReference(ref) {
-    var slot = document.querySelector('#success-modal .sc__ref');
-    if (slot) slot.textContent = 'Reference ' + ref;
+  /* The ID button shows a shimmer until the send resolves (resetReference
+     runs as the dialog opens), then the real ID, which copies on click. */
+  function refButton() { return document.querySelector('#success-modal .sc__ref-id'); }
+
+  function resetReference() {
+    var btn = refButton();
+    if (!btn) return;
+    btn.disabled = true;
+    btn.classList.add('is-pending');
+    btn.classList.remove('is-copied');
+    btn.removeAttribute('aria-label');
   }
+
+  function showReference(ref) {
+    var btn = refButton();
+    if (!btn) return;
+    btn.querySelector('.sc__ref-value').textContent = ref;
+    btn.setAttribute('data-ref', ref);
+    btn.setAttribute('aria-label', 'Reference ID ' + ref + ', copy to clipboard');
+    btn.classList.remove('is-pending');
+    btn.disabled = false;
+  }
+
+  /* Clipboard API first; if it is missing or refused (insecure origin, no
+     permission), the old select-and-copy route still works in most browsers. */
+  function legacyCopy(text) {
+    return new Promise(function (resolve, reject) {
+      var t = document.createElement('textarea');
+      t.value = text; t.setAttribute('readonly', '');
+      t.style.position = 'fixed'; t.style.opacity = '0';
+      document.body.appendChild(t); t.select();
+      try { document.execCommand('copy') ? resolve() : reject(); } catch (e) { reject(e); }
+      document.body.removeChild(t);
+    });
+  }
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).catch(function () { return legacyCopy(text); });
+    }
+    return legacyCopy(text);
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('.sc__ref-id');
+    if (!btn || btn.disabled) return;
+    var done = btn.querySelector('.sc__ref-done');
+    copyText(btn.getAttribute('data-ref') || '').then(function () {
+      if (done) done.textContent = 'Copied';
+      btn.classList.add('is-copied');
+      clearTimeout(btn.__copyTimer);
+      btn.__copyTimer = setTimeout(function () { btn.classList.remove('is-copied'); }, 1800);
+    }, function () {
+      if (done) done.textContent = 'Press Ctrl+C to copy';
+      btn.classList.add('is-copied');
+    });
+  });
 
   /* Only reached when no relay is configured: hands the visitor a prefilled
      draft so the details still reach the office. */
@@ -342,6 +394,17 @@
       if (combo && combo.__combo) { combo.__combo.setValue(val); }
       else { target.value = val; changed(target); }
     });
+
+    /* ?need=<sub-service> comes from a row on a service page: name the job
+       in the message so the visitor only adds the details. Only into an
+       empty box, or over our own earlier line (the preview keeps the form
+       alive between views) - never over something they have typed. */
+    var need = params.get('need');
+    var msg = form.querySelector('[name="message"]');
+    if (need && msg && (!msg.value.trim() || msg.value === msg.__autoNeed)) {
+      msg.value = msg.__autoNeed = 'I would like to book: ' + need.slice(0, 60) + '.\n';
+      changed(msg);
+    }
   }
 
   /* For callers that change the query without a page load (the single-file
@@ -410,6 +473,7 @@
            failed submission to the visitor. */
         var note = form.querySelector('[data-storage-note]');
         if (note) note.textContent = 'Sending your request...';
+        resetReference();   /* the dialog opens below, before the send resolves */
 
         BCE.sendEnquiry(record).then(function (res) {
           var ref = res.mail.ref;

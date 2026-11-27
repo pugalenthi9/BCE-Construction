@@ -23,6 +23,17 @@
   --text-heading-alt:   #1e1f24;  /* About Us headline */
   --text-on-dark:       #ffffff;
   --text-on-dark-muted: rgba(255, 255, 255, .72);
+  /* Two-tone section titles (Figma 715:3658): the first line is the quiet
+     lead-in - grey on light sections, white at half strength on dark. */
+  --title-lead:         var(--text-3);
+  --title-lead-on-dark: rgba(255, 255, 255, .5);
+  --sector-link:        #f5ac90;  /* "Request a Site Visit" on the dark cards  715:3668 */
+
+  /* ---- WhatsApp float (Figma 626:2979) -------------------------------- */
+  --wa-green:           #19e365;
+  --wa-halo:            rgba(25, 227, 101, .2);
+  --wa-shadow:          0 15px 6px rgba(0, 0, 0, .01), 0 8px 5px rgba(0, 0, 0, .03),
+                        0 4px 4px rgba(0, 0, 0, .05), 0 1px 2px rgba(0, 0, 0, .06);
 
   /* ---- Surfaces ------------------------------------------------------- */
   --bg-1:               #fcfdff;  /* [figma] Bg color 1 — page ground */
@@ -69,6 +80,7 @@
   --fs-hero:      64px;   --lh-hero:      88px;   --ls-hero:    1.28px;
   --fs-hero-sub:  32px;   --lh-hero-sub:  36px;
   --fs-h2:        40px;   --lh-h2:        50px;
+  --fs-title:     44px;   /* section titles, Figma 715:3658 */
   --fs-h3:        34px;   --lh-h3:        44px;
   --fs-card:      32px;   --lh-card:      42px;   /* service card title */
   --fs-stat:      36px;
@@ -85,9 +97,26 @@
   --values-bg:  #f8f8f8;   /* "Your reliable partner"  437:1221 */
   --md-orange:  #ff5b1b;   /* "Meet our MD"            437:1464 */
 
+  /* Review cards (Figma 616:2590 home strip, 599:1511 Recent Work) */
+  --reviews-bg:    #f8f8f8;
+  --review-line:   #f0f2f5;   /* card border */
+  --review-avatar: #7ea3db;
+  --rating-on:     #ffaf04;
+  --rating-off:    #e6e9ee;
+  --tile-bg:       #f0f4fa;   /* Get in Touch icon tiles (197:2134) */
+
   /* Home FAQ (Figma 495:1320) and Contact Us (136:2055) */
   --faq-bg:         #fcf5f2;  /* warm ground behind the skyline */
   --stroke-divider: #e2ebf8;  /* rules between the contact lines */
+
+  /* Service page (Figma 1:958) */
+  --subsvc-blue:     #0152c4;  /* active "Homes" pill                   606:2051 */
+  --teal:            #047793;  /* commercial accent: pill, row hover    609:2189 */
+  --subsvc-line:     #e1e5eb;  /* rule under each sub-service row       609:2171 */
+  --subsvc-tab-line: #dce0e5;  /* idle pill outline                     609:2180 */
+  --steps-orange:    #ff5b1b;  /* How it works: lit step, rail fill     599:1405 */
+  --steps-line:      #f5d5c8;  /* How it works: rail                    599:1433 */
+  --steps-dot:       #f5eeeb;  /* How it works: unlit square            599:1433 */
 
   /* Loading overlay */
   --progress-green: #16a34a;
@@ -122,6 +151,8 @@
   /* ---- Motion ---------------------------------------------------------- */
   --ease:        cubic-bezier(.22, .61, .36, 1);
   --ease-out:    cubic-bezier(.16, 1, .3, 1);
+  /* On-screen movement that both starts and settles in view (wipes, slides). */
+  --ease-in-out: cubic-bezier(.77, 0, .175, 1);
   --dur-fast:    140ms;
   --dur:         240ms;
   --dur-slow:    420ms;

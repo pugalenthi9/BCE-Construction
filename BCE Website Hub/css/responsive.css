@@ -21,52 +21,55 @@
   }
 
   .hero__banner { height: auto; min-height: 150px; padding: var(--sp-4) var(--sp-6); }
+  /* The banner is auto height here, so the logo takes its full 48px instead of
+     overlapping the tighter padding above or the tagline below it. */
+  .hero__certified img { margin: 0; }
   /* Title stays on one line here - the cqi rule shrinks it to fit the banner. */
 
   .nav-menu { margin-left: var(--sp-6); gap: var(--sp-5); }
   .nav-search { width: 220px; }
   .mega-menu { left: -180px; }
 
-  .about { grid-template-columns: 380px 1fr; gap: var(--sp-16); }
-  .collage { transform: scale(.86); transform-origin: left center; }
-
   .contact { grid-template-columns: 380px 1fr; gap: var(--sp-16); }
   /* 1024px leaves ~460px for the form once the panel keeps 32px sides. */
   .reach__grid { grid-template-columns: minmax(0, 340px) minmax(0, 666px); padding-inline: var(--sp-8); }
-  .connect__grid { grid-template-columns: 320px minmax(0, 1fr); gap: var(--sp-12); }
-  .connect__photo { height: 480px; }
-  .process__stage { grid-template-columns: 380px 1fr; }
-  .process__photo { width: calc(100% - 150px); height: 580px; }
+  .connect__grid { grid-template-columns: minmax(0, 380fr) minmax(0, 666fr); column-gap: var(--sp-16); }
+  /* Sized to its column (64px per 446px in the design), so "Our Journey"
+     always holds one line. */
+  .connect__title { font-size: min(56px, calc((100vw - 192px) * .052)); line-height: 1.25; }
+  .connect__photo { height: 520px; }
 
   /* Banner keeps the design ratio but scales with the container. */
   .cta-banner__inner { height: 380px; padding: 56px 44px; }
-  .cta-banner__title { font-size: 40px; }
   .cta-banner__eyebrow { font-size: var(--fs-body); line-height: 24px; }
   .cta-banner__photo { width: 620px; height: 420px; margin-left: 0; }
 
-  .service-hero { min-height: 500px; }
-  .service-hero__inner { gap: var(--sp-12); padding-block: 72px 0; }
+  .service-hero { min-height: 520px; }
+  .service-hero__inner { padding-block: 80px var(--sp-16); }
   .service-hero__title { font-size: 56px; letter-spacing: 1px; }
-  .service-hero__lead { margin-top: var(--sp-12); }
 
-  .founder-band { padding-block: var(--sp-20); }
-  /* 204 holds "Founder & Director" on one line beside the avatar. */
-  .founder { grid-template-columns: 204px 1fr; gap: var(--sp-16); }
-  .founder__quote { font-size: 36px; }
-  .provide__grid { grid-template-columns: repeat(2, 1fr); }
-  .provide { min-height: 0; padding-bottom: 180px; }
-  .provide .section-title { font-size: 36px; max-width: 460px; }
-  /* Below the design width the fixed offset no longer lines up, so the sketch
-     is anchored to the section's bottom edge instead. */
-  .provide__art { top: auto; bottom: 0; width: 480px; height: 370px; }
+  /* Service page: the name column narrows with the container; the timeline
+     and work stage tighten their gutters. */
+  /* Title over lead from here, so the title keeps the full width. */
+  .subsvc__head { grid-template-columns: 1fr; row-gap: var(--sp-4); }
+  .subsvc__title { font-size: 40px; }
+  .subsvc__title { white-space: normal; }
+  .subsvc__lead { margin-top: 0; }
+  .subsvc__row { grid-template-columns: 41px minmax(0, 480px) minmax(0, 1fr) 32px; }
+  /* About hero: the indented 64px title no longer fits beside the CTA, so the
+     bizSAFE line moves above the title and the CTA follows it. */
+  .about-hero__head { grid-template-columns: 1fr; }
+  .about-hero__badge { position: static; margin-bottom: var(--sp-4); }
+  .about-hero__title { text-indent: 0; font-size: 56px; }
+  .about-hero__cta { justify-self: start; margin: var(--sp-6) 0 0; }
+  .steps__body { column-gap: 72px; }
+  .why__name { font-size: 28px; }
+  .work__stage { grid-template-columns: 300px minmax(0, 1fr); }
+  .mapview__card { left: var(--sp-8); }
   .footer-grid { grid-template-columns: 1.4fr .8fr .8fr 1.2fr; gap: var(--sp-8); }
   /* Narrower column: shrink the name rather than let nowrap overflow. */
   .footer-brand__name { font-size: var(--fs-body); }
 
-  /* About page bands. Four 274px value columns need 1228px, so they pair up
-     below the design width; the MD quote drops its 94px inset. */
-  .value-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-10) 44px; }
-  .md__body, .md__person { margin-left: 0; }
 }
 
 /* --------------------------------------------------------------------------
@@ -79,7 +82,12 @@
     --grid-gap: 24px;
     --fs-hero: 40px;  --lh-hero: 52px;
     --fs-h2: 34px;    --lh-h2: 44px;
+    --fs-title: 36px;
   }
+
+  /* Two card columns of ~330px: the card titles drop to 26px so
+     "High-Rise & Mixed-Use" stays on one line. */
+  .type-card__title { font-size: 26px; letter-spacing: .5px; }
 
   /* Columns stack here, so sideways reveals would push full-width blocks 32px
      past the screen edge (iOS lets the page pan into that). Rise instead. */
@@ -122,26 +130,41 @@
   /* Two-up grids */
   .grid-3,
   .feature-grid,
-  .value-grid,
-  .works-grid,
-  .testimonials__grid { grid-template-columns: repeat(2, 1fr); }
+  .works-grid { grid-template-columns: repeat(2, 1fr); }
+  /* Testimonials: the strip starts at the content edge once the design's
+     1440 offset no longer applies. */
+  .reviews__title { font-size: 40px; }
+  .reviews.is-marquee .reviews__track { margin-left: var(--page-margin); }
 
   /* Bento collapses to two columns; the third column's cards follow on. */
   .services-bento { grid-template-columns: repeat(2, 1fr); }
   .service-card { height: 360px; }
-  .type-card__media { height: 300px; }
 
-  /* Process card stops overlapping and stacks over the photo */
-  .process__stage { grid-template-columns: 1fr; gap: var(--sp-6); }
-  .process__photo { grid-column: 1; grid-row: 1; width: 100%; height: 380px; justify-self: stretch; }
-  .process__card { grid-row: 2; }
+  /* How it works: photo above, timeline below. */
+  .steps__body { grid-template-columns: 1fr; row-gap: var(--sp-10); }
+  .steps__photo { height: 380px; }
+  .steps__title { font-size: 36px; max-width: none; }
 
-  .about { grid-template-columns: 1fr; gap: var(--sp-12); }
-  /* width: 100% matters: every photo is absolutely positioned, so without it
-     the auto margins shrink the box to 0px and park it at the column centre,
-     pushing the photos off the right edge. */
-  .collage { transform: none; width: 100%; height: 460px; max-width: 449px; margin-inline: auto; }
-  .about__stats { gap: var(--sp-10); }
+  /* About: facts pair up, each pair on its own rail. */
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-12) var(--sp-6); }
+  .facts::before { display: none; }
+  .facts__item::after {
+    content: ""; position: absolute; top: 7.5px; left: 0; right: calc(-1 * var(--sp-6));
+    height: 1px; background: var(--facts-line);
+  }
+  .facts__item:nth-child(2n)::after { right: 0; }
+  .facts__value { font-size: 56px; }
+  .about-intro { padding-bottom: var(--sp-16); }
+  .about-intro__head { grid-template-columns: 1fr; }
+  .about-intro__title { font-size: 36px; line-height: 46px; }
+  .about-intro .facts { margin-top: 64px; }
+  .story-link { justify-self: start; margin-top: var(--sp-6); }
+  .about-hero__title { font-size: 48px; }
+  .about-hero__photos { margin-top: var(--sp-10); }
+  .about-hero__photo { height: 320px; }
+  .md-words { padding-top: 64px; }
+  .md-words__quote { font-size: 26px; }
+  .md-words .facts { margin-top: 64px; }
 
   .contact { grid-template-columns: 1fr; gap: var(--sp-12); }
   /* Stacked: no pinning below 1024 (see initReachScene), so the panel is
@@ -152,14 +175,23 @@
   .faq { --bld-s: .8; }
   .location { grid-template-columns: 1fr; gap: var(--sp-10); }
 
-  .connect__grid { grid-template-columns: 1fr; gap: var(--sp-10); }
-  .connect__photo { height: 420px; }
-  .connect__title, .visit__title { font-size: 34px; line-height: 44px; }
-  .mapview { height: 440px; }
-  .mapview__details { width: auto; right: var(--sp-4); left: var(--sp-4); top: var(--sp-4); }
-  .mapview__zoom { display: none; }
-  .mapview__pin { top: 68%; }
-  .founder { grid-template-columns: 1fr; gap: var(--sp-8); }
+  .connect__grid {
+    grid-template-columns: 1fr;
+    grid-template-areas: "title" "lead" "form" "photo";
+    row-gap: var(--sp-8);
+  }
+  .connect__title { font-size: 48px; line-height: 60px; }
+  .connect__lead { margin-top: calc(var(--sp-4) * -1); max-width: none; }
+  .connect__photo { position: static; height: 380px; }   /* stacked: nothing to hold beside */
+  .visit__title { font-size: 34px; line-height: 44px; }
+  .visit__head { grid-template-columns: 1fr; row-gap: var(--sp-3); }
+  .visit__lead { margin-top: 0; }
+  .mapview { --map-h: 480px; }
+  /* The card moves under the map, clear of Google's layer switch; the live
+     map still floats it on the pin where it fits (initGoogleMap). */
+  .mapview__card { position: static; width: auto; margin-top: var(--sp-4); padding-bottom: var(--sp-4); box-shadow: none; }
+  .mapview__photo { height: 190px; }
+  .mapview__rows { gap: var(--sp-4); margin-top: var(--sp-4); }
 
   .compare { height: 420px; }
 
@@ -167,19 +199,43 @@
   .cta-banner__inner { height: auto; padding: var(--sp-10); }
   .cta-banner__copy { max-width: 100%; }
   .cta-banner__photo { display: none; }
-  .cta-banner__title { font-size: var(--fs-h2); line-height: var(--lh-h2); }
+  .cta-banner__title { line-height: 1.2; }
   .cta-banner__eyebrow { font-size: var(--fs-sm); line-height: 22px; }
 
-  .service-hero { min-height: 420px; }
-  .service-hero__inner { grid-template-columns: 1fr; gap: var(--sp-6); padding-block: 56px var(--sp-12); }
-  .service-hero__lead { margin-top: 0; text-align: left; }
-  .service-hero__title { font-size: 40px; letter-spacing: .5px; }
+  .service-hero { min-height: 440px; }
+  .service-hero__inner { padding-block: 64px var(--sp-12); }
+  .service-hero__lead { text-align: left; }
+  .service-hero__title { font-size: 44px; letter-spacing: .8px; }
 
-  .founder-band { padding-block: var(--sp-16); }
-  .founder { grid-template-columns: 1fr; gap: var(--sp-8); }
-  .founder__quote { font-size: 28px; }
-  .founder__body { text-align: left; }
-  .provide__art { display: none; }
+  /* Sub-services: number, then name over description, arrow on the right. */
+  .subsvc__head { grid-template-columns: 1fr; row-gap: var(--sp-4); }
+  .subsvc__title { font-size: var(--fs-title); }
+  .subsvc__lead { margin-top: 0; }
+  .subsvc__row {
+    grid-template-columns: 36px minmax(0, 1fr) 32px;
+    row-gap: var(--sp-2);
+    padding: 40px var(--sp-2);
+  }
+  .subsvc__group--commercial { margin-top: 80px; }
+  .subsvc__num  { grid-column: 1; grid-row: 1; align-self: start; padding-top: 10px; }
+  .subsvc__name { grid-column: 2; grid-row: 1; font-size: 28px; }
+  .subsvc__desc { grid-column: 2; grid-row: 2; padding: 0 var(--sp-4) 0 0; }
+  .subsvc__go   { grid-column: 3; grid-row: 1 / span 2; }
+
+  .why__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-10) var(--sp-8); margin-top: var(--sp-12); }
+
+  /* Recent work: the photo full width, the review card overlapping its foot. */
+  .work__head { grid-template-columns: 1fr; }
+  .work__lead { margin-top: var(--sp-4); }
+  .work__stage { grid-template-columns: 1fr; }
+  .work__media { grid-column: 1; grid-row: 1; height: 360px; }
+  .work__card-slot {
+    grid-column: 1; grid-row: 2; align-self: start;
+    position: relative; z-index: 1;
+    width: min(100% - 48px, 360px);
+    margin: -72px 0 0 var(--sp-6);
+  }
+  .work-review { min-height: 0; }
 
   .other-buildings { flex-direction: column; align-items: flex-start; gap: var(--sp-6); }
 
@@ -187,7 +243,7 @@
   .footer-base { flex-direction: column; align-items: flex-start; gap: var(--sp-4); }
   /* Two-up columns are too narrow to hold the name on one line. */
   .footer-brand__name { white-space: normal; font-size: var(--fs-body); }
-  .footer-stamp, .footer-qr { margin-top: var(--sp-8); }
+  .footer-certs, .footer-qr { margin-top: var(--sp-8); }
 }
 
 /* --------------------------------------------------------------------------
@@ -201,6 +257,7 @@
     --fs-hero: 30px;  --lh-hero: 40px;  --ls-hero: .5px;
     --fs-hero-sub: 18px; --lh-hero-sub: 24px;
     --fs-h2: 26px;    --lh-h2: 34px;
+    --fs-title: 30px;
     --fs-h3: 24px;    --lh-h3: 32px;
     --fs-card: 24px;  --lh-card: 32px;
     --fs-stat: 30px;
@@ -239,46 +296,51 @@
   .grid-3,
   .grid-2,
   .feature-grid,
-  .value-grid,
-  .works-grid,
-  .testimonials__grid { grid-template-columns: 1fr; }
-  .grid-3 { gap: var(--sp-10); }
+  .works-grid { grid-template-columns: 1fr; }
+  .reviews__title { font-size: 32px; letter-spacing: .5px; }
 
-  /* About page bands at phone width */
-  .values-band__title { font-size: 28px; margin-bottom: var(--sp-8); }
-  .value-grid { gap: var(--sp-8); }
-  .value__title { font-size: 22px; }
-  .md__quote { font-size: 18px; }
-  .md__mark { font-size: 24px; }
+  /* About blocks at phone width */
+  .facts { column-gap: var(--sp-4); }
+  .facts__item::after { right: calc(-1 * var(--sp-4)); }
+  .facts__label { font-size: 13px; line-height: 20px; white-space: normal; }
+  .facts--dark .facts__label { font-size: 13px; }
+  .facts__value { margin-top: var(--sp-3); font-size: 44px; }
+  .facts__license { width: 128px; margin-top: var(--sp-3); }
+  .about-intro__title { font-size: 30px; line-height: 40px; letter-spacing: .5px; }
+  .about-intro__lead { font-size: var(--fs-body); line-height: 26px; }
+  .about-hero__badge img { width: 120px; }
+  .about-hero__title { font-size: 34px; letter-spacing: .5px; }
+  .about-hero__photos { grid-template-columns: 1fr; gap: var(--sp-4); }
+  .about-hero__photo { height: 240px; }
+  .md-words { padding-block: var(--sp-12) var(--sp-10); }
+  .md-words__quote { font-size: 20px; line-height: 30px; }
+  .grid-3 { gap: var(--sp-10); }
 
   .services-bento { grid-template-columns: 1fr; }
   .service-card { height: 300px; }
   .service-card__body { padding: var(--sp-5); }
   /* The always-on state for touch now lives in components.css under
      @media (hover: none), so it covers tablets too, not just phone widths. */
-  .type-card__media { height: 240px; }
+  .type-grid { grid-template-columns: 1fr; gap: var(--sp-10); }
+  .type-card__title { font-size: 26px; letter-spacing: .5px; }
+  .type-card__desc { line-height: 24px; }
+  .type-card__body { margin-bottom: var(--sp-4); }
+  .type-card__link { font-size: 16px; }
 
   .section-head { margin-bottom: var(--sp-10); }
 
-  .process__card { padding: var(--sp-6) var(--sp-5); }
-  .process__card-title { margin-bottom: var(--sp-6); }
-  .process__step + .process__step { margin-top: var(--sp-8); }
-  .process__photo { height: 260px; }
-  .process__num { width: 44px; height: 40px; font-size: var(--fs-lead); }
+  /* How it works: narrower rail, smaller titles. */
+  .steps__title { font-size: 28px; }
+  .steps__photo { height: 240px; }
+  .steps__track { padding-left: 36px; }
+  .steps__dot { left: -36px; top: 8px; }
+  .steps__rail { top: 8px; }
+  .steps__item + .steps__item { margin-top: var(--sp-8); }
+  .steps__name { font-size: 22px; line-height: 32px; letter-spacing: .3px; }
+  .steps__desc { font-size: var(--fs-sm); }
 
-  /* A 320 square laid out in percentages, so it scales down on phones whose
-     content area is narrower than 320 instead of running off the screen. */
-  .collage { height: auto; max-width: 320px; aspect-ratio: 1; }
-  .collage__item--a { left: 0;       top: 1.25%;  width: 55%; height: 55%; }
-  .collage__item--b { left: 59.375%; top: 16.25%; width: 40%; height: 40%; }
-  .collage__item--c { left: 10%;     top: 60%;    width: 40%; height: 40%; }
-  .collage__item--d { left: 55%;     top: 60%;    width: 30%; height: 30%; }
-
-  .about__stats { flex-wrap: wrap; gap: var(--sp-6) var(--sp-10); }
-  .about__actions,
   .cta-banner__actions,
   .service-hero__actions { flex-direction: column; align-items: stretch; }
-  .about__actions .btn,
   .cta-banner__actions .btn,
   .service-hero__actions .btn { width: 100%; }
 
@@ -287,6 +349,10 @@
   .compare__grip { top: 40px; }
 
   .form-card { padding: var(--sp-5); }
+  .form-card--inline .form-grid { gap: var(--sp-5); }
+  /* Voice Input drops to the bottom corner, so the text keeps the full width. */
+  .field--inline textarea.field__control { padding: 12px 14px 56px; }
+  .field--inline .voice-btn { top: auto; bottom: 14px; }
   .form-row { grid-template-columns: 1fr; }
   textarea.field__control { height: 140px; }
 
@@ -310,25 +376,56 @@
   .connect::before,
   .has-grid::before { display: none; }
 
-  .provide__grid { grid-template-columns: 1fr; }
-  .provide { min-height: 0; padding-bottom: var(--section-pad-y); }
-  .provide .section-title { font-size: 28px; max-width: none; }
-  .provide__card { padding: var(--sp-4); }
-  .provide__title { font-size: 22px; }
-  .service-hero__title { font-size: 28px; line-height: 38px; }
-  .cta-banner__inner { padding: var(--sp-6); border-radius: var(--r-md); }
-  .founder__quote { font-size: var(--fs-lead); line-height: 28px; }
-  .connect__photo { height: 300px; }
-  .connect__title, .visit__title { font-size: 26px; line-height: 34px; }
-  .mapview { height: 380px; border-radius: var(--r-md); }
-  .mapview__details { padding: var(--sp-4); }
-  .mapview__heading { font-size: var(--fs-body); }
+  /* Service page at phone width */
+  .subsvc { padding-bottom: var(--sp-16); }
+  .subsvc__title { letter-spacing: .5px; }
+  .subsvc__bar { margin-top: var(--sp-6); padding-block: var(--sp-2); }
+  /* Both pills on one line: a little smaller, and the strip scrolls sideways
+     rather than wrapping if a narrow phone still can't fit them. */
+  .subsvc__tabs { flex-wrap: nowrap; gap: var(--sp-2); overflow-x: auto; scrollbar-width: none; }
+  .subsvc__tabs::-webkit-scrollbar { display: none; }
+  .subsvc__tab { padding: 6px; font-size: 12px; gap: 6px; }
+  .subsvc__tab.is-active .subsvc__tab-dot { width: 14px; }
+  .subsvc__tab-dot { height: 14px; margin-right: -6px; }
+  .subsvc__group { scroll-margin-top: calc(var(--nav-h) + 60px); }
+  .subsvc__group--commercial { margin-top: 64px; }
+  .subsvc__row { grid-template-columns: 28px minmax(0, 1fr) 32px; padding: 40px 0; }
+  .subsvc__num { padding-top: 5px; font-size: var(--fs-xs); }
+  .subsvc__name { font-size: 22px; letter-spacing: .3px; }
+  .subsvc__desc { font-size: 13px; line-height: 20px; }
 
-  .service-hero__title { font-size: 32px; line-height: 42px; }
-  .service-hero { min-height: 440px; }
+  .why__title { font-size: 26px; line-height: 34px; }
+  .why__grid { grid-template-columns: 1fr; gap: var(--sp-8); margin-top: var(--sp-10); }
+  .why__name { font-size: 24px; }
+
+  .work__title { font-size: 30px; }
+  .work__media { height: 240px; }
+  .work__card-slot { width: auto; margin: -48px var(--sp-4) 0; }
+  .work-review { padding: var(--sp-5); }
+  .work__name { font-size: 24px; }
+  .work__meta { font-size: var(--fs-xs); }
+
+  .other-svc__title { font-size: 30px; line-height: 40px; }
+  .cta-banner__inner { padding: var(--sp-6); border-radius: var(--r-md); }
+  .connect__photo { height: 280px; }
+  .connect__title { font-size: 36px; line-height: 46px; letter-spacing: .6px; }
+  .connect__lead { font-size: var(--fs-body); }
+  .visit__title { font-size: 26px; line-height: 34px; }
+  /* The card leaves the map and follows it. */
+  .mapview { --map-h: 320px; }
+  .mapview__map { border-radius: var(--r-md); }
+  .mapview__card { position: static; width: auto; margin-top: var(--sp-4); padding-bottom: var(--sp-5); box-shadow: none; }
+  .mapview__photo { height: 220px; }
+  .mapview__value { max-width: none; }
+
+  .service-hero { min-height: 0; }
+  .service-hero__inner { padding-block: 48px; }
+  .service-hero__title { font-size: 32px; line-height: 42px; padding-left: 16px; border-left-width: 3px; }
+  .service-hero__lead { font-size: var(--fs-body); line-height: 26px; }
+  .service-hero__actions { margin-top: var(--sp-8); }
 
   .cta-banner__inner { padding: var(--sp-6); }
-  .other-buildings { padding: var(--sp-6); }
+  .other-buildings { margin-top: var(--sp-16); padding: var(--sp-6); }
   .other-buildings__icon { width: 88px; height: 88px; }
   .other-buildings__icon > img:not(.other-buildings__glow) { width: 48px; height: 48px; }
   /* Narrow card: the art would otherwise sit right under the copy. */
@@ -337,20 +434,24 @@
   .site-footer__inner { padding: var(--sp-6); }
   .footer-grid { grid-template-columns: 1fr; gap: var(--sp-8); }
   .footer-stamp { width: 88px; }
+  .footer-bizsafe { width: 128px; }
   .footer-legal { flex-wrap: wrap; gap: var(--sp-4); }
 
-  .to-top { right: var(--sp-4); bottom: var(--sp-4); width: 44px; height: 44px; }
+  /* The float sits 24px in so its outer halo clears the screen edge; the
+     44px back-to-top lines up with its centre. */
+  .to-top { left: var(--sp-4); bottom: calc(var(--sp-6) + 2px); width: 44px; height: 44px; }
+  .wa-float { right: var(--sp-6); bottom: var(--sp-6); }
 
   /* Both dialogs drop their fixed geometry and stack on small screens. */
   .gt { padding: var(--sp-5); }
-  .gt__grid-2 { grid-template-columns: 1fr; gap: var(--sp-5); margin-top: var(--sp-6); }
+  .gt__grid { height: 196px; }   /* the sub-line wraps here; the band still holds it */
+  .gt__contacts { grid-template-columns: 1fr; gap: var(--sp-5); margin-top: var(--sp-6); }
+  .gt__item--location { margin-top: var(--sp-5); }
+  .gt__qr { margin-top: var(--sp-5); }
   .gt__skyline { display: none; }
-  .gt__title { font-size: 20px; }
+  .gt__title { font-size: 24px; }
   .gt__close { right: var(--sp-5); top: var(--sp-5); }
 
-  .sc { height: auto; padding-bottom: 120px; }
-  .sc__body  { position: static; width: auto; padding: var(--sp-5) var(--sp-4) 0; }
-  .sc__close { position: static; width: auto; margin: var(--sp-5) var(--sp-4) 0; }
 }
 
 /* --------------------------------------------------------------------------
@@ -359,4 +460,5 @@
 @media (max-width: 400px) {
   :root { --page-margin: 16px; }
   .hero__slide { width: 148px; height: 220px; }
+  .subsvc__tab { padding-inline: 5px; }
 }

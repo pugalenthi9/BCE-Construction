@@ -22,9 +22,57 @@ BCE.company = {
   regNo:     'UEN NO: 202413369H',   /* shown in the footer only, under the company name */
   uen:       '202413369H',
   tagline:   'Quality - Innovation - Team Work - Passion',
+  /* Shown on the contact page's location card (Figma 637:1556). Taken from
+     the design - confirm with the office before launch. */
+  hours:     'MON - SAT 9:00 AM - 7:00 PM',
+  /* The live map on the contact page (initGoogleMap): the place it searches
+     and the office's position, so it can frame the pin beside the card. */
+  mapsQuery: 'Suntec Tower One, 7 Temasek Boulevard, Singapore 038987',
+  geo:       { lat: 1.29532, lng: 103.85855 },
   /* Footer blurb - kept short; no year count by owner request. */
   blurb:     'Proven experience delivering residential, commercial and industrial ' +
              'projects across Singapore.'
+};
+
+/* --------------------------------------------------------------------------
+   WhatsApp chat - the floating button (Figma 626:2979), on every page.
+
+   Tapping it opens a chat with BCE (wa.me) with `message` already typed in
+   the visitor's box; %s becomes "your services", or "<service> services" on
+   a service page. `number` is the company mobile: country code + number,
+   digits only, as wa.me requires.
+
+   BCE's welcome reply cannot come from the website - only the account owner
+   can send it. Set it once in the WhatsApp Business app on this number:
+   Settings > Business tools > Greeting message > on, recipients "Everyone".
+   WhatsApp then sends it by itself after a customer's first message, and
+   again after 14 days without contact. Suggested greeting:
+
+     Hello, and thank you for contacting Bala Construction & Engineering
+     (BCE).
+
+     We are a bizSAFE-certified building services company in Singapore,
+     handling aircon, electrical, painting, renovation, waterproofing and
+     demolition works for homes and businesses.
+
+     To help us prepare an accurate quotation, please share:
+     1. Your name
+     2. The service you need
+     3. Your property type and area (e.g. 4-room HDB, Tampines)
+     4. A few photos of the work area, if you have them
+
+     Our team replies during working hours, Mon - Sat, 9am - 7pm. For
+     anything urgent, call us on +65 9894 5223.
+
+   And for Business tools > Away message (outside those hours):
+
+     Thank you for your message. Our office is closed right now (Mon - Sat,
+     9am - 7pm). Your enquiry has reached us, and our team will reply as
+     soon as we are back.
+   -------------------------------------------------------------------------- */
+BCE.whatsapp = {
+  number:  '6598945223',
+  message: 'Hello BCE, I\'d like to enquire about %s.'
 };
 
 /* --------------------------------------------------------------------------
@@ -61,202 +109,252 @@ BCE.nav = [
 BCE.services = [
   {
     slug: 'aircon',
-    heroImage: 'images/misc/service-hero.webp',
-    processTitle: 'Complete Aircon Service Process',
-    processLead: 'Keep your air conditioning system running at peak performance with our professional servicing process.',
-    steps: [
-      { title: 'Aircon Installation',        desc: 'Professional setup of new units for maximum cooling efficiency.' },
-      { title: 'General Servicing',          desc: 'Routine cleaning and checks that keep output steady all year.' },
-      { title: 'Chemical Wash & Overhaul',   desc: 'Deep cleaning of coils and filters to restore cooling power.' },
-      { title: 'Aircon Repair',              desc: 'Fast, reliable fixes for cooling issues, leaks or unusual noises.' },
-      { title: 'Gas Top-Up',                 desc: 'Restoring refrigerant levels to keep your unit running smoothly.' },
-      { title: 'Annual Maintenance',         desc: 'Scheduled servicing for worry-free comfort year-round.' }
-    ],
     title: 'Aircon',
     image: 'images/services/aircon.webp',
+    heroImage: 'images/misc/service-hero.webp',
     menuDesc: 'Servicing, installation and repairs for home and office units.',
     heroTitle: 'Aircon - Services & Solutions',
     heroLead: "In Singapore\u2019s hot and humid climate, regular servicing is essential to maintain " +
               'cooling performance, prevent sudden breakdowns, and extend the lifespan of your unit.',
-    intro: 'Our aircon service is designed to keep your cooling systems running efficiently, ' +
-           'safely, and smoothly throughout the year.',
-    body:  'From installation and routine maintenance to repairs and deep cleaning, we ensure your ' +
-           'air conditioning delivers consistent performance, cleaner air, and lasting comfort for ' +
-           'your home or workplace.',
-    features: [
-      { title: 'Servicing & deep cleaning', desc: 'Chemical wash, coil and filter cleaning to restore cooling output.' },
-      { title: 'Installation',              desc: 'Correct sizing, piping and mounting for split and cassette systems.' },
-      { title: 'Repairs & gas top-up',      desc: 'Leak tracing, compressor diagnostics and refrigerant recharge.' }
-    ]
+
+    /* Sub-service list (Figma 606:2048). Copy from "BCE service page copy.pdf":
+       each service appears once, so the counts differ per trade. The [words]
+       in listTitle are the two-line title's quiet lead-in (.title-lead). */
+    listTitle: '[We Handle] All Your Aircon Work',
+    listLead:  'From a single wall unit to a building-wide ACMV system, we install it properly and keep it running.',
+    homes: [
+      ['Aircon Installation',      'Split and multi-split units fitted and tested, or old ones replaced or removed.'],
+      ['General Servicing',        'Filters, coils, drains and the outdoor unit cleaned, one-off or on a yearly plan.'],
+      ['Chemical Wash & Overhaul', 'A deep chemical clean, done in place or with the unit fully dismantled.'],
+      ['Aircon Repair',            "Fixes for units that won\u2019t cool, leak water, make noise or show error codes."],
+      ['Gas Top-Up & Leak Check',  'Refrigerant leaks found and sealed, then gas topped up to the correct level.']
+    ],
+    commercial: [
+      ['ACMV Installation',     'Ducted and central systems with mechanical ventilation, installed and commissioned.'],
+      ['VRF System Servicing',  'Servicing and repair for VRF systems that cool many rooms from one outdoor unit.'],
+      ['AHU & FCU Maintenance', 'Filter changes, coil cleaning and checks for air handling and fan coil units.'],
+      ['Maintenance Contracts', 'Monthly or quarterly servicing for whole buildings, with a record of every visit.']
+    ],
+
+    /* Recent work (Figma 599:1511) - SAMPLE, see BCE.worksAreSamples below. */
+    work: {
+      tag: 'Residential', date: 'Nov, 2026', place: 'HDB Flat, Woodlands',
+      title: 'Aircon Chemical Wash', desc: 'System 3 fan coils chemical-washed, drain pipes flushed',
+      image: 'images/works/aircon.webp',
+      /* Figma 599:1511 draws this photo 1.394x a cover fit, from its top-left. */
+      zoom: 1.394,
+      alt: 'Two BCE technicians servicing an outdoor aircon unit on an HDB service ledge'
+    }
   },
   {
     slug: 'demolition',
-    heroImage: 'images/services/demolition.webp',
-    processTitle: 'Complete Demolition Process',
-    processLead: 'Controlled removal carried out to Singapore site standards, with protection and disposal handled end to end.',
-    steps: [
-      { title: 'Site Survey',        desc: 'Assessment of the structure and an agreed method statement.' },
-      { title: 'Hoarding & Protection', desc: 'Screening and covers so adjoining units stay untouched.' },
-      { title: 'Interior Strip-Out', desc: 'Hacking of walls, floors and fittings ready for rebuild.' },
-      { title: 'Structural Works',   desc: 'Planned removal with temporary propping where required.' },
-      { title: 'Debris Disposal',    desc: 'Sorted removal and licensed disposal with documentation.' },
-      { title: 'Clean Handover',     desc: 'Site swept and cleared, ready for the next trade.' }
-    ],
     title: 'Demolition',
     image: 'images/services/demolition.webp',
+    heroImage: 'images/services/demolition.webp',
     menuDesc: 'Controlled strip-out and structural demolition with full disposal.',
     heroTitle: 'Demolition - Services & Solutions',
     heroLead: 'Safe, controlled demolition carried out to Singapore site standards, with hoarding, ' +
               'dust control and certified debris disposal handled end to end.',
-    intro: 'We take structures down as carefully as we put them up, with a method statement, ' +
-           'protection for what stays, and a clean site at handover.',
-    body:  'From single-room hacking and full interior strip-outs to structural demolition, our crew ' +
-           'works to an agreed sequence that protects adjoining units, keeps noise within permitted ' +
-           'hours, and clears all debris responsibly.',
-    features: [
-      { title: 'Interior strip-out', desc: 'Hacking of walls, floors and fittings ready for rebuild.' },
-      { title: 'Structural works',   desc: 'Planned removal with temporary propping where required.' },
-      { title: 'Disposal & haulage', desc: 'Sorted debris removal and licensed disposal with records.' }
-    ]
+
+    listTitle: '[We Handle] All Your Demolition Work',
+    listLead:  'From hacking a single wall to stripping out a whole unit, we protect what stays and clear what goes.',
+    homes: [
+      ['Wall Hacking',          'Non-structural walls removed, with HDB approval obtained where required.'],
+      ['Floor & Tile Hacking',  'Old tiles, screed and floor finishes broken out, including kitchens and toilets.'],
+      ['Carpentry Dismantling', 'Built-in wardrobes, cabinets and feature walls taken down and removed.'],
+      ['False Ceiling Removal', 'Plasterboard ceilings and cove lighting taken down, with wiring made safe.'],
+      ['Haulage & Disposal',    'Debris and old fittings carted away and disposed of at licensed sites.']
+    ],
+    commercial: [
+      ['Interior Strip-Out',    'A whole unit cleared of workstations, carpets, ceilings and partitions.'],
+      ['Reinstatement Works',   'Leased units restored to original or bare-shell condition and made good for handover.'],
+      ['Structural Demolition', 'Slabs, beams and walls removed under a BCA permit and QP supervision.']
+    ],
+
+    work: {
+      tag: 'Commercial', date: 'Oct, 2026', place: 'Office Unit, Jurong East',
+      title: 'Interior Strip-Out', desc: 'Partition walls hacked out ahead of the new fit-out',
+      image: 'images/services/demolition.webp',
+      alt: 'A worker in ear defenders hacking out a brick partition wall'
+    }
   },
   {
     slug: 'electrical',
-    heroImage: 'images/services/electrical.webp',
-    processTitle: 'Complete Electrical Service Process',
-    processLead: 'Licensed electrical work that is tested, labelled and documented before it is handed over.',
-    steps: [
-      { title: 'Load Assessment',    desc: 'Checking existing capacity before any new circuit is added.' },
-      { title: 'Wiring & Rewiring',  desc: 'New points, circuit extensions and full rewires.' },
-      { title: 'DB Upgrade',         desc: 'Board replacement, protection devices and load balancing.' },
-      { title: 'Lighting Install',   desc: 'Fittings, switches and controls set out to plan.' },
-      { title: 'Fault Finding',      desc: 'Tripping, earth leakage and intermittent fault diagnosis.' },
-      { title: 'Testing & Handover', desc: 'Every circuit tested, labelled and recorded.' }
-    ],
     title: 'Electrical',
     image: 'images/services/electrical.webp',
+    heroImage: 'images/services/electrical.webp',
     menuDesc: 'Licensed wiring, DB upgrades, lighting and fault finding.',
     heroTitle: 'Electrical - Services & Solutions',
     heroLead: 'Licensed electrical work for homes, offices and industrial units, from new circuits ' +
               'and distribution boards to fault finding and lighting upgrades.',
-    intro: 'Electrical work is where shortcuts cost the most, so every circuit we install is tested, ' +
-           'labelled and documented before we hand it over.',
-    body:  'We handle rewiring, DB upgrades, power and lighting points, and emergency fault tracing. ' +
-           'All work follows the relevant Singapore standards and is carried out by qualified crew.',
-    features: [
-      { title: 'Wiring & rewiring', desc: 'New points, circuit extensions and full rewires.' },
-      { title: 'DB upgrade & RCCB', desc: 'Board replacement, protection devices and load balancing.' },
-      { title: 'Fault finding',     desc: 'Tripping, earth leakage and intermittent fault diagnosis.' }
-    ]
+
+    listTitle: '[We Handle] All Your Electrical Work',
+    listLead:  'From a new power point to a full rewire or switchboard upgrade, every circuit we install is tested before handover.',
+    homes: [
+      ['Wiring & Rewiring',        'Full or partial rewiring to replace old, damaged or overloaded wiring.'],
+      ['DB Box & RCCB Upgrade',    'A new distribution board with modern breakers and RCCB protection.'],
+      ['Power & Appliance Points', 'New sockets and points for aircon, water heater, oven and hob.'],
+      ['Lighting Installation',    'Ceiling lights, fans, cove and feature lighting fitted and wired.'],
+      ['Fault Finding & Repair',   'Tripping, short circuits and power loss traced to the cause and fixed.']
+    ],
+    commercial: [
+      ['Electrical Installation', 'New circuits, cable trays and trunking for office, retail and factory fit-outs.'],
+      ['Power Supply Upgrade',    'Approved-load increases and three-phase supply, with switchboard upgrades to match.'],
+      ['Emergency Lighting',      'Emergency and exit lights installed and tested to keep premises compliant.'],
+      ['Testing & Turn-On',       'LEW testing, Certificate of Compliance and SP inspection to get power on.'],
+      ['Preventive Maintenance',  'Scheduled checks of switchboards and DBs to catch faults before they trip.']
+    ],
+
+    work: {
+      tag: 'Commercial', date: 'Oct, 2026', place: 'Cafe, Tiong Bahru',
+      title: 'DB Board Upgrade', desc: 'A tripping DB rewired after closing and every circuit labelled',
+      image: 'images/services/electrical.webp',
+      alt: 'An electrician wiring a distribution board'
+    }
   },
   {
     slug: 'painting',
-    heroImage: 'images/services/painting.webp',
-    processTitle: 'Complete Painting Process',
-    processLead: 'Most paint problems are preparation problems, so the groundwork is where the work goes.',
-    steps: [
-      { title: 'Surface Inspection', desc: 'Identifying damp, cracks and failed coatings before quoting.' },
-      { title: 'Protection',         desc: 'Furnishings, floors and fittings covered and taped.' },
-      { title: 'Preparation',        desc: 'Scraping, skim coat, patching and sanding.' },
-      { title: 'Priming',            desc: 'The right primer for the substrate so the topcoat holds.' },
-      { title: 'Finish Coats',       desc: 'Even application in your chosen sheen, cut in by hand.' },
-      { title: 'Clean & Inspect',    desc: 'Site cleared daily and a joint walkthrough at the end.' }
-    ],
     title: 'Painting',
     image: 'images/services/painting.webp',
+    heroImage: 'images/services/painting.webp',
     menuDesc: 'Interior and exterior painting with proper surface prep.',
     heroTitle: 'Painting - Services & Solutions',
     heroLead: 'Interior and exterior painting done the way it lasts: proper preparation, quality ' +
               'coatings, protected furnishings and a genuinely clean finish.',
-    intro: 'Most paint problems are preparation problems. We sand, patch, prime and protect before ' +
-           'the first coat goes on.',
-    body:  'Our painters cover residential units, offices and commercial frontages, working around ' +
-           'your schedule where the space stays in use, and leaving the site tidy each day.',
-    features: [
-      { title: 'Surface preparation', desc: 'Scraping, skim coat, patching and priming.' },
-      { title: 'Interior finishes',   desc: 'Walls, ceilings and joinery in your chosen sheen.' },
-      { title: 'Exterior & weather',  desc: 'Weather-resistant systems for facades and boundary walls.' }
-    ]
+
+    listTitle: '[We Handle] All Your Painting Work',
+    listLead:  'From a single room to a full building fa\u00e7ade, we prepare every surface properly before the first coat goes on.',
+    homes: [
+      ['Interior Painting',       'Walls, ceilings and doors patched, primed and painted in the sheen you choose.'],
+      ['Exterior Painting',       'Weather-resistant repainting of house exteriors, gates and boundary walls.'],
+      ['Anti-Mould Treatment',    'Mould treated at the source, then sealed with anti-mould or anti-algae paint.'],
+      ['Feature & Texture Walls', 'Limewash, sand-texture and accent walls for a decorative finish.'],
+      ['Metal & Wood Finishes',   'Gates and railings rust-proofed and painted; doors and timber varnished.']
+    ],
+    commercial: [
+      ['Repairs & Redecoration', 'Planned fa\u00e7ade repainting and minor repairs (R&R) for MCSTs and town councils.'],
+      ['Epoxy Flooring',         'Hard-wearing floor coatings and line marking for factories, kitchens and car parks.']
+    ],
+
+    work: {
+      tag: 'Residential', date: 'Sep, 2026', place: '4-Room HDB Flat, Tampines',
+      title: 'Interior Repaint', desc: 'Furniture covered, walls primed and spray-finished',
+      image: 'images/services/painting.webp',
+      alt: 'Painters in protective suits repainting a living room with the furniture covered'
+    }
   },
   {
     slug: 'renovation',
-    heroImage: 'images/services/renovation.webp',
-    processTitle: 'Complete Renovation Process',
-    processLead: 'One point of contact and one programme, from first measurement through to the final walkthrough.',
-    steps: [
-      { title: 'Design & Planning',  desc: 'Layout, material selection and a costed programme.' },
-      { title: 'Approvals',          desc: 'Permits and submissions handled where the works require them.' },
-      { title: 'Demolition & Prep',  desc: 'Strip-out and making good before new work begins.' },
-      { title: 'Trade Coordination', desc: 'Carpentry, tiling, electrical and plumbing in sequence.' },
-      { title: 'Finishing',          desc: 'Painting, fixtures and the details that get noticed.' },
-      { title: 'Handover & Defects', desc: 'Joint inspection with a defects list closed out in writing.' }
-    ],
     title: 'Renovation',
     image: 'images/services/renovation.webp',
+    heroImage: 'images/services/renovation.webp',
     menuDesc: 'Full renovation managed from design through to handover.',
     heroTitle: 'Renovation - Services & Solutions',
     heroLead: 'Complete renovation for homes and workplaces, managed by one team from first ' +
               'measurement through to the final walkthrough.',
-    intro: 'One point of contact, one programme, one team accountable for the result: that is the ' +
-           'difference between a renovation that runs and one that drifts.',
-    body:  'We coordinate carpentry, tiling, electrical, plumbing and painting under a single ' +
-           'schedule, so trades follow each other in the right order and the handover date holds.',
-    features: [
-      { title: 'Design & planning',   desc: 'Layout, material selection and a costed programme.' },
-      { title: 'Full coordination',   desc: 'All trades sequenced under one site supervisor.' },
-      { title: 'Handover & defects',  desc: 'Joint inspection with a defects list closed out in writing.' }
-    ]
+
+    listTitle: '[We Handle] All Your Renovation Work',
+    listLead:  'From a kitchen refit to a full office fit-out, we plan the work, coordinate every trade and see it through to handover.',
+    homes: [
+      ['HDB & Condo Renovation', 'Whole-home renovation, with HDB permits and MCST approvals handled.'],
+      ['Kitchen Renovation',     'Cabinets, worktops, tiling, plumbing and electrical points in one job.'],
+      ['Bathroom Renovation',    'Waterproofing, re-tiling and new sanitary fittings, with a ponding test.'],
+      ['Carpentry & Built-Ins',  'Wardrobes, TV consoles, study tables and feature walls made to measure.'],
+      ['Ceilings & Partitions',  'Plasterboard ceilings, cove lighting and drywall partitions.'],
+      ['Tiling & Flooring',      'Floor tiles, vinyl and screeding for living areas, laid level and true.']
+    ],
+    commercial: [
+      ['Office & Retail Fit-Out', 'Offices, shops and F&B units fitted out with ceilings, partitions, flooring and M&E.'],
+      ['Addition & Alteration',   'Layout changes and mezzanines in existing buildings, with QP submissions if needed.']
+    ],
+
+    work: {
+      tag: 'Residential', date: 'Aug, 2026', place: 'Resale HDB Flat, Punggol',
+      title: 'Whole-Home Renovation', desc: 'Ceilings, partitions and wiring redone in one programme',
+      image: 'images/services/renovation.webp',
+      alt: 'A unit mid-renovation with new ceiling and partition boards in place'
+    }
   },
   {
     slug: 'waterproofing',
-    heroImage: 'images/services/waterproofing.webp',
-    processTitle: 'Complete Waterproofing Process',
-    processLead: 'A leak is a symptom. We trace where water actually enters before recommending any treatment.',
-    steps: [
-      { title: 'Leak Investigation', desc: 'Ponding and moisture testing to locate the true source.' },
-      { title: 'Surface Preparation',desc: 'Removing failed layers and repairing the substrate.' },
-      { title: 'Membrane Systems',   desc: 'Liquid or sheet membranes suited to the area.' },
-      { title: 'Joint Sealing',      desc: 'Corners, pipe penetrations and movement joints sealed.' },
-      { title: 'Ponding Test',       desc: 'Held and verified before anything is covered back up.' },
-      { title: 'Reinstatement',      desc: 'Screed and tiling restored, with a written report.' }
-    ],
     title: 'Waterproofing',
     image: 'images/services/waterproofing.webp',
+    heroImage: 'images/services/waterproofing.webp',
     menuDesc: 'Leak tracing and membrane systems for wet areas and roofs.',
     heroTitle: 'Waterproofing - Services & Solutions',
     heroLead: 'Leak investigation and waterproofing for bathrooms, balconies, roofs and planters: ' +
               'treating the cause, not just the stain.',
-    intro: 'A leak is a symptom. We trace where water actually enters before recommending any ' +
-           'treatment, so the repair holds.',
-    body:  'Our team carries out ponding tests, membrane systems, screed reinstatement and joint ' +
-           'sealing, with a written report of what was found and what was done.',
-    features: [
-      { title: 'Leak investigation',  desc: 'Ponding and moisture testing to locate the true source.' },
-      { title: 'Membrane systems',    desc: 'Liquid and sheet membranes for wet areas and roofs.' },
-      { title: 'Sealing & reinstate', desc: 'Joint sealing, screed and tile reinstatement after works.' }
-    ]
+
+    listTitle: '[We Handle] All Your Waterproofing Work',
+    listLead:  'From a leaking toilet to a basement or roof, we trace the source first, then seal it and test the repair.',
+    homes: [
+      ['Leak Investigation',      'The leak traced to its source before any repair, with a report for owners and MCSTs.'],
+      ['Toilet & Wet Areas',      'Toilets, bathrooms and kitchens resealed under new tiles, or treated without hacking.'],
+      ['Roof Waterproofing',      'Torch-on or liquid membranes for flat roofs, roof gardens and car porches.'],
+      ['Balcony & Planter Boxes', 'Membrane and drainage details for balconies, ledges and planter boxes.'],
+      ['Crack Injection',         'PU or epoxy resin injected into cracks to stop seepage through walls and slabs.'],
+      ['External Wall Sealing',   'Wall cracks and window frames sealed so rain stays out.']
+    ],
+    commercial: [
+      ['Basement & Water Tanks',  'Waterproofing for below-ground walls, slabs and water-retaining structures.'],
+      ['Expansion Joint Sealing', 'Failed sealant removed and movement joints resealed on roofs and car parks.']
+    ],
+
+    work: {
+      tag: 'Residential', date: 'Jul, 2026', place: 'HDB Flat, Sengkang',
+      title: 'Leak Repair & Waterproofing', desc: 'Leak traced with a ponding test, then the wet area resealed',
+      image: 'images/services/waterproofing.webp',
+      alt: 'Technicians applying a waterproofing membrane in a kitchen'
+    }
   }
 ];
 
-/* Building types - dark "We Provide For All Building Types" section. */
+/* ##########################################################################
+   SAMPLE CONTENT - the "Our Recent Work" entries above (service.work).
+   Dates, job titles and places were written to fill the Figma layout; the
+   review shown beside each one is that service's entry in BCE.testimonials,
+   which are samples too. Replace each `work` with a real, permissioned job
+   (and its own photo) before launch. Deleting a service's `work` hides the
+   section on that page.
+   ########################################################################## */
+BCE.worksAreSamples = true;
+
+/* Building types - dark "We Provide For All Building Types" section.
+   Labels follow the Singapore benchmark (reports/Singapore construction
+   website benchmark.md, section C): "Commercial", not "Commercial Space";
+   "Hospitality & Leisure" for "Entertainment"; no peer says "Multistory".
+   BCE is a trades contractor, so each line names the trades it brings to
+   that building type rather than claiming to build it. Every card shares
+   one button, "Get a Free Quote" (renderers.js), which opens the enquiry
+   form with the building type set.
+   The titles are also the form's building-type options (dropdown.js). */
 BCE.buildingTypes = [
-  { title: 'Residential',      image: 'images/building-types/residential.webp',
-    desc: "Build the elegant home you\u2019ve always dreamed of. From new construction and renovations we deliver exceptional craftsmanship for every project." },
-  { title: 'Multistory',       image: 'images/building-types/multistory.webp',
-    desc: 'Expert construction solutions for modern apartment and multistorey developments, combining structural excellence with timely delivery.' },
-  { title: 'Commercial Space', image: 'images/building-types/commercial.webp',
-    desc: 'Create distinctive, modern commercial spaces that inspire success. From offices and retail outlets, we build with precision and innovation.' },
-  { title: 'Industrial',       image: 'images/building-types/industrial.webp',
-    desc: 'Engineered industrial spaces that maximize productivity, operational efficiency, and sustainable growth.' },
-  { title: 'Institutional',    image: 'images/building-types/institutional.webp',
-    desc: 'Thoughtfully designed institutional buildings that foster learning, healthcare, and community development.' },
-  { title: 'Entertainment',    image: 'images/building-types/entertainment.webp',
-    desc: 'Distinctive entertainment destinations crafted to deliver memorable experiences and exceptional functionality.' }
+  { title: 'Residential',
+    image: 'images/building-types/residential.webp',
+    desc: 'Renovation, repainting, aircon, rewiring and leak repairs for HDB flats, condos and landed homes, all by one team.' },
+  { title: 'High-Rise & Mixed-Use',
+    image: 'images/building-types/multistory.webp',
+    desc: 'Facade repainting, roof waterproofing and common-area upgrades for condo towers, HDB blocks and mixed developments.' },
+  { title: 'Commercial',
+    image: 'images/building-types/commercial.webp',
+    desc: 'Office and retail fit-outs, reinstatement, aircon and electrical works, scheduled around your business hours.' },
+  { title: 'Industrial',
+    image: 'images/building-types/industrial.webp',
+    desc: 'Power upgrades, ACMV, industrial painting and roof waterproofing for factories and warehouses, with minimal downtime.' },
+  { title: 'Institutional',
+    image: 'images/building-types/institutional.webp',
+    desc: 'Repainting, ACMV servicing and upgrading works for schools, clinics and community buildings, done safely around occupants.' },
+  { title: 'Hospitality & Leisure',
+    image: 'images/building-types/entertainment.webp',
+    desc: 'Refurbishment, aircon and lighting works for hotels, F&B outlets and leisure venues, phased so you can stay open.' }
 ];
 
+/* How it works timeline (Figma 1:1990 service, 636:1436 home). */
 BCE.process = [
-  { n: '01', title: 'Request a Service',         desc: 'Fill out our online form or give us a quick call with your service needs.' },
-  { n: '02', title: 'Get Confirmation',          desc: 'Our expert will confirm the schedule, visit your site and provide a clear service quotation.' },
-  { n: '03', title: 'Enjoy Hassle-Free Service', desc: 'Our experts will arrive on time, complete the job, and make sure everything is working smoothly before they leave.' }
+  { n: '01', title: 'Request a Service', desc: 'Share your service requirements through our online form or contact our team directly.' },
+  { n: '02', title: 'Get Confirmation',  desc: 'Our expert will confirm the schedule, visit your site and provide a clear service quotation.' },
+  { n: '03', title: 'Plan & Execute',    desc: 'We plan the work, coordinate the necessary resources and carry out the service as agreed.' },
+  { n: '04', title: 'Review',            desc: 'We review the completed work with you, address any outstanding concerns and complete the handover.' }
 ];
 
 /* ##########################################################################
@@ -274,19 +372,21 @@ BCE.process = [
 /* Notice hidden at the owner's request (Nov 2026); the quotes are still samples. */
 BCE.testimonialsAreSamples = false;
 
+/* Localised for Singapore (Nov 2026): first name + initial and the client's
+   area, the way local review cards read. Still written, not collected. */
 BCE.testimonials = [
-  { category: 'Painting',   stars: 5, name: 'Daniel Tan',  role: 'Homeowner',
-    quote: 'The painting team was professional and neat. They finished the job with good attention to detail and minimal mess. Great value for the price.' },
-  { category: 'Renovation', stars: 5, name: 'Priya Menon', role: 'Office Manager',
-    quote: 'Our office refit ran to schedule and the site was left clean every evening. Coordination between trades was genuinely well handled.' },
-  { category: 'Aircon',     stars: 5, name: 'Wei Ling Ho', role: 'Condo Resident',
-    quote: 'Booked a servicing slot and they arrived on time. Explained what was wrong with the unit clearly instead of upselling me.' },
-  { category: 'Electrical', stars: 5, name: 'Arun Kumar',  role: 'Cafe Owner',
-    quote: 'They traced a tripping fault two other contractors had missed, then labelled the whole board properly. Straightforward and fair.' },
-  { category: 'Waterproofing', stars: 4, name: 'Michelle Lau', role: 'Property Agent',
-    quote: 'Balcony leak sorted after a proper ponding test. I appreciated getting a written report of what was found and what was done.' },
-  { category: 'Demolition', stars: 5, name: 'Suresh Nair', role: 'Developer',
-    quote: 'Strip-out was completed ahead of programme with hoarding and dust control in place. Adjoining units had no complaints.' }
+  { category: 'Painting',   stars: 5, name: 'Daniel T.',   role: 'Homeowner, Tampines',
+    quote: 'Repainted our whole 4-room flat in two days. Every piece of furniture was covered and they cleaned up each evening. Neat finish, fair price.' },
+  { category: 'Renovation', stars: 5, name: 'Priya M.',    role: 'Homeowner, Punggol',
+    quote: 'Our resale flat renovation kept to the timeline we agreed. One coordinator for every trade, and the site was cleared at the end of each day.' },
+  { category: 'Aircon',     stars: 5, name: 'Wei Ling H.', role: 'Homeowner, Woodlands',
+    quote: 'Booked a chemical wash for our System 3. They came on time, showed me the coils before and after, and did not push a new unit on me.' },
+  { category: 'Electrical', stars: 5, name: 'Arun K.',     role: 'Cafe Owner, Tiong Bahru',
+    quote: 'They traced a tripping fault two other contractors missed and labelled the whole DB. Work was done after closing, so we lost no business.' },
+  { category: 'Waterproofing', stars: 4, name: 'Michelle L.', role: 'Homeowner, Sengkang',
+    quote: 'Ceiling leak from the bathroom above, sorted properly. They ran a ponding test, explained the cause and gave us a written report.' },
+  { category: 'Demolition', stars: 5, name: 'Suresh N.',   role: 'Facilities Manager, Jurong East',
+    quote: 'Strip-out finished ahead of programme, with hoarding and dust control in place. The neighbouring units in the building had no complaints.' }
 ];
 
 /* Home FAQ (Figma 495:1320) - the owner's copy (Nov 2026). The section
@@ -300,7 +400,7 @@ BCE.faqs = [
        'enquiries and assistance.' },
   { q: 'How soon can I expect to hear back from your team after submitting an enquiry?',
     a: 'Our team will review your enquiry and get back to you within 24 hours. ' +
-       'We’ll discuss your requirements and guide you through the next steps.' },
+       'We\u2019ll discuss your requirements and guide you through the next steps.' },
   { q: 'Do you provide free quotations?',
     a: 'Yes, we will provide you with a free quotation before starting the work. ' +
        'On your approval, we will proceed to the next steps.' },
@@ -309,33 +409,46 @@ BCE.faqs = [
        'on the type and scope of work.' }
 ];
 
-/* "Your reliable partner" band (Figma 437:1221). The four headings are the
-   company tagline - Quality, Innovation, Team Work, Passion - and the order
-   below matches the design's columns left to right. Icons are the supplied
-   icons8 exports, used unmodified because they carry their own colour. */
-BCE.values = [
-  { title: 'Quality',   icon: 'images/values/quality.svg',
-    desc: 'Every job is finished to a standard we would accept in our own home. Materials are agreed up front and the work is checked before we call it done.' },
-  { title: 'Team Work', icon: 'images/values/teamwork.svg',
-    desc: 'One supervisor, one programme, and trades that follow each other in the right order. You deal with a single point of contact from first visit to handover.' },
-  { title: 'Innovation', icon: 'images/values/innovation.svg',
-    desc: 'Better methods, not simply more hours. We bring current techniques and the right equipment to each site so the work lasts and the disruption is shorter.' },
-  { title: 'Passion',   icon: 'images/values/passion.svg',
-    desc: 'We take the work personally. Every project we deliver proves the same thing: we would rather do a job properly than do it twice.' }
+/* Google Maps JavaScript API key for the contact page map. With a key, the
+   map goes live: the details card rides beside the office pin and the map
+   cannot be panned far enough to lose them. Without one, the page uses
+   Google's keyless embed instead (no card-on-pin).
+   To get a key: Google Cloud console > enable "Maps JavaScript API" > create
+   an API key, restrict it to this site's domain (HTTP referrers), paste it here. */
+BCE.maps = {
+  apiKey: ''
+};
+
+/* The fact timeline (Figma 697:2998 home About, 437:1464 About page MD block).
+   Each count ticks up to its value on view; the bizSAFE licence closes the row. */
+BCE.facts = [
+  { label: 'Satisfied Customer',  count: 100 },
+  { label: 'Successful Projects', count: 20 },
+  { label: 'Expert Team Members', count: 10 }
 ];
 
-/* "Meet our MD" band (Figma 437:1464). The design reads "BEC" here and in the
-   Recent Works heading; the company is BCE, so that is corrected. */
+/* "Why choose us" band on every service page (Figma 597:1351). Icons are the
+   supplied icons8 exports at 100px, shown at 48px. */
+BCE.whyChoose = [
+  { title: 'Quality',    icon: 'images/why/quality.png',
+    desc: 'We maintain high standards of workmanship, using quality materials and careful attention to detail in every project.' },
+  { title: 'Team Work',  icon: 'images/why/teamwork.png',
+    desc: 'Our team coordinates every stage of the project to ensure smooth communication and efficient delivery.' },
+  { title: 'Innovation', icon: 'images/why/innovation.png',
+    desc: 'We adopt practical methods and suitable technologies to deliver effective, lasting solutions.' },
+  { title: 'Commitment', icon: 'images/why/commitment.png',
+    desc: 'We take pride in our work and remain committed to delivering dependable service and customer satisfaction.' }
+];
+
+/* Words from the MD on the About page (Figma 437:1464). The design reads
+   "At BEC, we build ec project"; the company is BCE and "ec" is a typo for
+   "every", so both are corrected. */
 BCE.founder = {
-  eyebrow: 'MEET OUR MD',
-  lead:    'a vision built on trust & quality',
-  name:    'Balamurugan',
-  role:    'Founder & Director',
-  photo:   'images/about/md-balamurugan.webp',
-  quote:   'At BCE, we believe every successful project begins with trust, thoughtful planning, ' +
-           'and a commitment to quality. Our vision is to deliver reliable construction and ' +
-           'maintenance solutions that meet our clients’ needs while building lasting ' +
-           'relationships. We strive to make every project a smooth and rewarding experience.'
+  name:  'Balamurugan',
+  role:  'Director',
+  quote: 'At BCE, we build every project on trust, quality and commitment. We provide reliable ' +
+         'construction and maintenance solutions, with a focus on meeting our customers\u2019 needs ' +
+         'and building lasting relationships.'
 };
 
 /* The About page now reuses the home page's "We Provide For All Building

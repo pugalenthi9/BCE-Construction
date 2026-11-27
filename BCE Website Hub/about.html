@@ -37,61 +37,64 @@
 
 <main id="main">
 
-  <!-- ===== About ======================================================== -->
-  <section class="section">
-    <div class="container about">
-      <div class="collage" data-reveal="left">
-        <figure class="collage__item collage__item--a"><img src="images/about/collage-1-crew.webp" alt="Safety equipment ready for the crew" loading="lazy"></figure>
-        <figure class="collage__item collage__item--b"><img src="images/about/collage-2-site.webp" alt="Site works in progress" loading="lazy"></figure>
-        <figure class="collage__item collage__item--c"><img src="images/about/collage-3-worker.webp" alt="Worker on a reinforced structure" loading="lazy"></figure>
-        <figure class="collage__item collage__item--d"><img src="images/about/collage-4-gloves.webp" alt="Protective gloves" loading="lazy"></figure>
-      </div>
-
-      <div data-reveal="right">
-        <span class="eyebrow">About Us</span>
-        <h1 class="section-title section-title--md" style="margin-top:16px">
-          The Team Behind Bala Construction &amp; Engineering
-        </h1>
-        <p class="section-lead">
-          Proven experience across residential, commercial and industrial projects
-          in Singapore — delivering construction and renovation work that is safe, on schedule and
-          built to last.
-        </p>
-        <p class="section-lead">
-          From a single room to a full fit-out, the same team handles the programme end to end:
-          one supervisor, an agreed scope, and a written quote you are held to — not a moving target.
-        </p>
-
-        <div class="about__stats">
-          <div class="stat"><p class="stat__value" data-count="100">100+</p><p class="stat__label">Satisfied Customers</p></div>
-          <div class="stat"><p class="stat__value" data-count="20">20+</p><p class="stat__label">Successful Projects</p></div>
-          <div class="stat"><p class="stat__value" data-count="10">10+</p><p class="stat__label">Expert Team Members</p></div>
-        </div>
-
-        <div class="about__actions">
-          <a class="btn btn--primary" href="contact.html">
-            <span class="btn__icon" data-icon="star-fall"></span>
-            <span>Book Your Service Now</span>
-          </a>
-          <a class="btn btn--outline" href="tel:+6598945223">
-            <span class="btn__icon" data-icon="phone-call"></span>
-            <span>Call Us</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== Your reliable partner (Figma 437:1221) ======================= -->
-  <section class="values-band">
+  <!-- ===== Hero (Figma 665:1421) ======================================== -->
+  <!-- The bizSAFE line sits in the indent of the title's first line, as in
+       the design; below 1024px it moves above the title instead. -->
+  <section class="about-hero has-grid" aria-labelledby="about-hero-title">
     <div class="container">
-      <h2 class="values-band__title" data-reveal>Your reliable partner for construction related services</h2>
-      <div class="value-grid" data-render="values"></div>
+      <div class="about-hero__head">
+        <div class="about-hero__heading" data-reveal>
+          <p class="about-hero__badge">
+            <img src="images/brand/bizsafe-wreath.webp" alt="bizSAFE STAR certified" width="153" height="64">
+            <span class="about-hero__tagline">
+              <span class="about-hero__team">One Team</span>
+              <span class="about-hero__solutions">Multiple Building Solutions.</span>
+            </span>
+          </p>
+          <h1 class="about-hero__title" id="about-hero-title">
+            Your trusted<br>construction service partner
+          </h1>
+        </div>
+        <a class="btn btn--brand about-hero__cta" href="contact.html" data-reveal style="--reveal-delay:120ms">
+          <span class="btn__icon" data-icon="star-fall"></span>
+          <span>Book Your Service Now</span>
+        </a>
+      </div>
+
+      <div class="about-hero__photos">
+        <figure class="about-hero__photo" data-reveal>
+          <img src="images/about/collage-1-crew.webp" alt="Hard hats and safety vests ready for the crew">
+        </figure>
+        <figure class="about-hero__photo" data-reveal style="--reveal-delay:90ms">
+          <img src="images/misc/process-team.webp" alt="BCE engineers reviewing plans on site">
+        </figure>
+      </div>
     </div>
   </section>
 
-  <!-- ===== Meet our MD (Figma 437:1464) ================================= -->
-  <section class="md-band" data-render="founder-band"></section>
+  <!-- ===== Words from the MD (Figma 437:1464) ============================ -->
+  <section class="md-words" aria-labelledby="md-words-title">
+    <div class="container">
+      <h2 class="chip-dark" id="md-words-title" data-reveal>Words From MD</h2>
+      <img class="md-words__mark" src="images/icons/quote-dark.svg" alt="" width="32" height="32" data-reveal>
+      <figure class="md-words__body" data-render="md-words" data-reveal></figure>
+      <ul class="facts facts--dark" data-render="facts" data-reveal></ul>
+    </div>
+  </section>
+
+  <!-- ===== Why choose us (Figma 684:1529) ================================
+       The same band as the service pages, from the same data. -->
+  <section class="why" aria-labelledby="about-why-title">
+    <div class="container">
+      <div class="why__head" data-reveal>
+        <span class="eyebrow">Why choose us</span>
+        <h2 class="why__title" id="about-why-title">
+          <span class="title-lead">Your reliable partner for</span> construction related services
+        </h2>
+      </div>
+      <div class="why__grid" data-render="why-choose"></div>
+    </div>
+  </section>
 
   <!-- ===== Building types (dark) =======================================
        Same section as the home page, rendered from the same data and markup
@@ -101,11 +104,11 @@
   <section class="section section--dark has-grid">
     <div class="container">
       <div class="section-head" data-reveal>
-        <span class="eyebrow">Services &amp; Solutions</span>
-        <h2 class="section-title">We Provide For All Building Types</h2>
+        <span class="eyebrow">Sectors We Serve</span>
+        <h2 class="section-title"><span class="title-lead">We Provide For</span> All Building Types</h2>
       </div>
 
-      <div class="grid-3" data-render="building-types"></div>
+      <div class="type-grid" data-render="building-types"></div>
 
       <div class="other-buildings" data-reveal>
         <img class="other-buildings__skyline" src="images/misc/ob-skyline.webp" alt="" aria-hidden="true">

@@ -188,6 +188,53 @@
     });
   }
 
+  /* ---- Testimonials strip (home, Figma 616:2590) --------------------------
+     The card set is cloned once - hidden from assistive tech and the tab
+     order - so the track can loop by sliding exactly one set's width. The
+     speed is constant in px/s whatever the card count or screen width. The
+     strip runs only while on screen. With reduced motion it stays a
+     swipeable row. */
+  var REVIEWS_PX_PER_S = 36;
+
+  function initReviews() {
+    var root = document.querySelector('[data-reviews]');
+    var section = root && root.closest('.reviews');
+    var set = root && root.querySelector('.reviews__set');
+    if (!section || !set || !set.children.length || reduceMotion) return;
+
+    var track = set.parentNode;
+    var clone = set.cloneNode(true);
+    clone.removeAttribute('data-render');
+    clone.setAttribute('aria-hidden', 'true');
+    clone.setAttribute('inert', '');
+    track.appendChild(clone);
+    section.classList.add('is-marquee');
+
+    function setDuration() {
+      var seconds = Math.max(20, set.getBoundingClientRect().width / REVIEWS_PX_PER_S);
+      track.style.setProperty('--reviews-duration', seconds.toFixed(1) + 's');
+    }
+    setDuration();
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(setDuration, 200);
+    });
+
+    var onScreen = false;
+    function sync() { section.classList.toggle('is-running', onScreen); }
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        onScreen = entries[0].isIntersecting;
+        sync();
+      }).observe(root);
+    } else {
+      onScreen = true;
+      sync();
+    }
+  }
+
   /* ---- Before / after slider -------------------------------------------- */
 
   function initCompare() {
@@ -275,34 +322,278 @@
     });
   }
 
-  /* ---- Map zoom (contact page) ------------------------------------------- */
+  /* ---- Contact: live Google map ---------------------------------------------
 
-  function initMapZoom() {
-    var map = document.querySelector('.mapview');
-    if (!map) return;
+     Two modes, picked by BCE.maps.apiKey (site.js):
+     - Live (with a key, or ?map=js to preview without one): Google's Maps
+       JavaScript API. The orange office pin and the details card ride on the
+       map together; panning is limited so the pin can never leave the map,
+       and the card stays beside the pin - left of it, or right when the left
+       runs out of room - sliding up or down to stay inside. Map / Satellite
+       is Google's own map-type control, cut to those two.
+     - Embed (no key): Google's keyless map, which carries Google's own layer
+       switch. Its view is set with `ll` so the pin lands in the open map
+       beside the card. Every change reloads the frame, so the framing works
+       in 20px steps and the frame is only rebuilt when that changes. */
+  var MAP_ZOOM = 17;
+  var MAP_STEP = 20;
 
-    var MIN = 1, MAX = 2.4, STEP = 0.3;
-    var zoom = MIN;
+  function initGoogleMap() {
+    var box = document.querySelector('[data-gmap]');
+    var C = BCE.company || {};
+    if (!box || !C.geo || !C.mapsQuery) return;
+    var key = (BCE.maps && BCE.maps.apiKey) || '';
+    var preview = /(^|[?&])map=js(&|$)/.test(window.location.search.slice(1) + '&' + (BCE.routeQuery || ''));
+    if (!key && !preview) { framedEmbed(box, C); return; }
 
-    function apply() {
-      map.style.setProperty('--map-zoom', zoom.toFixed(2));
-      map.querySelectorAll('[data-map-zoom]').forEach(function (btn) {
-        var dir = btn.getAttribute('data-map-zoom');
-        btn.disabled = (dir === 'in' && zoom >= MAX) || (dir === 'out' && zoom <= MIN);
-        btn.style.opacity = btn.disabled ? '.45' : '';
-      });
+    /* Load the API once; if it can't load (offline, bad key), keep the embed. */
+    window.__bceMapsReady = function () { liveMap(box, C); };
+    var s = document.createElement('script');
+    s.src = 'https://maps.googleapis.com/maps/api/js?v=weekly&callback=__bceMapsReady' +
+            (key ? '&key=' + encodeURIComponent(key) : '');
+    s.async = true;
+    s.onerror = function () { framedEmbed(box, C); };
+    document.head.appendChild(s);
+    framedEmbed(box, C);   /* shown until the live map replaces it */
+  }
+
+  function framedEmbed(box, C) {
+    var frame = box.querySelector('.mapview__frame');
+    if (!frame || frame.__framed) return;
+    frame.__framed = true;
+    var card = box.parentNode.querySelector('.mapview__card');
+    var degPerPx = 360 / (256 * Math.pow(2, MAP_ZOOM));
+    var current = '';
+
+    /* Layout offsets, not rects: the map scales in on reveal, and a
+       transform must not skew the framing. All in the box's own pixels. */
+    function viewUrl() {
+      var w = box.clientWidth, h = box.clientHeight;
+      if (!w) return '';
+      var left = 0;   /* where the open map starts */
+      if (card && getComputedStyle(card).position === 'absolute') {
+        left = Math.max(0, card.offsetLeft + card.offsetWidth - box.offsetLeft);
+      }
+      var snap = function (v) { return Math.round(v / MAP_STEP) * MAP_STEP; };
+      var dx = snap((left + w) / 2 - (frame.offsetLeft + frame.offsetWidth / 2));
+      var dy = snap(h / 2 - (frame.offsetTop + frame.offsetHeight / 2));
+      return 'https://maps.google.com/maps?q=' + encodeURIComponent(C.mapsQuery) +
+             '&ll=' + (C.geo.lat + dy * degPerPx).toFixed(6) + ',' + (C.geo.lng - dx * degPerPx).toFixed(6) +
+             '&t=m&z=' + MAP_ZOOM + '&output=embed';
+    }
+    function show() {
+      if (!frame.isConnected) return;
+      var next = viewUrl();
+      if (!next || next === current) return;
+      current = next;
+      frame.src = next;
     }
 
-    map.querySelectorAll('[data-map-zoom]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        zoom = btn.getAttribute('data-map-zoom') === 'in'
-          ? Math.min(MAX, zoom + STEP)
-          : Math.max(MIN, zoom - STEP);
-        apply();
-      });
+    if ('ResizeObserver' in window) {
+      var timer;
+      new ResizeObserver(function () {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(show, 150);
+      }).observe(box);
+    }
+    show();
+  }
+
+  function liveMap(box, C) {
+    var g = window.google && window.google.maps;
+    if (!g) return;
+    var mapview = box.parentNode;
+    var card = mapview.querySelector('.mapview__card');
+    var PIN_W = 54, PIN_H = 66, GAP = 24, EDGE = 16;
+    var phone = window.matchMedia('(max-width: 767px)');
+    var office = new g.LatLng(C.geo.lat, C.geo.lng);
+
+    var frame = box.querySelector('.mapview__frame');
+    if (frame) frame.remove();
+    var canvas = document.createElement('div');
+    canvas.className = 'mapview__canvas';
+    box.appendChild(canvas);
+
+    var map = new g.Map(canvas, {
+      center: office,
+      zoom: MAP_ZOOM,
+      mapTypeId: 'roadmap',
+      disableDefaultUI: true,
+      mapTypeControl: true,
+      mapTypeControlOptions: {
+        style: g.MapTypeControlStyle.HORIZONTAL_BAR,
+        position: g.ControlPosition.TOP_RIGHT,
+        mapTypeIds: ['roadmap', 'satellite']
+      },
+      zoomControl: true,
+      zoomControlOptions: { position: g.ControlPosition.RIGHT_BOTTOM },
+      fullscreenControl: true,
+      fullscreenControlOptions: { position: g.ControlPosition.RIGHT_BOTTOM },
+      gestureHandling: 'cooperative',   /* page scroll stays page scroll */
+      clickableIcons: false
     });
 
-    apply();
+    /* The pin and (on larger screens) the card, anchored to the office. */
+    var mark = document.createElement('div');
+    mark.className = 'mapmark';
+    mark.innerHTML = '<span class="mapmark__pin" aria-hidden="true"><img src="images/icons/building.svg" alt=""></span>';
+    var overlay = new g.OverlayView();
+    overlay.onAdd = function () { this.getPanes().floatPane.appendChild(mark); layout(); };
+    overlay.onRemove = function () { mark.remove(); };
+    overlay.draw = function () {
+      var p = this.getProjection().fromLatLngToDivPixel(office);
+      mark.style.transform = 'translate(' + p.x + 'px,' + p.y + 'px)';
+      placeCard();
+    };
+    overlay.setMap(map);
+
+    var side = '', sideTimer = 0;
+    function floating() { return card && card.classList.contains('is-floating'); }
+
+    /* Card beside the pin, inside the map: left of the pin when it fits,
+       otherwise right; vertically centred on the pin but kept inside. */
+    function placeCard() {
+      var proj = overlay.getProjection();
+      if (!floating() || !proj) return;
+      var c = proj.fromLatLngToContainerPixel(office);
+      var w = box.clientWidth, h = box.clientHeight;
+      var cw = card.offsetWidth, ch = card.offsetHeight;
+      var reach = PIN_W / 2 + GAP;
+      var next = c.x - reach - cw >= EDGE ? 'left'
+               : c.x + reach + cw <= w - EDGE ? 'right'
+               : (c.x > w / 2 ? 'left' : 'right');
+      if (side && next !== side) {
+        card.classList.add('is-moving');
+        window.clearTimeout(sideTimer);
+        sideTimer = window.setTimeout(function () { card.classList.remove('is-moving'); }, 340);
+      }
+      side = next;
+      var x = side === 'left' ? -(reach + cw) : reach;
+      var top = Math.min(Math.max(c.y - PIN_H / 2 - ch / 2, EDGE), Math.max(EDGE, h - EDGE - ch));
+      card.style.transform = 'translate(' + Math.round(x) + 'px,' + Math.round(top - c.y) + 'px)';
+    }
+
+    /* Pan limit: the viewport may only move while the whole pin stays EDGE
+       inside it. Google's restriction keeps the viewport within a box, so
+       that box is the pin's own box grown by the viewport, worked out in
+       world pixels at the current zoom - hence again after every zoom. */
+    function restrict() {
+      var proj = map.getProjection();
+      if (!proj) return;
+      var scale = Math.pow(2, map.getZoom());
+      var wp = proj.fromLatLngToPoint(office);
+      var px = wp.x * scale, py = wp.y * scale;
+      var w = box.clientWidth, h = box.clientHeight;
+      var west = px + PIN_W / 2 + EDGE - w, east = px - PIN_W / 2 - EDGE + w;
+      var north = py + EDGE - h, south = py - PIN_H - EDGE + h;
+      if (west >= east || north >= south) { map.setOptions({ restriction: null }); return; }
+      var nw = proj.fromPointToLatLng(new g.Point(west / scale, north / scale));
+      var se = proj.fromPointToLatLng(new g.Point(east / scale, south / scale));
+      map.setOptions({ restriction: {
+        latLngBounds: { north: nw.lat(), south: se.lat(), west: nw.lng(), east: se.lng() },
+        strictBounds: false
+      } });
+    }
+
+    /* Open with the pin and card centred together. */
+    function frameOffice() {
+      var proj = map.getProjection();
+      if (!proj) return;
+      var scale = Math.pow(2, map.getZoom());
+      var wp = proj.fromLatLngToPoint(office);
+      var dx = floating() ? -(GAP + card.offsetWidth) / 2 : 0;
+      map.setCenter(proj.fromPointToLatLng(new g.Point(wp.x + dx / scale, wp.y - (PIN_H / 2) / scale)));
+    }
+
+    /* The card rides on the pin only where it can always fit beside it: at
+       most half the map, less the pin, gap and edge, so whichever half the
+       pin is in, the other side has room. Narrower than MIN_FLOAT_W - or
+       taller than the map - and it sits under the map instead, as on phones. */
+    var MIN_FLOAT_W = 320, guarded = false;
+    function below() {
+      card.classList.remove('is-floating', 'is-moving');
+      card.classList.add('is-below');
+      card.style.width = card.style.transform = '';
+      if (card.parentNode !== mapview) mapview.appendChild(card);
+    }
+    function layout() {
+      if (!card || !mark.isConnected) return;
+      /* Measured in its own place, never inside the pin's layer. */
+      if (card.parentNode !== mapview) mapview.appendChild(card);
+      card.classList.remove('is-floating', 'is-below');
+      card.style.width = '';
+      var fit = phone.matches ? 0
+              : Math.min(card.offsetWidth, box.clientWidth / 2 - (PIN_W / 2 + GAP + EDGE));
+      if (fit >= MIN_FLOAT_W) {
+        mark.appendChild(card);
+        if (!guarded) { g.OverlayView.preventMapHitsAndGesturesFrom(card); guarded = true; }
+        card.style.width = Math.floor(fit) + 'px';
+        card.classList.add('is-floating');
+        if (card.offsetHeight > box.clientHeight - 2 * EDGE) below();
+      } else {
+        below();
+      }
+      side = '';
+      restrict();
+      frameOffice();
+      placeCard();
+    }
+
+    var raf = 0;
+    map.addListener('bounds_changed', function () {
+      if (!raf) raf = window.requestAnimationFrame(function () { raf = 0; placeCard(); });
+    });
+    map.addListener('zoom_changed', restrict);
+    g.event.addListenerOnce(map, 'projection_changed', layout);
+    if (phone.addEventListener) phone.addEventListener('change', layout);
+    if ('ResizeObserver' in window) {
+      var t;
+      new ResizeObserver(function () {
+        window.clearTimeout(t);
+        t = window.setTimeout(layout, 120);
+      }).observe(box);
+    }
+  }
+
+  /* ---- Get Directions -------------------------------------------------------
+
+     Opens Google Maps directions to the office. When the visitor allows it,
+     their position goes in as the start, so both ends arrive filled in; if
+     they decline or it isn't available, Google Maps starts from its own idea
+     of "your location" (the app does that by itself). The tab opens once the
+     position is known, so a slow permission prompt can't leave an empty tab
+     behind; if the browser then blocks the pop-up, it opens here instead. */
+  function initDirections() {
+    var C = BCE.company || {};
+    if (!C.mapsQuery) return;
+    var base = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(C.mapsQuery);
+
+    document.querySelectorAll('[data-directions]').forEach(function (a) {
+      a.href = base;
+      a.addEventListener('click', function (e) {
+        if (!navigator.geolocation || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        if (a.getAttribute('aria-busy') === 'true') return;
+        a.setAttribute('aria-busy', 'true');
+
+        var settled = false;
+        function go(origin) {
+          if (settled) return;
+          settled = true;
+          a.removeAttribute('aria-busy');
+          var url = base + (origin ? '&origin=' + origin : '');
+          var tab = window.open(url, '_blank');
+          if (tab) tab.opener = null;
+          else window.location.href = url;
+        }
+        navigator.geolocation.getCurrentPosition(
+          function (p) { go(p.coords.latitude.toFixed(6) + ',' + p.coords.longitude.toFixed(6)); },
+          function () { go(''); },
+          { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
+        );
+        window.setTimeout(function () { go(''); }, 9000);
+      });
+    });
   }
 
   /* ---- Stat counters ----------------------------------------------------- */
@@ -403,57 +694,181 @@
     tops.forEach(function (section) { io.observe(section); });
   }
 
-  /* ---- "The Process" auto-scan ------------------------------------------- */
+  /* ---- How it works timeline (home + service pages) ----------------------
 
-  /* Walks the primary-blue highlight down the numbered steps while the card is
-     on screen, looping back to the first. Steps are re-queried on every tick so
-     a re-render (the bundle's router rebuilds the service page) cannot leave a
-     stale node lit. */
+     Scroll-linked: a reading line sits 55% down the screen, and every step
+     whose square has passed it is "done" (square filled) while the last of
+     those is "current" (title lit orange). The rail's orange fill runs from
+     the first square down to the reading line, stopping at the last square.
+     It is driven straight from scroll position each frame, transform only,
+     so it tracks the page rather than playing back a timed animation. With
+     reduced motion the same states apply; only the colour fades are cut. */
+  function initSteps() {
+    document.querySelectorAll('[data-steps]').forEach(function (track) {
+      var fill = track.querySelector('.steps__fill');
+      var rail = track.querySelector('.steps__rail');
+      if (!fill || !rail) return;
+      var raf = 0;
 
-  var SCAN_DWELL = 1400;   /* ms each number stays lit */
-
-  function initProcessScan() {
-    var cards = document.querySelectorAll('.process__card');
-    if (!cards.length || !('IntersectionObserver' in window) || reduceMotion) return;
-
-    cards.forEach(function (card) {
-      var timer = null, index = 0, paused = false, visible = false;
-
-      function steps() { return card.querySelectorAll('.process__step'); }
-
-      /* light(-1) matches nothing, so it doubles as "clear all". */
-      function light(n) {
-        steps().forEach(function (step, i) {
-          step.classList.toggle('is-scanning', i === n);
+      function update() {
+        raf = 0;
+        var items = track.querySelectorAll('.steps__item');
+        if (!items.length) return;
+        var line = window.innerHeight * .55;
+        var r = rail.getBoundingClientRect();
+        var current = 0;
+        items.forEach(function (item, i) {
+          var d = item.querySelector('.steps__dot').getBoundingClientRect();
+          var reached = i === 0 || d.top + d.height / 2 <= line;
+          if (reached) current = i;
+          item.classList.toggle('is-done', reached);
         });
+        items.forEach(function (item, i) { item.classList.toggle('is-current', i === current); });
+
+        var last = items[items.length - 1].querySelector('.steps__dot').getBoundingClientRect();
+        var end = last.top + last.height / 2 - r.top;
+        var reach = Math.max(0, Math.min(line - r.top, end));
+        fill.style.transform = 'scaleY(' + (r.height ? reach / r.height : 0).toFixed(4) + ')';
       }
 
-      function stop() {
-        if (timer) { clearInterval(timer); timer = null; }
-        light(-1);
+      function onScroll() { if (!raf) raf = requestAnimationFrame(update); }
+
+      /* Only listen while the timeline is near the screen. */
+      if ('IntersectionObserver' in window) {
+        var listening = false;
+        new IntersectionObserver(function (entries) {
+          var near = entries[0].isIntersecting;
+          if (near === listening) return;
+          listening = near;
+          if (near) { window.addEventListener('scroll', onScroll, { passive: true }); onScroll(); }
+          else window.removeEventListener('scroll', onScroll);
+        }, { rootMargin: '25% 0px' }).observe(track);
+      } else {
+        window.addEventListener('scroll', onScroll, { passive: true });
       }
+      window.addEventListener('resize', onScroll);
+      update();
+    });
+  }
 
-      function start() {
-        if (timer || paused || !visible) return;
-        if (steps().length < 2) return;
-        index = 0;
-        light(index);
-        timer = setInterval(function () {
-          var total = steps().length;
-          if (!total) { stop(); return; }
-          index = (index + 1) % total;
-          light(index);
-        }, SCAN_DWELL);
-      }
+  /* ---- Recent work entrance (service pages, Figma 599:1511) ---------------
+     .is-in plays the section's entrance (sections.css). It is set once a
+     fifth of the section is on screen and cleared only when none of it is,
+     so the entrance replays on every visit but never resets in view. */
+  function initWorkReveal() {
+    var section = document.querySelector('[data-work-reveal]');
+    if (!section || !revealSupported()) return;
+    new IntersectionObserver(function (entries) {
+      var e = entries[0];
+      if (e.intersectionRatio >= .2) section.classList.add('is-in');
+      else if (!e.isIntersecting) section.classList.remove('is-in');
+    }, { threshold: [0, .2] }).observe(section);
+  }
 
-      /* A real hover takes over, so two numbers never light at once. */
-      card.addEventListener('mouseenter', function () { paused = true;  stop(); });
-      card.addEventListener('mouseleave', function () { paused = false; start(); });
+  /* ---- Service page: sub-service groups ----------------------------------
 
-      new IntersectionObserver(function (entries) {
-        visible = entries[0].isIntersecting;
-        if (visible) { start(); } else { stop(); }
-      }, { threshold: 0.35 }).observe(card);
+     The two pills sit in a sticky bar (CSS), so they hold under the navbar
+     while the lists scroll. This keeps them in step with the page: the
+     group whose list has reached the bar is the active pill - blue for
+     homes, teal for commercial. A pill click glides to its list's first row. */
+  function initSubsvc() {
+    var bar = document.querySelector('[data-subsvc-bar]');
+    if (!bar) return;
+    var section = bar.closest('.subsvc');
+    var nav = document.querySelector('.navbar');
+    var tabs = bar.querySelectorAll('[data-subsvc-tab]');
+    var active = null, raf = 0;
+
+    function groups() { return section.querySelectorAll('[data-subsvc-group]:not([hidden])'); }
+
+    function setActive(name) {
+      if (name === active) return;
+      active = name;
+      tabs.forEach(function (t) {
+        var on = t.getAttribute('data-subsvc-tab') === name;
+        t.classList.toggle('is-active', on);
+        if (on) t.setAttribute('aria-current', 'true'); else t.removeAttribute('aria-current');
+      });
+    }
+
+    function navBottom() { return nav ? Math.max(0, nav.getBoundingClientRect().bottom) : 0; }
+
+    /* Positions are read from a plain marker just above the bar, never from
+       the sticky bar itself: mid-scroll, a sticky box's rect can lag a frame
+       behind the page, which left the pinned state stale. */
+    var mark = document.createElement('span');
+    mark.setAttribute('aria-hidden', 'true');
+    mark.style.cssText = 'display:block;height:0;visibility:hidden';
+    bar.parentNode.insertBefore(mark, bar);
+
+    function update() {
+      raf = 0;
+      var top = navBottom();
+      var barH = bar.offsetHeight;
+      var margin = parseFloat(getComputedStyle(bar).marginTop) || 0;
+      var natural = mark.getBoundingClientRect().top + margin;   /* where the bar sits unpinned */
+
+      /* A group counts as reached once its top is within 24px of the bar. */
+      var line = Math.max(natural, top) + barH + 24, name = null;
+      groups().forEach(function (g, i) {
+        if (i === 0 || g.getBoundingClientRect().top <= line) name = g.getAttribute('data-subsvc-group');
+      });
+      if (name) setActive(name);
+    }
+
+    function onScroll() { if (!raf) raf = requestAnimationFrame(update); }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function (e) {
+        var g = section.querySelector('[data-subsvc-group="' + tab.getAttribute('data-subsvc-tab') + '"]');
+        if (!g) return;
+        e.preventDefault();
+        setActive(tab.getAttribute('data-subsvc-tab'));
+        /* Land the first row just under the pinned bar. */
+        var top = window.scrollY + g.getBoundingClientRect().top - navBottom() - bar.offsetHeight - 4;
+        window.scrollTo({ top: Math.max(0, top), behavior: reduceMotion ? 'auto' : 'smooth' });
+      });
+    });
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scrollend', onScroll);
+    window.addEventListener('resize', onScroll);
+    BCE.refreshSubsvc = function () { active = null; update(); };
+    update();
+
+    /* Touch has no hover, so a finger on a row shows the hover state (36px
+       name, filled arrow) while it is down. It holds a beat after a quick tap
+       so the press still reads; a scroll gesture cancels it at once. */
+    var pressed = null, releaseTimer = 0;
+    function release(delay) {
+      var row = pressed;
+      pressed = null;
+      window.clearTimeout(releaseTimer);
+      if (row) releaseTimer = window.setTimeout(function () { row.classList.remove('is-pressed'); }, delay);
+    }
+    section.addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'touch') return;
+      var row = e.target.closest('.subsvc__row');
+      if (!row) return;
+      window.clearTimeout(releaseTimer);
+      section.querySelectorAll('.subsvc__row.is-pressed').forEach(function (r) {
+        if (r !== row) r.classList.remove('is-pressed');
+      });
+      pressed = row;
+      row.classList.add('is-pressed');
+    }, { passive: true });
+    section.addEventListener('pointerup', function () { release(240); });
+    section.addEventListener('pointercancel', function () { release(0); });
+  }
+
+  /* ---- Company details written once, read everywhere ---------------------
+     [data-company="address|hours|..."] text comes from BCE.company, so the
+     contact page cannot drift from site.js. */
+  function initCompanyFields() {
+    var C = BCE.company || {};
+    document.querySelectorAll('[data-company]').forEach(function (el) {
+      var v = C[el.getAttribute('data-company')];
+      if (v) el.textContent = v;
     });
   }
 
@@ -468,6 +883,120 @@
     btn.addEventListener('click', function () {
       window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
     });
+  }
+
+  /* ---- WhatsApp chat ------------------------------------------------------
+
+     The float opens wa.me with an opening line typed in. On a service page
+     that line names the service ("...about aircon services"), so BCE knows
+     the topic before replying. Worked out at tap time, because the
+     single-file preview changes page without reloading. */
+  function initWhatsApp() {
+    var link = document.querySelector('.wa-float');
+    if (!link || !BCE.waLink) return;
+    link.addEventListener('click', function () {
+      var where = window.location.pathname + window.location.search + window.location.hash +
+                  '&' + (BCE.routeQuery || '');
+      var slug = /service(\.html)?\b/.test(where) && (where.match(/[?&]s=([\w-]+)/) || [])[1];
+      var svc = slug && (BCE.services || []).filter(function (s) { return s.slug === slug; })[0];
+      link.href = BCE.waLink(svc ? svc.title.toLowerCase() + ' services' : '');
+    });
+  }
+
+  /* ---- Service page: service badge ----------------------------------------
+
+     Figma 734:1350. Top centre under the navbar, naming the service being
+     viewed. It is on screen whenever the hero is out of view and fades away
+     as the hero comes back. On phones the sub-service pills pin under the
+     navbar across the full width, so while they are stuck the badge sits
+     just below them. Checked once per frame at most while scrolling, and on
+     every view change in the single-file preview (where a hidden service
+     view must never show it). */
+  function initSectionBadge() {
+    var root  = document.querySelector('[data-service-page]');
+    var badge = root && root.querySelector('[data-svc-badge]');
+    var hero  = root && root.querySelector('[data-svc-hero]');
+    if (!badge || !hero) return;
+    var label = badge.querySelector('.svc-badge__label');
+    var bar   = root.querySelector('[data-subsvc-bar]');
+    var nav   = document.querySelector('.navbar');
+    var phone = window.matchMedia('(max-width: 767px)');
+    var raf   = 0;
+
+    function update() {
+      raf = 0;
+      var edge = nav ? nav.getBoundingClientRect().bottom : 0;
+      var show = !!hero.offsetParent && hero.getBoundingClientRect().bottom <= edge;
+      if (show) {
+        label.textContent = root.getAttribute('data-service-name') || '';
+        var top = '';
+        if (bar && phone.matches) {
+          var r = bar.getBoundingClientRect();
+          if (r.height && r.top <= edge + 1 && r.bottom > edge) top = Math.round(r.bottom + 8) + 'px';
+        }
+        badge.style.top = top;
+      }
+      badge.classList.toggle('is-shown', show);
+    }
+    function schedule() { if (!raf) raf = window.requestAnimationFrame(update); }
+
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    window.addEventListener('hashchange', schedule);
+    update();
+  }
+
+  /* ---- Service hero: scroll-out -------------------------------------------
+
+     As the hero slides up under the navbar its content lifts away in layers
+     - the title fastest, then the lead, then Book Now - and fades, while the
+     photo sinks at 30% of the scroll speed and eases in a touch, so the hero
+     leaves like a deep scene rather than a flat block. Tied straight to the
+     scroll position (scrolling back reverses it exactly), transform and
+     opacity only, worked out at most once a frame. The layers move with the
+     separate `translate` property and the fade sits on their wrapper, so
+     nothing fights the entrance reveal's own transform and opacity.
+     Reduced motion keeps the fade and drops the movement. */
+  function initHeroExit() {
+    var hero = document.querySelector('[data-svc-hero]');
+    if (!hero) return;
+    var inner  = hero.querySelector('.service-hero__inner');
+    var photo  = hero.querySelector('.service-hero__photo');
+    var nav    = document.querySelector('.navbar');
+    var layers = [['.service-hero__title', 96], ['.service-hero__lead', 64], ['.service-hero__actions', 40]]
+      .map(function (l) { return [hero.querySelector(l[0]), l[1]]; })
+      .filter(function (l) { return l[0]; });
+    var raf = 0, last = -1;
+
+    function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+    function smooth(a, b, v) { var t = clamp((v - a) / (b - a)); return t * t * (3 - 2 * t); }
+
+    function frame() {
+      raf = 0;
+      if (!hero.offsetParent) return;
+      var r = hero.getBoundingClientRect();
+      var edge = nav ? nav.getBoundingClientRect().bottom : 0;
+      var p = Math.round(clamp((edge - r.top) / r.height) * 1000) / 1000;
+      if (p === last) return;
+      last = p;
+      if (!p) {   /* at rest: hand everything back to the stylesheet */
+        inner.style.opacity = '';
+        if (photo) photo.style.transform = '';
+        layers.forEach(function (l) { l[0].style.translate = ''; });
+        return;
+      }
+      inner.style.opacity = (1 - smooth(.1, .7, p)).toFixed(3);
+      if (reduceMotion) return;
+      layers.forEach(function (l) { l[0].style.translate = '0 ' + (-l[1] * p).toFixed(1) + 'px'; });
+      if (photo) photo.style.transform =
+        'translateY(' + (r.height * .3 * p).toFixed(1) + 'px) scale(' + (1 + .06 * p).toFixed(4) + ')';
+    }
+    function schedule() { if (!raf) raf = window.requestAnimationFrame(frame); }
+
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    window.addEventListener('hashchange', function () { last = -1; schedule(); });
+    frame();
   }
 
   /* ---- FAQ accordion (home) --------------------------------------------- */
@@ -723,12 +1252,20 @@
     initNav();
     initSearch();
     initMarquee();
+    initReviews();
     initCompare();
-    initMapZoom();
+    initGoogleMap();
+    initDirections();
     initCounters();
     initNavCta();
-    initProcessScan();
+    initSteps();
+    initWorkReveal();
+    initSubsvc();
+    initCompanyFields();
     initToTop();
+    initWhatsApp();
+    initSectionBadge();
+    initHeroExit();
     initFaq();
     initFaqScene();
     initReachScene();

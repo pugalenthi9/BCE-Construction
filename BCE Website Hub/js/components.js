@@ -29,6 +29,14 @@
            '</a>';
   }
 
+  /* wa.me chat link with the visitor's opening line typed in (BCE.whatsapp
+     in site.js). `topic` defaults to "your services". */
+  BCE.waLink = function (topic) {
+    var W = BCE.whatsapp;
+    return 'https://wa.me/' + W.number + '?text=' +
+           encodeURIComponent(W.message.replace('%s', topic || 'your services'));
+  };
+
   BCE.button = function (opts) {
     var tag  = opts.href ? 'a' : 'button';
     var attr = opts.href ? ' href="' + opts.href + '"' : ' type="' + (opts.type || 'button') + '"';
@@ -37,6 +45,43 @@
              (opts.icon ? '<span class="btn__icon" data-icon="' + String(opts.icon).replace('.svg','') + '"></span>' : '') +
              '<span>' + esc(opts.label) + '</span>' +
            '</' + tag + '>';
+  };
+
+  /* One client review card, shared by the home strip (Figma 616:2590) and the
+     service pages' Recent Work (599:1511). The two designs draw the stars
+     differently, so the caller picks:
+       stars: 'row'    - the home strip's five-star SVG, used as a mask and
+                         filled to the rating (css .review-card__rating)
+       stars: 'single' - Recent Work's separate 20px stars
+     `cls` adds classes for the caller's layout. */
+  BCE.reviewCard = function (r, opts) {
+    opts = opts || {};
+    var label = r.stars + ' out of 5 stars';
+    var stars;
+    if (opts.stars === 'row') {
+      stars = '<span class="review-card__rating" role="img" aria-label="' + label + '"' +
+                    ' style="--rating:' + Number(r.stars) + '"></span>';
+    } else {
+      stars = '';
+      for (var n = 0; n < 5; n++) {
+        stars += '<img class="review-card__star' + (n < r.stars ? '' : ' is-off') + '"' +
+                     ' src="' + url('images/icons/review-star.svg') + '" alt="" width="20" height="20">';
+      }
+      stars = '<span class="review-card__stars" role="img" aria-label="' + label + '">' + stars + '</span>';
+    }
+    return '<figure class="review-card ' + (opts.cls || '') + '">' +
+             stars +
+             '<p class="review-card__category">' + esc(r.category) + '</p>' +
+             '<img class="review-card__mark" src="' + url('images/icons/review-quote.svg') + '" alt="" width="24" height="24">' +
+             '<blockquote class="review-card__quote">' + esc(r.quote) + '</blockquote>' +
+             '<figcaption class="review-card__client">' +
+               '<span class="review-card__avatar" aria-hidden="true">' + esc(r.name.charAt(0)) + '</span>' +
+               '<span class="review-card__who">' +
+                 '<span class="review-card__name">' + esc(r.name) + '</span>' +
+                 '<span class="review-card__role">' + esc(r.role) + '</span>' +
+               '</span>' +
+             '</figcaption>' +
+           '</figure>';
   };
 
   /* ---- Utility bar + navigation ---------------------------------------- */
@@ -156,7 +201,7 @@
             '<img class="cta-banner__grid" src="' + url('images/misc/perspective-grid.svg') + '" alt="" aria-hidden="true">' +
             '<div class="cta-banner__copy">' +
               '<p class="cta-banner__eyebrow">Book now - Relax now - Transform your space now</p>' +
-              '<h2 class="cta-banner__title">From first call to final check, handled with care and accuracy.</h2>' +
+              '<h2 class="cta-banner__title"><span class="title-lead">From first call to final check,</span> handled with care and accuracy.</h2>' +
               '<div class="cta-banner__actions">' +
                 BCE.button({ label: 'Book Your Service Now', icon: 'star-fall.svg', variant: 'btn--inverse', href: url('contact.html') }) +
                 BCE.button({ label: 'Call Us', icon: 'phone-call.svg', variant: 'btn--outline', href: C.phoneHref }) +
@@ -194,7 +239,11 @@
                   '<span class="footer-brand__uen">' + esc(C.regNo) + '</span>' +
                 '</div>' +
                 '<p class="footer-blurb">' + esc(C.blurb) + '</p>' +
-                '<img class="footer-stamp" src="' + url('images/brand/rubber-stamp.webp') + '" alt="Company seal">' +
+                /* The seal and the bizSAFE STAR licence sit side by side, centred on each other. */
+                '<div class="footer-certs">' +
+                  '<img class="footer-stamp" src="' + url('images/brand/rubber-stamp.webp') + '" alt="Company seal">' +
+                  '<img class="footer-bizsafe" src="' + url('images/brand/bizsafe-wreath.webp') + '" alt="bizSAFE STAR certified" width="153" height="64">' +
+                '</div>' +
               '</div>' +
               '<div>' +
                 '<h3 class="footer-heading">Services</h3>' +
@@ -233,6 +282,17 @@
           '</div>' +
         '</div>' +
       '</footer>' +
+      /* WhatsApp chat (Figma 626:2979), bottom right. The halos sit before
+         the button so they paint beneath it; main.js names the service in
+         the message on service pages (initWhatsApp). */
+      (BCE.whatsapp ?
+        '<a class="wa-float" href="' + BCE.waLink() + '" target="_blank" rel="noopener" ' +
+           'aria-label="Chat with BCE on WhatsApp">' +
+          '<span class="wa-float__halo" aria-hidden="true"></span>' +
+          '<span class="wa-float__halo wa-float__halo--outer" aria-hidden="true"></span>' +
+          '<span class="wa-float__btn"><img src="' + url('images/icons/whatsapp.svg') + '" alt=""></span>' +
+        '</a>' : '') +
+      /* Back to top, bottom left - the right corner belongs to WhatsApp. */
       '<button class="to-top" id="to-top" aria-label="Back to top">' +
         '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
           '<path d="M12 19V5M12 5l-6 6M12 5l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
@@ -240,15 +300,18 @@
       '</button>';
     },
 
-    /* Figma 197:2134 — opened by the "Get in Touch" CTA. */
+    /* Figma 197:2134 — opened by the "Get in Touch" CTA. Each contact line is
+       a 48px icon tile beside a caps label and its value. */
     getInTouchModal: function () {
       function row(icon, label, value, cls) {
         return '<div class="gt__item ' + (cls || '') + '">' +
-                 '<span class="gt__item-head">' +
-                   '<span class="gt__icon"><img src="' + url('images/icons/' + icon) + '" alt=""></span>' +
-                   '<span class="gt__label">' + esc(label) + '</span>' +
+                 '<span class="gt__tile">' +
+                   '<img src="' + url('images/icons/' + icon) + '" alt="" width="32" height="32">' +
                  '</span>' +
-                 '<span class="gt__value">' + value + '</span>' +
+                 '<span class="gt__text">' +
+                   '<span class="gt__label">' + esc(label) + '</span>' +
+                   '<span class="gt__value">' + value + '</span>' +
+                 '</span>' +
                '</div>';
       }
 
@@ -269,18 +332,18 @@
 
           '<div class="gt__head">' +
             '<h2 class="gt__title" id="gt-title">Get in Touch</h2>' +
-            '<p class="gt__sub">Reach out any time - our experts will talk you through the options and get the job sorted.</p>' +
+            '<p class="gt__sub">Feel free to get in touch, our experts will guide you and fix your issues</p>' +
           '</div>' +
 
-          '<div class="gt__grid-2">' +
-            row('phone.svg', 'Mobile/WhatsApp',
+          '<div class="gt__contacts">' +
+            row('contact-call.svg', 'Call',
                 '<a href="' + C.phoneHref + '">' + esc(C.phone) + '</a>') +
-            row('email.svg', 'Email',
+            row('contact-email.svg', 'Email',
                 '<a href="' + C.emailHref + '">' + esc(C.email) + '</a>') +
           '</div>' +
 
           /* UEN deliberately omitted - it lives in the footer only. */
-          row('pin.svg', 'Office Location', esc(C.address), 'gt__item--wide') +
+          row('contact-building.svg', 'Location', esc(C.address), 'gt__item--location') +
 
           '<div class="gt__qr">' +
             '<img src="' + url('images/modal/qr-code.svg') + '" alt="QR code to the BCE office location">' +
@@ -314,10 +377,24 @@
             '<p class="sc__sub">We have received your query.</p>' +
           '</div>' +
 
-          '<p class="sc__body">Sit back and relax - the right team will be in touch within an ' +
-            'hour to confirm your booking.</p>' +
+          '<p class="sc__body">Take a breath, our respective team will contact you within 1 hour ' +
+            'and we will fix your query.</p>' +
 
-          '<p class="sc__ref"></p>' +
+          /* The ID arrives when the send resolves (forms.js showReference);
+             until then a shimmer holds its place. Clicking it copies it. */
+          '<div class="sc__ref">' +
+            '<p class="sc__ref-label" id="sc-ref-label">This is your reference ID</p>' +
+            '<button class="sc__ref-id is-pending" type="button" aria-describedby="sc-ref-label" disabled>' +
+              '<span class="sc__ref-value">BCE000000</span>' +
+              '<span class="sc__ref-copy" aria-hidden="true">' +
+                '<svg viewBox="0 0 24 24" width="16" height="16" fill="none">' +
+                  '<rect x="8" y="8" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.8"/>' +
+                  '<path d="M16 8V6.5A2.5 2.5 0 0 0 13.5 4h-7A2.5 2.5 0 0 0 4 6.5v7A2.5 2.5 0 0 0 6.5 16H8" stroke="currentColor" stroke-width="1.8"/>' +
+                '</svg>' +
+              '</span>' +
+              '<span class="sc__ref-done" role="status" aria-live="polite"></span>' +
+            '</button>' +
+          '</div>' +
           '<p class="sc__fallback" hidden></p>' +
           '<button class="sc__close" type="button" data-close-modal>Close</button>' +
 

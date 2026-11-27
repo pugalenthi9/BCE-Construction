@@ -27,11 +27,11 @@
   var ICONS = {
     /* Building types */
     'Residential':      'M3 10.5 12 3l9 7.5M5.5 9.5V20h13V9.5M10 20v-5h4v5',
-    'Multistory':       'M3 21h18M5 21V4h8v17M13 21V10h6v11M7.5 7.5h3M7.5 11h3M7.5 14.5h3M15.5 13.5h1M15.5 17h1',
-    'Commercial Space': 'M4 9h16v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9ZM3 9l1.6-5h14.8L21 9M9.5 21v-6h5v6',
+    'High-Rise & Mixed-Use': 'M3 21h18M5 21V4h8v17M13 21V10h6v11M7.5 7.5h3M7.5 11h3M7.5 14.5h3M15.5 13.5h1M15.5 17h1',
+    'Commercial':       'M4 9h16v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9ZM3 9l1.6-5h14.8L21 9M9.5 21v-6h5v6',
     'Industrial':       'M3 21V11l5.5 3.2V11L14 14.2V11l5.5 3.2V21ZM3 21h18M6.5 17.5h1.5M11 17.5h1.5M15.5 17.5H17',
     'Institutional':    'M3 10h18L12 4 3 10ZM5.5 10v8M9.5 10v8M14.5 10v8M18.5 10v8M3 21h18',
-    'Entertainment':    'M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1.5a2.5 2.5 0 0 0 0 5V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3.5a2.5 2.5 0 0 0 0-5ZM10 6.5v11',
+    'Hospitality & Leisure': 'M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1.5a2.5 2.5 0 0 0 0 5V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3.5a2.5 2.5 0 0 0 0-5ZM10 6.5v11',
 
     /* Services */
     'aircon':        'M12 2.5v19M4.4 7l15.2 8.8M19.6 7 4.4 15.8M12 6.2 9.6 3.8M12 6.2l2.4-2.4M12 17.8l-2.4 2.4M12 17.8l2.4 2.4',

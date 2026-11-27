@@ -56,7 +56,7 @@
           <span class="hero__glyph" style="left:401px; top:148px; width:21px; height:21px"><img src="images/icons/tools.svg" alt=""></span>
 
           <div class="hero__certified">
-            <img src="images/brand/bizsafe.webp" alt="bizSAFE certified">
+            <img src="images/brand/bizsafe-star.webp" alt="bizSAFE STAR certified" width="76" height="48">
           </div>
 
           <p class="hero__tagline">Quality - Innovation - Team Work - Passion</p>
@@ -95,31 +95,27 @@
     <div class="container">
       <div class="section-head section-head--center" data-reveal>
         <span class="eyebrow">Our Services</span>
-        <h2 class="section-title">The services that we&rsquo;ve prepared for you</h2>
+        <h2 class="section-title"><span class="title-lead">The services that</span> we&rsquo;ve prepared for you</h2>
       </div>
       <div class="services-bento" data-render="service-cards"></div>
     </div>
   </section>
 
   <!-- ===== How it works ================================================= -->
-  <section class="section process" id="how-it-works">
+  <!-- Figma 636:1436 - the same timeline as the service pages (initSteps). -->
+  <section class="section steps" id="how-it-works" aria-labelledby="steps-title">
     <div class="container">
-      <div class="section-head" data-reveal>
+      <div class="section-head steps__head" data-reveal>
         <span class="eyebrow">How it works</span>
-        <h2 class="section-title">We Will Reach You In a Few Clicks</h2>
+        <h2 class="steps__title" id="steps-title"><span class="title-lead">We Will Reach You</span> In Few Clicks</h2>
       </div>
-    </div>
-
-    <div class="process__band">
-      <div class="container">
-        <div class="process__stage">
-          <figure class="process__photo" data-reveal="right">
-            <img src="images/misc/process-team.webp" alt="BCE engineers reviewing plans on site" loading="lazy">
-          </figure>
-          <div class="process__card" data-reveal="left">
-            <h3 class="process__card-title">The Process</h3>
-            <div data-render="process-steps"></div>
-          </div>
+      <div class="steps__body">
+        <figure class="steps__photo" data-reveal="right">
+          <img src="images/misc/process-team.webp" alt="BCE engineers reviewing plans on site" loading="lazy">
+        </figure>
+        <div class="steps__track" data-steps>
+          <span class="steps__rail" aria-hidden="true"><span class="steps__fill"></span></span>
+          <ol class="steps__list" data-render="process-steps"></ol>
         </div>
       </div>
     </div>
@@ -130,7 +126,7 @@
     <div class="container">
       <div class="section-head section-head--center" data-reveal>
         <span class="eyebrow">Our Work</span>
-        <h2 class="section-title">Before &amp; After</h2>
+        <h2 class="section-title"><span class="title-lead">Before &amp;</span> After</h2>
         <p class="section-lead section-lead--wide">
           Experience the transformation with our Before &amp; After results! See the remarkable
           difference our expert services can make.
@@ -157,11 +153,11 @@
   <section class="section section--dark has-grid" id="building-types">
     <div class="container">
       <div class="section-head" data-reveal>
-        <span class="eyebrow">Services &amp; Solutions</span>
-        <h2 class="section-title">We Provide For All Building Types</h2>
+        <span class="eyebrow">Sectors We Serve</span>
+        <h2 class="section-title"><span class="title-lead">We Provide For</span> All Building Types</h2>
       </div>
 
-      <div class="grid-3" data-render="building-types"></div>
+      <div class="type-grid" data-render="building-types"></div>
 
       <div class="other-buildings" data-reveal>
         <img class="other-buildings__skyline" src="images/misc/ob-skyline.webp" alt="" aria-hidden="true">
@@ -183,43 +179,26 @@
     </div>
   </section>
 
-  <!-- ===== About ======================================================== -->
-  <section class="section" id="about">
-    <div class="container about">
-      <div class="collage" data-reveal="left">
-        <figure class="collage__item collage__item--a"><img src="images/about/collage-1-crew.webp" alt="Safety equipment ready for the crew" loading="lazy"></figure>
-        <figure class="collage__item collage__item--b"><img src="images/about/collage-2-site.webp" alt="Site works in progress" loading="lazy"></figure>
-        <figure class="collage__item collage__item--c"><img src="images/about/collage-3-worker.webp" alt="Worker on a reinforced structure" loading="lazy"></figure>
-        <figure class="collage__item collage__item--d"><img src="images/about/collage-4-gloves.webp" alt="Protective gloves" loading="lazy"></figure>
-      </div>
-
-      <div data-reveal="right">
-        <span class="eyebrow">About Us</span>
-        <h2 class="section-title section-title--md" style="margin-top:16px">
-          Construction and Renovation, Handled End to End
-        </h2>
-        <p class="section-lead">
-          One team across residential, commercial and industrial work in Singapore — a single
-          supervisor, an agreed scope, and a handover date you can hold us to.
-        </p>
-
-        <div class="about__stats">
-          <div class="stat"><p class="stat__value" data-count="100">100+</p><p class="stat__label">Satisfied Customers</p></div>
-          <div class="stat"><p class="stat__value" data-count="20">20+</p><p class="stat__label">Successful Projects</p></div>
-          <div class="stat"><p class="stat__value" data-count="10">10+</p><p class="stat__label">Expert Team Members</p></div>
+  <!-- ===== About (Figma 697:2998) ======================================= -->
+  <section class="about-intro" id="about" aria-labelledby="about-title">
+    <div class="container">
+      <div class="about-intro__head">
+        <div>
+          <span class="eyebrow" data-reveal>About Us</span>
+          <h2 class="about-intro__title" id="about-title" data-reveal>
+            <span class="title-lead">Your trusted</span> construction service partner
+          </h2>
+          <p class="about-intro__lead" data-reveal style="--reveal-delay:90ms">
+            Bala Construction &amp; Engineering provides practical construction, renovation and
+            maintenance solutions for residential and commercial needs in Singapore.
+          </p>
         </div>
-
-        <div class="about__actions">
-          <a class="btn btn--primary" href="contact.html">
-            <span class="btn__icon" data-icon="star-fall"></span>
-            <span>Book Your Service Now</span>
-          </a>
-          <a class="btn btn--outline" href="tel:+6598945223">
-            <span class="btn__icon" data-icon="phone-call"></span>
-            <span>Call Us</span>
-          </a>
-        </div>
+        <a class="story-link" href="about.html" data-reveal style="--reveal-delay:140ms">
+          <span>Discover Our Story</span>
+          <img src="images/icons/chevron-down-24.svg" alt="" width="24" height="24">
+        </a>
       </div>
+      <ul class="facts" data-render="facts" data-reveal></ul>
     </div>
   </section>
 
@@ -239,7 +218,7 @@
         <div class="faq__head" data-reveal>
           <span class="faq__tag">FAQ</span>
           <h2 class="faq__title" id="faq-title">
-            <span class="faq__title-muted">Got Questions?</span> We&rsquo;ve Got Answers.
+            <span class="title-lead">Got Questions?</span> We&rsquo;ve Got Answers.
           </h2>
           <p class="faq__lead">
             Get answers to common questions about our services, pricing, and booking before contacting us.
@@ -248,14 +227,18 @@
 
         <div class="faq__list" data-render="faq" data-reveal></div>
 
-        <div class="faq-cta" data-reveal>
-          <h3 class="faq-cta__title">Still Need Assistance</h3>
+        <!-- Figma 495:1320 - the MD's card, as on the service pages. -->
+        <div class="faq-cta faq-cta--md" data-reveal>
+          <p class="faq-cta__kicker">Still Need Assistance ?</p>
+          <h3 class="faq-cta__title">Hi, I&rsquo;m Bala, MD of Bala Construction &amp; Engineering.</h3>
           <p class="faq-cta__text">
             Can&rsquo;t find the answer you&rsquo;re looking for? Share your requirements with us, and our team will be happy to help.
           </p>
-          <a class="btn btn--light faq-cta__btn" href="#enquiry">
-            <span class="btn__icon" data-icon="star-fall"></span>
-            <span>Submit Your Query</span>
+          <a class="faq-cta__ask" href="#enquiry">
+            <span>Ask Your Doubt</span>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+              <path d="M9.5 6.5L15 12l-5.5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </a>
         </div>
       </div>
@@ -267,16 +250,24 @@
     </div>
   </section>
 
-  <!-- ===== Testimonials ================================================= -->
-  <section class="section testimonials" id="testimonials">
-    <div class="container">
-      <div class="section-head" data-reveal>
-        <h2 class="section-title">Our Trusted Clients</h2>
-        <p class="section-lead">
-          What homeowners, offices and developers say about working with BCE.
-        </p>
+  <!-- ===== Testimonials (Figma 616:2590) ================================= -->
+  <!-- A strip of review cards that runs past on its own (initReviews in
+       js/main.js); a card under the pointer takes a soft shadow. With reduced
+       motion it is a plain swipeable row instead. -->
+  <section class="reviews" id="testimonials" aria-labelledby="reviews-title">
+    <div class="container reviews__head">
+      <h2 class="reviews__title" id="reviews-title" data-reveal>
+        <span class="title-lead">Our Work</span> Their Words
+      </h2>
+    </div>
+    <p class="container reviews__notice" hidden>
+      <strong>Sample content.</strong> These quotes are placeholders for layout only &mdash;
+      they are not real customer reviews, and must be replaced before launch.
+    </p>
+    <div class="reviews__viewport" data-reviews>
+      <div class="reviews__track">
+        <ul class="reviews__set" data-render="testimonials"></ul>
       </div>
-      <div class="testimonials__grid" data-render="testimonials"></div>
     </div>
   </section>
 
@@ -293,9 +284,9 @@
         <div class="reach__grid">
           <div class="reach__col reach__col--info">
             <div class="reach__info" data-reveal="left">
-              <h2 class="reach__title" id="reach-title">Contact Us</h2>
+              <h2 class="reach__title" id="reach-title"><span class="title-lead">Our Journey</span> Begins Here</h2>
               <p class="reach__lead">
-                We&rsquo;re here to help! Reach out to the BCE team, and we&rsquo;ll reach your doorstep.
+                Tell us about the work you need. From the first site visit to the final handover, the BCE team is with you at every step.
               </p>
 
               <ul class="reach__list">
