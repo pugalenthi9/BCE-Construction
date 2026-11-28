@@ -940,6 +940,7 @@ textarea.field__control { height: 132px; padding: var(--sp-3) var(--sp-4); resiz
    -------------------------------------------------------------------------- */
 .form-card--inline {
   padding: var(--sp-8);
+  border-radius: 4px;           /* square-cornered in both designs (734:1214, 750:1234) */
   border-color: var(--stroke-card);
   box-shadow: 0 24px 27px rgba(102, 102, 102, .04), 0 97px 48.5px rgba(102, 102, 102, .03),
               0 219px 65.5px rgba(102, 102, 102, .02), 0 389px 78px rgba(102, 102, 102, .01);

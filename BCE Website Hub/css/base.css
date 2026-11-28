@@ -159,6 +159,9 @@ a { color: inherit; text-decoration: none; }
    The lead-in takes --title-lead, which dark sections switch to white at
    half strength. */
 .title-lead { display: block; color: var(--title-lead); }
+/* Same tone on one line, where the design keeps a short title whole
+   ("Before & After", Figma 136:2121). */
+.title-lead--inline { display: inline; }
 .section-title--md { font-size: var(--fs-h3); line-height: var(--lh-h3); font-weight: 500; }
 
 .section-lead {

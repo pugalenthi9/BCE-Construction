@@ -45,6 +45,8 @@
   .cta-banner__photo { width: 620px; height: 420px; margin-left: 0; }
 
   .service-hero { min-height: 520px; }
+  /* Before & After: a narrower lead keeps the title on one line. */
+  .ba__head { grid-template-columns: minmax(0, 1fr) minmax(0, 480px); }
   .service-hero__inner { padding-block: 80px var(--sp-16); }
   .service-hero__title { font-size: 56px; letter-spacing: 1px; }
 
@@ -170,8 +172,12 @@
   /* Stacked: no pinning below 1024 (see initReachScene), so the panel is
      just a card and the form follows the details. */
   .reach { padding-block: var(--sp-16); }
-  .reach__grid { grid-template-columns: 1fr; row-gap: var(--sp-10); padding: var(--sp-10) var(--sp-8); }
-  .reach__info { padding-top: 0; }
+  .reach__grid { grid-template-columns: 1fr; row-gap: var(--sp-12); padding: var(--sp-10) var(--sp-8); }
+  .reach__list { margin-top: var(--sp-8); }
+  .reach__lead { padding-top: 0; }
+  .reach .form-card { margin-top: var(--sp-6); }
+  /* Nothing pins here, so the jump just lands on the lead. */
+  .reach #enquiry { scroll-margin-top: 0; }
   .faq { --bld-s: .8; }
   .location { grid-template-columns: 1fr; gap: var(--sp-10); }
 
@@ -194,6 +200,10 @@
   .mapview__rows { gap: var(--sp-4); margin-top: var(--sp-4); }
 
   .compare { height: 420px; }
+  /* Before & After: lead under the title. */
+  .ba__head { grid-template-columns: 1fr; }
+  .ba__lead { margin-top: var(--sp-4); }
+  .ba .compare { margin-top: var(--sp-10); }
 
   /* Photo drops out below the banner's two-column width; copy takes the panel. */
   .cta-banner__inner { height: auto; padding: var(--sp-10); }
@@ -348,6 +358,8 @@
   .service-hero__actions .btn { width: 100%; }
 
   .compare { height: 300px; border-radius: var(--r-md); }
+  .ba__lead { font-size: var(--fs-body); }
+  .ba .compare { margin-top: var(--sp-8); }
   .compare__badge { top: var(--sp-4); font-size: var(--fs-sm); padding: var(--sp-2); }
   .compare__grip { top: 40px; }
 
@@ -373,6 +385,9 @@
   .reach__panel { border-radius: var(--r-lg); }
   .reach__grid { row-gap: var(--sp-8); padding: var(--sp-6) var(--sp-4); }
   .reach__title { font-size: 30px; line-height: 40px; letter-spacing: .4px; }
+  .reach__list { margin-top: var(--sp-6); }
+  .reach__lead { font-size: var(--fs-body); line-height: 24px; letter-spacing: .32px; }
+  .reach .form-card { margin-top: var(--sp-5); }
   .reach-line__value--address { max-width: none; }
 
   /* Background rules read as noise at phone width. */

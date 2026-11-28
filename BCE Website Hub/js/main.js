@@ -241,10 +241,6 @@
     document.querySelectorAll('[data-compare]').forEach(function (root) {
       var dragging = false;
 
-      function sync() {
-        root.style.setProperty('--compare-width', root.clientWidth + 'px');
-      }
-
       function setPos(clientX) {
         setPosRaw(clientX - root.getBoundingClientRect().left);
       }
@@ -296,9 +292,8 @@
         syncBadges(clamped, w);
       }
 
-      sync();
       setPosRaw(parseFloat(getComputedStyle(root).getPropertyValue('--compare-pos')) || 32);
-      window.addEventListener('resize', function () { sync(); setPosRaw(root.clientWidth * 0.55); });
+      window.addEventListener('resize', function () { setPosRaw(root.clientWidth * 0.55); });
 
       /* Gentle opening hint so the control announces itself. */
       if (!reduceMotion && 'IntersectionObserver' in window) {
@@ -1129,9 +1124,10 @@
   }
 
   /* ---- Contact Us (home): pinned panel, the form scrolls inside -----------
-     Figma 537:2216. When the screen is too short for the whole panel, the
-     panel holds under the navbar and the form scrolls up through it 1:1 with
-     the page, so it reads as scrolling the form itself. The details column
+     Figma 750:1234. When the screen is too short for the whole panel, the
+     panel holds under the navbar and the right column (lead + form) scrolls
+     up through it 1:1 with the page, so it reads as scrolling the form
+     itself. The details column
      (title, contact lines, QR) stays where it is. When the form's end
      arrives the pin releases and the panel leaves with the page.
 

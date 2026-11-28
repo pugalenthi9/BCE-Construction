@@ -121,13 +121,20 @@
     </div>
   </section>
 
-  <!-- ===== Before & After =============================================== -->
-  <section class="section" id="our-work">
+  <!-- ===== Before & After (Figma 136:2120) ==============================
+       Chip and the one-line title on the left, the lead on the right, then
+       the 1232 x 582 slider. The two photos are registered to each other -
+       after.webp was shifted 23.5px down and 2.5px right onto the before
+       photo's window - and both are drawn in one full-size frame, so the
+       window meets itself exactly at the handle at any width. -->
+  <section class="ba" id="our-work">
     <div class="container">
-      <div class="section-head section-head--center" data-reveal>
-        <span class="eyebrow">Our Work</span>
-        <h2 class="section-title"><span class="title-lead">Before &amp;</span> After</h2>
-        <p class="section-lead section-lead--wide">
+      <div class="ba__head" data-reveal>
+        <div>
+          <span class="eyebrow">Our Work</span>
+          <h2 class="section-title"><span class="title-lead title-lead--inline">Before &amp;</span> After</h2>
+        </div>
+        <p class="ba__lead">
           Experience the transformation with our Before &amp; After results! See the remarkable
           difference our expert services can make.
         </p>
@@ -135,10 +142,10 @@
 
       <div class="compare" data-compare data-reveal="scale">
         <div class="compare__layer compare__layer--before">
-          <img src="images/before-after/before.webp" alt="Property before BCE works">
+          <img src="images/before-after/before.webp" alt="A room mid-repaint, walls patched and unfinished" width="1672" height="941">
         </div>
         <div class="compare__layer compare__layer--after">
-          <img src="images/before-after/after.webp" alt="The same property after completion">
+          <img src="images/before-after/after.webp" alt="The same room after the repaint, finished" width="1672" height="941">
         </div>
         <span class="compare__badge compare__badge--after">AFTER</span>
         <span class="compare__badge compare__badge--before">BEFORE</span>
@@ -272,22 +279,20 @@
   </section>
 
   <!-- ===== Contact ====================================================== -->
-  <!-- Figma 537:2216 - home only. The panel layout is the home page's own;
-       the form inside it is the same one contact.html uses.
+  <!-- Figma 750:1234 - home only. Two stacks on the tinted panel: the title,
+       contact lines and QR on the left; the lead and the enquiry form on the
+       right. The form is the same inline-label one contact.html uses.
        The track is the panel's scroll runway: on desktop the panel pins under
-       the navbar and the form scrolls inside it while the details hold still
-       (js/main.js). The columns are wrappers so the scroll offset never fights
-       data-reveal. -->
+       the navbar and the right stack (lead + form) scrolls inside it while the
+       details hold still (js/main.js). The columns are wrappers so the scroll
+       offset never fights data-reveal. -->
   <section class="reach" id="contact" aria-labelledby="reach-title">
     <div class="container reach__track">
       <div class="reach__panel">
         <div class="reach__grid">
           <div class="reach__col reach__col--info">
             <div class="reach__info" data-reveal="left">
-              <h2 class="reach__title" id="reach-title"><span class="title-lead">Our Journey</span> Begins Here</h2>
-              <p class="reach__lead">
-                Tell us about the work you need. From the first site visit to the final handover, the BCE team is with you at every step.
-              </p>
+              <h2 class="reach__title" id="reach-title"><span class="title-lead">Let&rsquo;s Get</span> Connected</h2>
 
               <ul class="reach__list">
                 <li>
@@ -327,10 +332,15 @@
           </div>
 
           <div class="reach__col reach__col--form">
-            <div class="form-card" id="enquiry" data-reveal="right">
-              <form data-enquiry-form novalidate>
-                <div data-render="enquiry-fields" data-form-scope="home"></div>
-              </form>
+            <div class="reach__form" id="enquiry" data-reveal="right">
+              <p class="reach__lead">
+                Tell us about the work you need. From the first site visit to the final handover, the BCE team is with you at every step.
+              </p>
+              <div class="form-card form-card--inline">
+                <form data-enquiry-form novalidate>
+                  <div data-render="enquiry-fields" data-form-scope="home" data-form-style="inline"></div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
